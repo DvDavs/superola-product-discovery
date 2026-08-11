@@ -36,7 +36,8 @@ Use exactly: `CONFIRMED`, `OBSERVED`, `PROPOSED`, `ASSUMPTION`, `FUTURE`, `REJEC
 - Material decisions require an ADR using `docs/02-architecture/adr/README.md`; do not create fake decisions.
 - Technology/API/pricing research must record access date, authoritative primary sources, alternatives, tradeoffs, risks, costs, lock-in, and a reconsideration trigger.
 - P01 may proceed from current evidence before pending owner materials arrive; reconcile those materials as a later track and revise hypotheses when needed.
-- Employer-facing artifacts must support Spanish and English; internal canonical engineering docs may remain English.
+- Internal canonical documentation is English only, including plans, evidence/context registers, product/architecture/technology/UX/roadmap/migration/research documents, ADRs, agent instructions, internal diagrams, technical decision records, and internal presentation-production support files.
+- Bilingual Spanish + English is required only for artifacts and diagrams intended to be shown directly to the Superola owner. Do not create translated duplicates of internal documents or parallel language versions without a concrete owner-presentation need.
 
 ## Multi-agent collaboration
 

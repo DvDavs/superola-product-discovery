@@ -15,3 +15,7 @@ Every completed research note must include:
 - recommendation status (`PROPOSED` until approved);
 - measurable reconsideration trigger;
 - authoritative sources and unresolved questions.
+
+Current bounded P01 research:
+
+- `ai-discoverability.md` — internal intent interpretation, external AI/search discoverability, future agent actions, protocol watch, and launch-scope guardrails. It is product/architecture discovery, not an AI vendor selection.
