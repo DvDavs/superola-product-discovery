@@ -33,3 +33,17 @@ Numbers and competitor observations remain qualified on the slide. The preview c
 | Capture template | Answers require source, date, speaker, and an explicit relationship value before any canonical document changes. | `docs/01-product/owner-reconciliation-matrix.md` | Process rule | `DAVID_DIRECTIVE` workflow discipline | P01.1 REVIEWED |
 
 The guide states in both languages that the V1 slice is a proposal. It contains no technology, price, target, or delivery commitment, and it does not present any `PROPOSED` item as approved.
+
+## Architecture Preview v0.1
+
+> Status: `PROPOSED — OWNER VALIDATION PENDING`. `presentation/architecture-preview-v0.1.md` is bilingual because it is shown directly to the owner; this register remains English only. Added by P02.
+
+| Section | Claim or content | Canonical source | Evidence label | Provenance | Review status |
+|---|---|---|---|---|---|
+| Preview 1 — the shape | Four capabilities inside one system; one source of truth; future extensions have a defined attachment point but are not built. | `docs/02-architecture/domain-map.md`; `system-architecture.md`; `ADR-001`; `ADR-006` | `PROPOSED` | `TECHNICAL_DISCOVERY` | P02 REVIEWED |
+| Preview 2 — five trust decisions | Business is distinct from public profile; one request to one chosen provider; never claim what cannot be proven; organic and paid never mix; customer contact is not stored inside the request. | `ADR-002`, `ADR-003`, `ADR-005`, `ADR-006`, `ADR-008`, `ADR-010`; `domain-model.md` §2 | `PROPOSED` | `TECHNICAL_DISCOVERY` | P02 REVIEWED |
+| Preview 3 — current site's data | Imported records enter a separate space, are not discoverable, cannot receive requests, and are not published; claim grants ownership rather than publishing; deletion is recorded so a later import cannot re-create the record. **Does not decide how many records migrate.** | `ADR-009`; `security-privacy-architecture.md` §7; `docs/06-migration/legacy-data-strategy.md` (NOT STARTED) | `PROPOSED`; migration scope remains `A-001`, `A-007` OPEN | `TECHNICAL_DISCOVERY` | P02 REVIEWED |
+| Preview 4 — "what changes if…" | Reversal impact for six owner alternatives, stated as what does **not** change alongside what does. | `docs/02-architecture/decision-branches.md` (`DB-01`–`DB-14`) | `PROPOSED` | `TECHNICAL_DISCOVERY` over `DAVID_DIRECTIVE` envelope (`SRC-013`) | P02 REVIEWED |
+| Preview 5 — what is needed from the owner | Two questions the technical team cannot answer (`G-02` stopping boundary, `G-06` availability meaning), plus one needing the owner and counsel (`G-09` legacy permission). | `docs/01-product/owner-reconciliation-matrix.md` gates; `Q-007`, `Q-025`, `Q-029` | Open questions | `TECHNICAL_DISCOVERY` | P02 REVIEWED |
+
+The preview names **no** framework, database, cloud, search product, payment vendor, price, target, or delivery date. It states in both languages that the design was built on working assumptions rather than on owner answers, and it does not present any `PROPOSED` item as approved.

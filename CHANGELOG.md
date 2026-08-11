@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-11 — P02 domain and system architecture completed
+
+- Produced **one** `PROPOSED` logical architecture, not several: ten marketplace modules (Identity & Access, Provider, Catalog, Geography, Demand, Conversation, Discovery, Notification, Marketplace Operations, Marketplace Analytics), one application layer as the single write path, one cross-cutting audit facility, and one conditional legacy boundary.
+- Rejected as modules, each with a promotion trigger: Availability (`V1 has no availability model`), Monetization (a reserved policy seam), Quote (an entity inside the request aggregate), Media, Public Distribution, Legacy as a runtime module, and the pre-P02 Bookings, Payments, Subscriptions, Reviews, AI/Matching, and Favorites capabilities.
+- Added `docs/02-architecture/domain-model.md` with conceptual entities, twenty-three required distinctions, the category-extensibility decision, a geography model with three-valued location eligibility, and six Mermaid lifecycle state machines.
+- Added `system-architecture.md` (deployment shape `PROPOSED — TO BE VALIDATED IN P03`, interaction and consistency map, transactional boundaries, the durable-deferred-work requirement that is explicitly **not** an event bus, extension points with an admissibility test, and twenty-one checkable principles), `search-architecture-requirements.md`, `internationalization-architecture.md`, `security-privacy-architecture.md`, `decision-branches.md`, and `p03-decision-inputs.md` (`D-01`–`D-15`).
+- Added `ADR-001`–`ADR-012`, all `PROPOSED`. Recorded four decisions deliberately **not** written as ADRs, including "no event bus", because the absence of a mechanism is not a decision worth an ADR.
+- Added bilingual `presentation/architecture-preview-v0.1.md` with a "what changes if…" section covering six owner alternatives, stated as what does **not** change alongside what does.
+- Recorded honestly that the P01.1 release gate was **not satisfied** at P02 start: `G-06` (availability claim) and `G-10` (owner material status) unsatisfied; `G-01`, `G-04`, `G-05`, `G-07`, `G-09` partial. P02 proceeded under that document's own statement that the gate is a readiness test rather than an authorization. **P02 does not authorize P04.**
+- Renamed the transaction cluster from the brief's "V1 Phase 2" to **Transaction Extension — `FUTURE`, separately owner-approved**, because a scheduled phase name silently resolves `A-004`.
+- Separated the architecture capability envelope from launch operational scope, with named scenarios `S-1` and `S-2`, and stamped every artifact with the scenario it assumes. Recorded the finding that **locale does not follow country**: owner-reported category evidence indicates a Spanish-speaking segment inside the United States.
+- Ran the three-way category-variability comparison `docs/01-product/feature-inventory.md` chartered for P02, rather than accepting the envelope's pre-selected answer; recorded the outcome as `ADR-007` and the envelope's preference as `A-018`.
+- Added assumptions `A-015`–`A-025`, questions `Q-019`–`Q-032` (several marked as legal questions with counsel as decision owner), and risks `R-023`–`R-032`. Registered the P02 brief as `SRC-013`, noting that no hash is recorded because it was supplied as conversation input.
+- Revised `docs/00-context/glossary.md` substantially: retired `Vendor` for the supply side and `Listing`; renamed `Service area` to `ServiceAreaDeclaration`, `Quote` to a kind of `ProviderResponse`, `Claimable profile` to `LegacyProviderRecord` plus `OwnershipClaim`; downgraded `Event` to a value object; and marked date and resource `Availability` as `REJECTED` for V1.
+- Advanced the three pre-P02 architecture placeholders so they no longer contradict P02, including correcting the staged search hypothesis to read as a branch that may never be taken rather than an inevitability with a schedule.
+- Selected **no** technology, cloud, database, search product, message broker, or payment vendor; introduced **no** AI protocol as architecture; invented **no** microservice requirement; assumed **no** full legacy migration; and published **no** numeric non-functional-requirements table, deliberately.
+- P01 and the Marketplace Leads recommendation remain unchanged and `PROPOSED — OWNER VALIDATION REQUIRED`; P03–P07 remain NOT STARTED.
+
 ## 2026-08-11 — P01.1 owner reconciliation prep completed
 
 - Added `docs/01-product/owner-reconciliation-matrix.md` with a reconciliation record model, seventeen seeded baseline topics (`OR-001`–`OR-017`), an intentionally empty reconciliation ledger, the owner-material intake process, the P02/P04 release gate, and the owner-material checklist.
