@@ -4,7 +4,7 @@ Repository-based source of truth for Superola product discovery, architecture ex
 
 ## Current phase
 
-`P00 — Bootstrap` and `P00.1 — Evidence & Workflow Hardening` are complete. `P01 — Product Discovery` has not started and still requires David's explicit authorization. This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
+`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, and current-evidence `P01 — Product Discovery` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
 
 ## Start here
 
@@ -26,7 +26,7 @@ Repository-based source of truth for Superola product discovery, architecture ex
 - `docs/07-research/`: focused research work packages.
 - `plans/`: living execution plans and handoffs.
 - `.codex/agents/`: project-scoped specialist agents.
-- `diagrams/`, `prototype/`, `presentation/`: later-phase outputs; currently scaffolded only.
+- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the P01 bilingual working preview; the mature P07 presentation pack remains not started.
 
 ## Evidence discipline
 
@@ -36,4 +36,6 @@ Material claims also record provenance independently using the convention in [do
 
 ## Language policy
 
-Internal engineering documentation is canonical in English. Anything prepared for direct presentation to the Superola owner must support Spanish and English.
+Internal canonical documentation is English only. This includes plans, context/evidence registers, product and architecture documents, ADRs, research, UX/roadmap/migration working documents, source registers, agent instructions, technical decision records, internal diagrams, and internal presentation-production support files.
+
+Bilingual Spanish + English is required only for artifacts or diagrams intended to be shown directly to the Superola owner, such as the Discovery Preview and future presentation slides. Do not maintain Spanish duplicates or parallel language versions of internal documents without a concrete owner-presentation need.

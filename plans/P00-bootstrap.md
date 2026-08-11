@@ -31,7 +31,7 @@ Create a durable repository-based source of truth and a rigorous human + AI oper
 
 - Repository state must remain understandable without chat history.
 - Evidence labels must prevent assumptions and proposals from becoming facts.
-- Employer-facing output must support Spanish and English; internal engineering docs may be English.
+- Internal canonical and presentation-support documents are English only; only artifacts intended for direct owner presentation require Spanish + English.
 - The repository must remain safe for private technical collaboration and contain no secrets or real private customer data.
 - Subagents are advisory; the primary agent owns canonical writes.
 
@@ -58,7 +58,7 @@ P00 canonical writing remains with the primary agent because the repository star
 3. The six-label evidence model is mandatory.
 4. Subagents are read-only and advisory by default; the primary agent integrates their output.
 5. Plans and ADRs carry phase state and material decisions respectively.
-6. Internal canonical docs use English; direct owner-facing artifacts must support Spanish and English.
+6. Internal canonical and presentation-support docs use English only; direct owner-facing artifacts and presentation diagrams must support Spanish and English.
 7. Project agent concurrency is capped at four spawned agents; model selection inherits the current environment.
 
 These are repository/workflow decisions only. No product architecture or technology candidate has been accepted.
