@@ -1,0 +1,47 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs, caches, and temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# Common generated outputs
+node_modules/
+dist/
+build/
+coverage/
+target/
+.gradle/
+
+# Discovery exports may contain private or generated material
+prototype/exports/*
+!prototype/exports/README.md
+
+# Legacy or sensitive data must stay outside the repository; these are safety nets
+private-data/
+legacy-data/
+data/raw/
+*.dump
+*.backup
+*.sqlite
+*.sqlite3
