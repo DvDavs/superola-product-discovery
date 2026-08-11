@@ -5,21 +5,23 @@
 
 ---
 
-## 1. Superola hoy / Superola today
+## 1. Qué es Superola y dónde está hoy / What Superola is and where it stands today
 
 ### Español
 
+- Superola es un **marketplace de dos lados** entre personas que organizan eventos y proveedores de servicios: músicos, DJs, salones, transporte, pasteles, maquillaje y otras categorías. No es solamente un directorio.
 - El owner reporta que Superola acumuló aproximadamente **43 mil registros de proveedores** con atención limitada; el dato y su origen/actividad todavía no están auditados.
 - El owner también reporta ubicación poco confiable y categorías saturadas; la magnitud y causas aún requieren auditoría.
 - La oportunidad no es “migrar 43 mil filas”; es convertir oferta real y vigente en un marketplace útil.
 
 ### English
 
+- Superola is a **two-sided marketplace** between people organizing events and service providers: musicians, DJs, venues, transportation, cakes, makeup, and other categories. It is not only a directory.
 - The owner reports that Superola accumulated approximately **43,000 provider registrations** with limited attention; the count and its acquisition/activity characteristics remain unaudited.
 - The owner also reports unreliable location and saturated categories; their extent and causes still require audit.
 - The opportunity is not “migrate 43,000 rows”; it is to turn real, current supply into a useful marketplace.
 
-*Sources / Fuentes: `SRC-001`, `A-001`, `R-001`, `R-010`.*
+*Sources / Fuentes: `docs/00-context/product-context.md`, `SRC-001`, `A-001`, `R-001`, `R-010`.*
 
 ---
 
@@ -178,3 +180,23 @@
 7. Which materials/timelines are commitments versus open ideas?
 
 *Source / Fuente: `docs/01-product/open-questions.md`.*
+
+---
+
+## 9. Qué sigue / What happens next
+
+### Español
+
+1. Sus respuestas se registran una por una y se comparan con esta propuesta: la confirman, la amplían, la contradicen o la reemplazan. Lo que quede sin resolver queda anotado como pregunta abierta, nunca como supuesto silencioso.
+2. Pedimos el documento de funcionalidades y monetización, y los materiales de UI/UX que ya existen, para reconciliarlos con esto antes de diseñar.
+3. Con eso definido, empieza el trabajo de arquitectura y de diseño de experiencia.
+4. Alcance comprometido, plazos, costos y tecnología llegan después, con evidencia. Nada de eso se decide en este documento.
+
+### English
+
+1. Your answers are recorded one by one and compared with this proposal: they confirm it, extend it, contradict it, or replace it. Whatever stays unresolved is recorded as an open question, never as a silent assumption.
+2. We request the feature and monetization document and the existing UI/UX materials, to reconcile them with this before designing.
+3. Once that is settled, architecture and experience design work begins.
+4. Committed scope, timelines, costs, and technology come later, with evidence. None of that is decided in this document.
+
+*Sources / Fuentes: `docs/01-product/owner-reconciliation-matrix.md`, `plans/P01.1-owner-reconciliation-prep.md`.*

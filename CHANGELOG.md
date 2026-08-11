@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-11 — P01.1 owner reconciliation prep completed
+
+- Added `docs/01-product/owner-reconciliation-matrix.md` with a reconciliation record model, seventeen seeded baseline topics (`OR-001`–`OR-017`), an intentionally empty reconciliation ledger, the owner-material intake process, the P02/P04 release gate, and the owner-material checklist.
+- Added bilingual `presentation/owner-meeting-guide-v0.1.md` with seven CORE owner decisions, five IF TIME topics, a practical meeting sequence, the materials request, and a capture template mapped to matrix IDs.
+- Refined `presentation/discovery-preview-v0.1.md`: an explicit statement of what Superola is, and a closing section on how owner answers are reconciled and what follows.
+- Registered the meeting guide and the new preview section in `presentation/sources.md`.
+- Separated BLOCKING gates for P02/P04 from uncertainty that may remain open, so pricing, sponsored mechanics, mobile implementation, protocols, and technology cannot hold the gate.
+- No architecture, technology, data model, API, wireframe, or cost figure was introduced. P01 and the Marketplace Leads recommendation remain unchanged and `PROPOSED — OWNER VALIDATION REQUIRED`; P02–P07 remain NOT STARTED.
+
 ## 2026-08-11 — P01 product discovery completed
 
 - Compared three launch slices and recommended direct-RFQ Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`.

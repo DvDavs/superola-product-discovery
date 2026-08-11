@@ -4,7 +4,7 @@ Repository-based source of truth for Superola product discovery, architecture ex
 
 ## Current phase
 
-`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, and current-evidence `P01 — Product Discovery` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
+`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, current-evidence `P01 — Product Discovery`, and `P01.1 — Owner Reconciliation Prep` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. P01.1 added the reconciliation matrix, material intake process, P02/P04 release gate, and the bilingual owner-meeting guide; the gate is defined but not yet satisfied. This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
 
 ## Start here
 
@@ -12,7 +12,8 @@ Repository-based source of truth for Superola product discovery, architecture ex
 2. Read [docs/00-context/product-context.md](docs/00-context/product-context.md) for the durable project summary.
 3. Read [docs/00-context/interview-evidence.md](docs/00-context/interview-evidence.md) before treating a claim as a requirement.
 4. Check [docs/01-product/open-questions.md](docs/01-product/open-questions.md) and [docs/00-context/assumptions.md](docs/00-context/assumptions.md) for unresolved matters.
-5. Use [PLANS.md](PLANS.md) and [plans/README.md](plans/README.md) to start or continue a phase.
+5. Before acting on any owner answer or owner material, use [docs/01-product/owner-reconciliation-matrix.md](docs/01-product/owner-reconciliation-matrix.md) for the intake process and the P02/P04 release gate.
+6. Use [PLANS.md](PLANS.md) and [plans/README.md](plans/README.md) to start or continue a phase.
 
 ## Repository map
 
@@ -26,7 +27,7 @@ Repository-based source of truth for Superola product discovery, architecture ex
 - `docs/07-research/`: focused research work packages.
 - `plans/`: living execution plans and handoffs.
 - `.codex/agents/`: project-scoped specialist agents.
-- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the P01 bilingual working preview; the mature P07 presentation pack remains not started.
+- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the P01 bilingual working preview and the P01.1 bilingual owner-meeting guide; the mature P07 presentation pack remains not started.
 
 ## Evidence discipline
 
