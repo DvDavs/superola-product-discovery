@@ -1,16 +1,25 @@
-# ADR-013 — Application platform: JVM/Spring server-rendered single deployable, with build-failing module-boundary enforcement
+# ADR-013 — Application platform: Kotlin on Spring Boot, one deployable, with build-failing module-boundary enforcement
 
 - Status: PROPOSED
-- Date: 2026-08-11
+- Reconciliation disposition (P03.1): **RECOMMEND ACCEPT** — see `docs/03-technology/p03-decision-reconciliation.md`. Remains `PROPOSED` because this repository's ADR index defines `ACCEPTED` as *approved by the appropriate human decision owner*, and the only precedent (`ADR-004`) required an explicit `DAVID_DIRECTIVE` naming that ADR. The P03 authorization was an authorization to evaluate, not an approval of the result.
 - Decision owner: David (technical decision owner for this repository)
-- Related evidence/requirements: `docs/03-technology/technology-evaluation.md` §1.1, §4.9, §4.10; `docs/02-architecture/p03-decision-inputs.md` `D-09`, `D-10`; `ADR-001`, `ADR-011`, `ADR-012`; `system-architecture.md` §3, §4; `domain-map.md` forbidden-dependency table; `R-007`, `R-032`, `R-034`, `R-035`, `R-036`, `R-047`; `SRC-013`
+- Scope: **platform only.** Kotlin, Spring Boot, the JVM/runtime baseline, Spring Modulith / mechanical module-boundary enforcement, and the one-deployable application architecture. **Web rendering strategy is NOT decided here — it is `ADR-020`.**
+- Related evidence/requirements: `docs/03-technology/technology-evaluation.md` §1.1, §4.9, §4.10; `docs/02-architecture/p03-decision-inputs.md` `D-09`, `D-10`; `ADR-001`, `ADR-011`, `ADR-012`, `ADR-020`; `system-architecture.md` §3, §4; `domain-map.md` forbidden-dependency table; `R-007`, `R-032`, `R-034`, `R-035`, `R-036`, `R-047`; `SRC-013`
 - Supersedes / superseded by: N/A
+
+## Scope correction applied in P03.1
+
+The first version of this ADR packaged the platform decision together with the rendering decision — server-rendered views, htmx, and client-side islands. **Those two decisions have very different reversal costs and must not be approved as one act.** The platform is a VERY HIGH reversal decision, effectively a rewrite. Rendering is LOW–MEDIUM, and **P04 has not yet established the interaction requirements that should decide it.** Approving both under one signature would settle a UX question by architecture side effect — the same failure this repository already refuses on region selection (`ADR-016` rule 1).
+
+Rendering is therefore split out to **`ADR-020`**, which holds the current baseline as provisional and explicitly permits P04 to conclude that a richer client is justified for specific surfaces. Everything below is the platform portion, with its original evidence preserved.
 
 ## Problem / context
 
 `ADR-001` recommends one deployable modular application and states that the decision is only cheap **if boundaries are mechanically enforced** — *"a forbidden cross-module import must fail the build"*, without which the ADR is *"claimed rather than implemented"* (`R-032`). `ADR-001` further asks P03 to report whether enforcement cost scales with boundary count, and to revisit the **boundary set** if it does.
 
-P03 must therefore select a language, a framework, a web-rendering approach and an enforcement mechanism together, because in practice they are one decision.
+P03 must therefore select a language, a framework, a runtime baseline and an enforcement mechanism together, because in practice **those** are one decision: the enforcement mechanism is a property of the ecosystem, so it cannot be chosen after the language.
+
+**Rendering is not part of that bundle**, and P03's first draft was wrong to treat it as one. A rendering approach is chosen inside whichever platform wins, is changeable per surface, and depends on interaction requirements P04 has not yet produced. See `ADR-020`.
 
 Evidence status: the marketplace loop and its invariants are `PROPOSED` (`TECHNICAL_DISCOVERY`). **There is no traffic evidence at all** — `SRC-006` is NOT RECEIVED. Team size is `CONFIRMED` small. David's platform experience is `CONFIRMED` and is an evaluation input only (`R-007`).
 
@@ -20,11 +29,11 @@ One part-time developer who also operates the system. Modelled load peaks **unde
 
 ## Options considered
 
-### Option A — Kotlin on Spring Boot 4.1 / Java 25 LTS, server-rendered views with progressive enhancement, one deployable (recommended)
+### Option A — Kotlin on Spring Boot 4.1 / Java 25 LTS, one deployable (recommended)
 
-Templates in the framework's own view layer, htmx for partial updates, client-side islands only where a genuinely stateful surface demands it. Out-of-band work as a separate process from the same artifact. Boundaries enforced by module verification plus architecture-rule tests plus a database-catalog test.
+One deployable artifact, with out-of-band work as a separate process from that same artifact. Boundaries enforced by Spring Modulith verification plus architecture-rule tests plus a database-catalog test. **The rendering approach inside this platform is decided separately in `ADR-020`; the platform supports server-rendered views, partial-update libraries, client islands, and a JSON API for a separate client, and does not force any of them.**
 
-Benefits: a first-party modular-monolith product whose three verification rules map almost one-to-one onto `domain-map.md`; a framework-native transactional outbox that answers `D-04` with no new always-on component; transaction semantics matching §4 natively; the longest verified platform support horizon; server-rendered HTML makes every `D-09` requirement cheap and eliminates the version-skew bug class.
+Benefits: a first-party modular-monolith product whose three verification rules map almost one-to-one onto `domain-map.md`; a framework-native transactional outbox that answers `D-04` with no new always-on component; transaction semantics matching §4 natively; the longest verified platform support horizon.
 
 Costs: the highest memory floor of the candidates — immaterial at these volumes but front-loaded where the budget is tightest; and roughly one framework upgrade per year, forever (`R-036`).
 
@@ -36,9 +45,11 @@ Rejection factors: no first-party equivalent to the modular-monolith or outbox p
 
 Rejection factors: its own vendor documentation states the backend capabilities *"are not a full backend replacement"*, which means the domain lives elsewhere — the two-deployable shape — or in a layer its vendor says is not one. A verified record of removals, renames and behaviour changes in its latest major. Self-hosting requires a shared cache handler to make caching **correct** across replicas, which P20 turns from optional into mandatory — a new always-on component.
 
-### Option D — Separate JS frontend plus backend API (two deployables)
+### Option D — Separate JS frontend plus backend API, deployed as two independent units
 
 Rejection factors: `ADR-001` names the first additional deployable unit as by far the most expensive increment available, and this applies it to the tier where it buys least at volumes where it buys nothing. URL identity acquires two owners, and `ADR-012`'s single machine-access enforcement point acquires two candidate locations.
+
+**What is rejected here is the second independently deployed unit, not client-side rendering.** A rich client served as static assets from the same deployable, or client islands inside the server-rendered shell, does not create a second deployable and is therefore not excluded by this ADR. That question is `ADR-020`'s.
 
 ### Option E — Go, Python, Ruby, Elixir
 
@@ -54,7 +65,9 @@ Option A, with **three enforcement layers, all failing the build**:
 
 Plus two disciplines: **the boundary rule files are protected**, so weakening `ADR-001` is visible in the history rather than invisible in a diff; and **the publication allowlist is a closed generated type, not a query predicate**, so the compiler enforces `ADR-012` where no static-analysis tool can.
 
-**Approval still required:** David.
+**Not decided here:** the web rendering strategy (`ADR-020`), the region (`ADR-016` rule 1), and anything about client-side interaction. **Approving this ADR does not approve a rendering approach**, and P04 is explicitly free to conclude that specific surfaces need a richer client.
+
+**Approval still required:** David, individually and explicitly. **P03.1 disposition: RECOMMEND ACCEPT.**
 
 ### Answer to `ADR-001`'s open scope note
 
@@ -76,13 +89,13 @@ Plus two disciplines: **the boundary rule files are protected**, so weakening `A
 
 **One asymmetry in the runner-up's rejection, named so it is not hidden.** The runner-up loses partly for having *"no first-party equivalent… both of which would be bespoke"* — while the recommendation itself relies on third-party architecture-rule tests, a third-party job library, and a third-party progressive-enhancement library. **The "first-party or bespoke" standard is applied to one side only, and it should not be.** Ground 1 survives that objection because a first-party *modular-monolith verifier* has no third-party equivalent in either ecosystem; the outbox and event grounds do not, which is why they are withdrawn above.
 
-On rendering: §3 already established no realtime and no server-initiated push, which is precisely the workload server-rendered HTML is optimal for. And `ADR-001`'s asymmetry argument applies here too — **adding a JSON API and a client later is additive if `ADR-011` holds; removing one is not.** Start on the recoverable side.
+**On rendering, this ADR now says only one thing: the platform does not constrain it.** The argument that server-rendered HTML suits §3's workload, and that adding a JSON API later is additive while removing one is not, is a real argument — but it is an argument about rendering, it is `ADR-020`'s, and it must be weighed against P04's interaction requirements rather than inherited from a platform approval.
 
 **`R-007` discipline, stated honestly.** This recommendation aligns with David's background, and after the withdrawals it rests on **two** grounds rather than four. Both are properties of the tooling that anyone can check. **If Ground 1 is falsified — if the declared-dependency mechanism cannot express the forbidden-dependency table — the recommendation should fall, and familiarity must not rescue it.** Ground 2 alone would not carry a VERY HIGH reversal decision.
 
 ## Consequences
 
-Positive: one artifact, one language, one log stream, one rollback; synchronous invariants stay simple; every `D-09` requirement is server routing plus governed data; no version-skew bug class; the enforcement gap in `ADR-001` is closed rather than asserted.
+Positive: one artifact, one language, one log stream, one rollback; synchronous invariants stay simple; the enforcement gap in `ADR-001` is closed rather than asserted. *(The `D-09` and version-skew consequences claimed in the first draft follow from the rendering approach, not from the platform, and are carried in `ADR-020`.)*
 
 Negative: the highest memory floor of the candidates; roughly annual framework upgrades for one person (`R-036`); and a hiring pool narrower than the JavaScript ecosystem, though Java developers read Kotlin.
 
@@ -92,11 +105,13 @@ Delivery: **expand/contract migration discipline is mandatory** (`R-047`) — ol
 
 ## Cost implications
 
-Build: the ten-module scaffolding once; server-rendered templates plus progressive enhancement is less total code than a single-page application. Fixed: one instance tier, memory-driven. Variable: none added per user action. Operator: lowest of the options — one investigation surface. Recurring: roughly one framework upgrade per year, which must be **budgeted, not discovered**. Figures in `docs/03-technology/cost-model.md`.
+Build: the ten-module scaffolding once. Fixed: one instance tier, memory-driven — **USD $35.00/month of application containers at Pilot** rising to USD $125.00 at Growth (`cost-model.md` §3). Variable: none added per user action. Operator: lowest of the options — one investigation surface. Recurring: roughly one framework upgrade per year, which must be **budgeted, not discovered**. Rendering-dependent build cost is in `ADR-020`.
 
 ## Lock-in and exit implications
 
-Vendor lock-in: none — the artifact is a container and the runtime is open source. Internal lock-in: the enforcement layers are what keep module extraction cheap, and they are only effective while the rule files stay protected. **Reversal difficulty is VERY HIGH for the language and framework — effectively a rewrite — and deliberately LOW–MEDIUM for the rendering approach.** The decision therefore carries most scrutiny at approval and least tolerance for revisiting later.
+Vendor lock-in: none — the artifact is a container and the runtime is open source. Internal lock-in: the enforcement layers are what keep module extraction cheap, and they are only effective while the rule files stay protected. **Reversal difficulty is VERY HIGH for the language and framework — effectively a rewrite.** The decision therefore carries most scrutiny at approval and least tolerance for revisiting later.
+
+**This is precisely why rendering was split out.** Rendering reversal is LOW–MEDIUM and per-surface; bundling it into a VERY HIGH decision would have imported the platform's low tolerance for revisiting into a question P04 is supposed to answer.
 
 ## Security and privacy implications
 
@@ -110,10 +125,14 @@ Vendor lock-in: none — the artifact is a container and the runtime is open sou
 
 **So it is recorded as an accepted risk with a named consequence instead:** the platform choice is treated as irreversible after first deploy and is *managed* — through the boundary enforcement in the Decision, which is precisely what keeps module extraction available if the deployment shape ever needs to change, and through budgeting the `R-036` upgrade cadence rather than discovering it. **What P03 buys with this ADR is not the ability to change the platform later; it is the ability to change everything else.** The approval decision should be taken on that basis.
 
-Rendering, any one: a named V1 surface requires client state surviving navigation, evidenced by a specific journey **and** a failed progressive-enhancement attempt; measured p75 interaction latency on request submission above the approved budget, attributable to full-page round trips; or the count of client-side islands exceeding five.
+Rendering triggers moved to `ADR-020`. **They are no longer stated as conditions that would reopen an approved rendering decision, because in P03.1 there is no approved rendering decision to reopen** — the baseline is provisional pending P04.
 
 Enforcement: more than two boundary violations reach the main branch in a quarter, or a second developer joins — either promotes the highest-pressure boundaries to build-tool subprojects, which compose with the current mechanism.
 
 ## Validation
 
-Verified 2026-08-11 from primary sources: the framework line's current release and support baseline; the module-verification library's current release; and that its verification call **throws, failing the build**, on module cycles, internal-package references, and undeclared dependencies. Required instrumentation: a counted log of boundary-rule failures at the check stage, a counted log of violations detected post-merge, per-flow interaction latency, and a counted island inventory in the build.
+Verified **2026-08-11** from primary sources: the framework line's current release and support baseline (Spring Boot 4.1.0, released 2026-06-10); the module-verification library's current release (Spring Modulith 2.1 GA, 2026-06-11); and that its verification call **throws, failing the build**, on module cycles, internal-package references, and undeclared dependencies. Required instrumentation: a counted log of boundary-rule failures at the check stage, and a counted log of violations detected post-merge. *(Interaction-latency and island-inventory instrumentation moved to `ADR-020`.)*
+
+---
+
+*Record dates — ADR authored 2026-08-11 (P03). Scope narrowed to platform-only 2026-08-12 (P03.1); rendering split to `ADR-020`. Evidence access date 2026-08-11; re-verify release lines before any commitment.*

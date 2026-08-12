@@ -15,7 +15,7 @@
 | Media transformation | strong buy | **BUILD — pre-generated derivatives in the worker** | **Architecturally forced.** See §2.1 |
 | Audio and video hosting | strong buy | **NEITHER — link out** | Cost, moderation labour, and rights |
 | Place resolution and geocoding | strong buy | **HYBRID — build the governed `Place` list, buy geocoding for provider base addresses only** | See §2.2 |
-| Map rendering | strong buy | **NEITHER — no map in V1** | No lawful public surface for it |
+| Map rendering | strong buy | **NEITHER — no map assumed in V1.** `ADR-019` Level 3: **decided by P04**, not here | A pin at a provider's exact location has no lawful public surface. **A coarse or area-level surface does, and P04 may want one** — at which point this row is re-costed |
 | **Authentication** | **strong buy** | **BUILD** | **See §2.3. The P00 heuristic was wrong here** |
 | Marketplace authorization and business membership | build | **BUILD — and never outsourced** | `ADR-011`; the domain decides |
 | Technical monitoring | *"analytics infrastructure"* as buy | **BUY, at the smallest free tier** | Bought small; product measurement is built |
@@ -56,7 +56,7 @@ This is the clearest reversal, and it is worth stating why the heuristic failed.
 3. **The `VerificationFact` mismatch.** §2 requires typed, expiring, revocable facts because *"verification is never a boolean on a Business."* Every vendor ships a boolean. **You reimplement the vendor's flagship feature on day one, and the vendor's copy is the one that cannot be revoked.**
 4. **Revocation.** §9 requires operators to suspend an actor. **A safety suspension that takes effect "within 15 minutes" is not a suspension.**
 
-**And the asymmetry that decides it: BUILD→BUY is documented and supported — vendors publish bulk import accepting hashed passwords. BUY→BUILD may be impossible, and hash exportability could not be verified for any vendor.** The documentary observation stands on its own: **vendors document how to get users *in* and are silent on how to get hashes *out*.**
+**The asymmetry P03 said decides it — corrected by P03.1.** BUILD→BUY is documented and supported: vendors publish bulk import accepting hashed passwords. **BUY→BUILD was verified on 2026-08-12 and is vendor-specific, not uniformly hard:** self-service for **Supabase Auth** (bcrypt in a customer-owned table) and **Clerk** (dashboard CSV including hashed passwords); **gated behind a support case for Auth0**; **no documented mechanism for Cognito** — recorded as *no path found*, never as *proven impossible*. **The blanket claim is withdrawn, `ADR-017` is on `HOLD`, and the recommendation below is a working recommendation rather than a settled decision.** Evidence: `docs/07-research/authentication-vendor-verification.md`.
 
 If no export exists, migrating 25,000 accounts means forcing every user to reset — which, against `R-022`, would be **the largest deliberate abandonment event in the product's life.** The mitigation is not a vendor choice; it is owning the credential.
 

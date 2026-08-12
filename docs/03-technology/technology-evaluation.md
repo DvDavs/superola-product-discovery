@@ -32,17 +32,27 @@ Three consequences:
 2. The binding criteria are the ones P02 already named: mechanical boundary enforcement, transactional correctness at `system-architecture.md` §4, one write path, the allowlist projection, one machine-access enforcement point, and one part-time operator. Those are **correctness and maintenance** criteria.
 3. A counter-quantity worth carrying: an assumed 30-second unread-count poll across 200 concurrent authenticated sessions is ≈6.7 requests/second — **comparable to all public traffic at Growth combined.** Polling, not page views, is the plausible dominant load. This is exactly why `system-architecture.md` §3 requires every polling interval to be stated with its query cost.
 
-### 1.2 Human cost is 88–96% of total cost of ownership at every scenario
+### 1.2 Human time is the dominant cost sensitivity — but it is not part of the bill
+
+**Two quantities, deliberately not summed** (`AGENTS.md`, *Cost framing*; `cost-model.md` §1). **Currency: USD.**
+
+**The invoice:**
 
 | | Pilot | Early Marketplace | Growth |
 |---|---|---|---|
-| Infrastructure and services, cash | **$75.98** | **$192.99** | **$560.79** |
-| Infrastructure operations labour | 3.25 h → $244 | 5.00 h → $375 | 9.00 h → $675 |
-| Marketplace operator labour | 8.35 h → $334 | 55.42 h → $2,217 | 340.58 h → $13,623 |
-| **Total cost of ownership** | **~$654** | **~$2,784** | **~$14,859** |
-| **Human share** | **88%** | **93%** | **96%** |
+| **Infrastructure and services, cash** | **USD $75.98** | **USD $192.99** | **USD $560.79** |
 
-Rate assumptions, stated separately because the work differs: **infrastructure operations at $75/hour** (specialist), **marketplace operator case work at $40/hour** (non-specialist). Both are assumptions, neither is owner-validated, and every human figure scales linearly with them.
+**An illustrative sensitivity — not a forecast, not a budget, not a committed operating cost:**
+
+| | Pilot | Early Marketplace | Growth |
+|---|---|---|---|
+| Infrastructure operations labour | 3.25 h → USD $244 | 5.00 h → USD $375 | 9.00 h → USD $675 |
+| Marketplace operator labour | 8.35 h → USD $334 | 55.42 h → USD $2,217 | 340.58 h → USD $13,623 |
+| **Illustrative human total** | **~USD $578** | **~USD $2,592** | **~USD $14,298** |
+
+Rate assumptions, stated separately because the work differs: **infrastructure operations at USD $75/hour** (specialist, band USD $40–150), **marketplace operator case work at USD $40/hour** (non-specialist, band USD $20–60). Both are assumptions, neither is owner-validated, and **every human figure scales linearly with them.** The workload volumes have no measured basis either.
+
+**What the comparison supports: human time is roughly 88–96% of the two tables combined at every scenario, so any decision that saves USD $30 on the invoice and adds one hour of monthly labour is a loss.** That conclusion is robust across the entire rate band. **What it does not support is a combined headline — *"Superola costs USD $14,859/month"* is not a claim this analysis makes.** *(Corrected in P03.1: this section previously carried a `Total cost of ownership` row.)*
 
 **Consequence for every decision in this document: any choice that saves $30 on the invoice and adds one hour of monthly labour is a loss.** `system-architecture.md` P21 already required architecture decisions to be evaluated for the manual queue volume they create. P03 confirms it with numbers, and the numbers are not close.
 
@@ -79,7 +89,7 @@ Used identically across every work package so cost lines are comparable. **Not d
 | # | Decision | **Selected** | Runner-up | Reversal |
 |---|---|---|---|---|
 | — | Backend language and framework | **Kotlin on Spring Boot 4.1, Java 25 LTS** | C# / .NET 10 | **VERY HIGH** |
-| `D-09` | Web rendering | **Server-rendered in the framework's own view layer, htmx for partials, React islands only where a stateful surface demands it** | Full-stack JS/TS framework | LOW–MEDIUM |
+| `D-09` | Web rendering — **NOT DECIDED. `ADR-020`, deferred to P04** | **Working baseline only:** server-rendered in the framework's own view layer, htmx for partials, React islands where a stateful surface demands it. **P04 may conclude a richer client is justified for named surfaces** | Full-stack JS/TS framework; a component-framework client for named authenticated surfaces | LOW–MEDIUM, **and per-surface** |
 | `D-10` | Deployment | **One managed-PaaS deployable + one worker process from the same artifact, single US region** | Self-managed VPS | LOW today |
 | `D-10` | Boundary enforcement | **Spring Modulith `allowedDependencies` + ArchUnit + a cross-schema foreign-key test** | Build-tool subprojects | LOW |
 | `D-01` | Record store | **PostgreSQL 18, one cluster, one database, schema-per-module** | MySQL 8.4 — **not disqualified**, see §4.1 | MEDIUM |
@@ -88,8 +98,8 @@ Used identically across every work package so cost lines are comparable. **Not d
 | `D-04` | Durable deferred work | **A job table in the SAME PostgreSQL instance** | Cloud queue | LOW |
 | `D-05` | Notification channel | **AWS SES** | Postmark | LOW |
 | `D-06` | Media | **S3-compatible object storage with zero egress + pre-generated fixed derivative set + LINK OUT audio and video** | Metered-egress CDN storage | LOW–MEDIUM |
-| `D-07` | Place resolution | **Governed internal `Place` list (open gazetteer) + a permanent-storage geocoder for provider base addresses ONLY + NO rendered map** | OpenCage | LOW (~$50, four days) |
-| `D-08` | Authentication | **BUILD on the framework's established security library, credentials in `D-01`** | Supabase Auth | BUILD→BUY easy; BUY→BUILD hard |
+| `D-07` | Place resolution — **split by P03.1: architecture recommended, vendor on `HOLD` (legal), map moved to P04** | **Governed internal `Place` list (open gazetteer) + a permanent-storage geocoder for provider base addresses ONLY.** No rendered map is **assumed** in the cost model; it is no longer **decided** here | OpenCage | LOW (~USD $50, four days) |
+| `D-08` | Authentication — **`ADR-017` on `HOLD` after P03.1 verification** | **BUILD on the framework's established security library, credentials in `D-01`** — a *working* recommendation, not a settled decision | Supabase Auth (case strengthened); Clerk | BUILD→BUY easy; **BUY→BUILD is vendor-specific and verified**, not uniformly hard |
 | `D-11` | Observability | **Free-tier error tracker + free-tier log store + external uptime + a dead-man's switch on jobs. $0 at Pilot.** Audit in the same database, separate schema, separate owning role | Single-vendor bundle | LOW |
 | `D-12` | Labels and localization | **In `D-01`, Catalog's schema, versioned label sets** | — | LOW |
 | `D-13` | AI intent mapping | **DO NOT SPEND.** Gate closed and unanswerable in P03 | — | n/a |
@@ -274,7 +284,9 @@ At Growth: **~$3.53/month**, against $25–50 from an origin with metered egress
 
 ### 4.7 `D-07` — Place resolution and geocoding
 
-**Selected: a governed internal `Place` list for all customer-side location input, a permanent-storage geocoder for provider base addresses ONLY, and NO rendered map in V1.**
+**Selected: a governed internal `Place` list for all customer-side location input, and a permanent-storage geocoder for provider base addresses ONLY.**
+
+> **P03.1 correction.** This section originally selected *"and NO rendered map in V1"* as part of the same decision. **That is a product/UX conclusion, not a technology selection, and it has been moved to P04** (`ADR-019` Level 3). The **invariant** — precise provider-private base location is never publicly exposed — is unchanged and absolute. **The vendor selection is separately on `HOLD` pending two legal readings.** Everything below is preserved as written; read the map paragraph as *why the cost model assumes no map*, not as a prohibition.
 
 **Two candidates are disqualified on terms, not price.**
 
@@ -299,7 +311,9 @@ And the reversal that makes it work: the geocoder's **permanent** tier — no fr
 
 **There is also a coherence argument, not only a cost one.** `Market` is a governed (Category × Place-at-a-stated-granularity) pair. If Markets are governed and enumerable, the customer-side location vocabulary is **already constrained to a governed list by construction**. Free-text customer geocoding would let a customer express a location no Market covers, producing `undetermined` eligibility for structural rather than data reasons. **It is not merely expensive — it is incoherent with the `Market` concept.**
 
-**No rendered map in V1, and the argument is classification, not cost.** §12 classifies precise provider base location as provider-private, readable by the eligibility computation and *"never emitted to a projection, a search result, a notification, or analytics."* **There is no public surface on which a pin at a provider's location could lawfully be drawn.** No booking, availability, routing, directions or service-area drawing tool exists in V1. The geographic interface reduces to: enter an address, display a coarse location label. **One product decision removes the largest line item on every vendor's price sheet *and* dissolves the map-coupled storage restrictions that disqualified the largest platform.** An open-source renderer is therefore also unnecessary — not because it is inadequate, but because there is nothing to render.
+**On maps — the invariant, and the conclusion P03.1 separated from it.** §12 classifies precise provider base location as provider-private, readable by the eligibility computation and *"never emitted to a projection, a search result, a notification, or analytics."* **There is therefore no public surface on which a pin at a provider's exact location could lawfully be drawn.** That is the invariant and it holds.
+
+**What does not follow is "no map."** A city centroid, a governed coarse `Place`, a declared service area or market coverage emits no provider-private data. **P03 had no UX evidence to reject those surfaces**, and this document originally wrote the invariant and the product conclusion as one sentence. **The narrower true statement:** no booking, availability, routing, directions or service-area drawing tool exists in V1, and no identified V1 requirement needs a map — so the geographic interface currently reduces to *enter an address* and *display a coarse location label*. **The cost model assumes that**, and it is that assumption which removes the largest line item on every vendor's price sheet and dissolves the map-coupled storage restrictions that disqualified the largest platform. **If P04 approves a geographic surface, the line is re-priced against the specific surface — see `ADR-019` Level 3.**
 
 **Precision is a correctness requirement, and it decides the vendor.** The selected geocoder returns an accuracy classification plus a match code, which maps almost one-to-one onto the three-valued `LocationEligibility`: rooftop/parcel/point may drive radius eligibility; interpolated/approximate yield `undetermined`; intersection routes to operator review. **That is the structural fix for the reported legacy defect, implemented directly.** A vendor returning no precision signal is a correctness problem, not a convenience problem.
 
@@ -322,7 +336,9 @@ And the reversal that makes it work: the geocoder's **permanent** tier — no fr
 3. **The `VerificationFact` mismatch.** §2 requires **typed, expiring, revocable** verification facts, because *"verification is never a boolean on a Business"*. Every vendor ships `email_verified` as a boolean on the user. Superola would shadow it immediately — **reimplementing the vendor's flagship feature on day one, with the vendor's copy being the one that cannot expire or be revoked.**
 4. **Revocation.** §9 requires operators to suspend an actor. With a server-side session in Superola's own store, revocation is a delete and is immediate. With a vendor-issued token, revocation is bounded by token lifetime unless you call the vendor per request — discarding the reason the token was chosen. **A safety suspension that takes effect "within 15 minutes" is not a suspension.**
 
-**And the asymmetry that decides it.** BUILD→BUY is a documented, supported path: vendors publish bulk import accepting hashed passwords. **BUY→BUILD may be impossible — and this is the single most important unverified item in the whole evaluation: password-hash exportability could not be confirmed for any vendor.** The documentary observation stands on its own: **vendors document how to get users *in* and are silent on how to get hashes *out*.** If no export exists, migrating 25,000 accounts means forcing every user to reset — against `R-022`, which already treats verification abandonment as a measured cost, that would be the largest deliberate abandonment event in the product's life. **The mitigation is not a vendor choice. It is owning the credential.**
+**The asymmetry that P03 said decides it — and the P03.1 correction that removes it.** BUILD→BUY is a documented, supported path: vendors publish bulk import accepting hashed passwords. **P03 wrote that BUY→BUILD "may be impossible" because password-hash exportability could not be confirmed for any vendor, and inferred a general documentary asymmetry. P03.1 verified the fact and falsified the inference for two of four vendors:** Supabase documents the hashes as bcrypt in a customer-owned table; Clerk documents a self-service export that *"includes their hashed passwords"*. **Auth0 is gated behind a support case; Cognito has no documented mechanism, which is recorded as *no path found* rather than *proven impossible*.**
+
+**What survives is narrower and still real:** where no export exists, migrating 25,000 accounts means forcing every user to reset — against `R-022`, which already treats verification abandonment as a measured cost, that would be the largest deliberate abandonment event in the product's life. **That risk is now vendor-specific rather than categorical.** `ADR-017` is on **`HOLD`**; the recommendation stands as a *working* recommendation on the axes that survive — revocation semantics, the `VerificationFact` model, and `ADR-004` dual-role account shape. Evidence: `docs/07-research/authentication-vendor-verification.md`, accessed 2026-08-12.
 
 **Honest cost of BUILD, stated as an assumption:** password hashing, session management, email verification, password reset, rate limiting and lockout, on a framework's battle-tested primitives — **8–12 engineering days initially, ~2 days/year maintenance.** That is real money and real risk. The argument is not that BUILD is free; **it is that BUILD is the reversible option.**
 
@@ -334,9 +350,11 @@ And the reversal that makes it work: the geocoder's **permanent** tier — no fr
 
 ### 4.9 `D-09` — Web rendering and public distribution
 
-**Selected: one server-rendered application in the framework's own view layer, htmx for partial updates, React islands only where a genuinely stateful surface demands it.**
+**Working baseline, NOT a decision: one server-rendered application in the framework's own view layer, htmx for partial updates, React islands where a genuinely stateful surface demands it.**
 
-`system-architecture.md` §3 already established there is **no realtime, no server-initiated push, and state is fetched on navigation or explicit refresh.** That is precisely the workload a server-rendered application is optimal for, and nothing in the repository describes a rich-client requirement.
+> **P03.1 correction.** This was originally written as a selection and packaged into `ADR-013` alongside the platform. **Rendering is now `ADR-020` and is `DEFERRED PENDING P04 UX VALIDATION.`** The reasoning below is preserved because it is a good reason to **start** here — **it is not a reason to approve it before P04 has produced any interaction requirement.** P04 may legitimately conclude that a richer client is justified for named surfaces, and this document does not prejudge that. **Two things are not provisional under any option: authorization is decided in the domain, never in a route guard, a template or a client (`ADR-011`); and public discovery pages stay server-readable.**
+
+`system-architecture.md` §3 already established there is **no realtime, no server-initiated push, and state is fetched on navigation or explicit refresh.** That is precisely the workload a server-rendered application is optimal for, and **nothing in the repository yet describes a rich-client requirement — because nothing in the repository yet describes the interactions at all.**
 
 Every `D-09` requirement becomes cheap: canonical URLs, retained redirect history, locale-distinct URLs, language links and sitemap are **server routing plus a governed table**, and machine-access policy is **one filter ahead of every controller** — literally what `ADR-012` asks for. It also eliminates the version-skew bug class entirely and needs none of the multi-instance cache coordination a full-stack JS framework documents for self-hosting.
 
@@ -480,16 +498,17 @@ The two cheaper alternatives are **already required by P02** and cost ~13–25 i
 
 ## 5. Cost model summary
 
-Full detail in `docs/03-technology/cost-model.md`. Headline:
+Full detail in `docs/03-technology/cost-model.md`, which is the **single arithmetic source of truth**; `cost-alternatives.md` explains why each line is what it is. **The headline is the cash bill. The human rows below it are a separately labelled sensitivity and must not be added to it.**
 
 | | Pilot | Early Marketplace | Growth |
 |---|---|---|---|
-| Fixed platform | $75.30 | $187.05 | $505.20 |
-| Usage-variable | $0.68 | $5.94 | $55.59 |
-| **Cash bill** | **$75.98** | **$192.99** | **$560.79** |
-| Human, infra ops @ $75/h | $244 | $375 | $675 |
-| Human, marketplace operator @ $40/h | $334 | $2,217 | $13,623 |
-| **Total cost of ownership** | **~$654** | **~$2,784** | **~$14,859** |
+| Fixed platform | USD $75.30 | USD $187.05 | USD $505.20 |
+| Usage-variable | USD $0.68 | USD $5.94 | USD $55.59 |
+| **CASH BILL** | **USD $75.98** | **USD $192.99** | **USD $560.79** |
+| *Separately — illustrative human sensitivity, not added above* | | | |
+| Human, infra ops @ an assumed USD $75/h | USD $244 | USD $375 | USD $675 |
+| Human, marketplace operator @ an assumed USD $40/h | USD $334 | USD $2,217 | USD $13,623 |
+| *Illustrative human total* | *~USD $578* | *~USD $2,592* | *~USD $14,298* |
 
 **Deliberately excluded:** payment and booking (`G-02`), the legacy import environment (`G-09`), the AI experiment (recommended against), and second-locale content operations (a staffing decision, not an infrastructure line).
 
@@ -567,4 +586,6 @@ P03 was instructed not to redesign P02 unless a technology constraint proved an 
 
 **Repository state, not chat history, holds the sources. If a figure in this document is not traceable to that register, treat it as unverified.**
 
-**The principal `NOT VERIFIED` gaps, restated here because they qualify conclusions in this document rather than only prices:** the deep comparative case against MySQL and other relational candidates (§4.1 — PostgreSQL was verified *sufficient*, the alternatives were **not** verified insufficient); **password-hash exportability for any authentication vendor** (§4.8 — the axis on which that recommendation rests, and the most important unverified item in the phase); the object-storage custom-domain and content-type seam (§4.6); the two legal readings on geocoding terms (§4.7); several managed-hosting instance prices and standby-node pricing; and delivery-network cache-purge propagation times, which **no vendor publishes** — meaning P20's bounded propagation must be **measured in V1, never assumed.**
+**The principal `NOT VERIFIED` gaps, restated here because they qualify conclusions in this document rather than only prices:** the deep comparative case against MySQL and other relational candidates (§4.1 — PostgreSQL was verified *sufficient*, the alternatives were **not** verified insufficient); the object-storage custom-domain and content-type seam (§4.6); the two legal readings on geocoding terms (§4.7); several managed-hosting instance prices and standby-node pricing; and delivery-network cache-purge propagation times, which **no vendor publishes** — meaning P20's bounded propagation must be **measured in V1, never assumed.**
+
+**Closed by P03.1, and the result went against this document's own conclusion:** ~~password-hash exportability for any authentication vendor~~ was verified on 2026-08-12 and is **self-service for Supabase and Clerk**, **gated for Auth0**, and has **no documented mechanism for Cognito**. `ADR-017` moved to `HOLD`. **Residual gaps carried in its place:** Clerk's exported hash format; whether Auth0 access tokens survive session revocation; and Auth0's support-case export SLA. Full evidence: `docs/07-research/authentication-vendor-verification.md`.

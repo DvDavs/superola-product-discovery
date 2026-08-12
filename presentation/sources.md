@@ -65,3 +65,33 @@ The preview names **no** framework, database, cloud, search product, payment ven
 | Preview 7 — what is needed from the owner | Three decisions that materially change cost: the V1 stopping boundary (`G-02`), one or two operating languages (`G-05`), and legal permission for legacy records (`G-09`). | `docs/01-product/owner-reconciliation-matrix.md` gates; `A-004`, `A-016`, `A-007` | Open questions | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
 
 **The preview names no vendor and no product.** It presents only the *shape* of the recommendation and the cost consequences, because vendor selection is David's decision to approve and is not an owner-facing question. It does not present any `PROPOSED` item as approved, and it states in both languages that no technology is bought or contracted.
+
+### P03.1 revisions to this preview
+
+| Change | Why |
+|---|---|
+| **USD stated on every monetary figure** | `AGENTS.md` currency policy. A bare `$` is ambiguous to a reader in Mexico. **No MXN conversion was added** — exchange rates are time-sensitive and change no comparison. |
+| **The combined "Total" column was removed.** Technology cash is Preview 1 and §3; the human figure moved to §3.1 and is labelled an **illustrative sensitivity** that says in both languages *"this table is NOT added to the one above"* | Presenting ~USD $14,859/month as a Superola operating cost would present two assumed hourly rates and unmeasured workloads as a bill. `cost-model.md` §1 now carries the same split. |
+| **Rendering marked as a starting point, not a decision** | `ADR-020`. P04 owns it. |
+| **Authentication disclosed as on hold, with the verification result stated honestly** | `ADR-017` moved to `HOLD` after P03.1 verification falsified its deciding claim for two of four vendors. **Disclosing a finding that went against our own recommendation is the point.** |
+| **The map bullet rewritten** | The privacy invariant is retained absolutely; the product conclusion moved to P04. |
+| **AI bullet extended with the bounded assisted-intake experiment** | `ai-evaluation.md` §8.1. The search-path recommendation is unchanged; the wording no longer implies AI has no product role. |
+
+## Cost Explainer v0.1
+
+> Status: `PROPOSED — DAVID APPROVAL REQUIRED`. `presentation/cost-explainer-v0.1.md` is bilingual because it is shown directly to the owner; this register remains English only. Added by P03.1.
+>
+> **It contains no arithmetic of its own.** Every figure is reproduced from `docs/03-technology/cost-model.md` §1.1, §3, §4 and §7, which is the single arithmetic source of truth. **Prices verified 2026-08-11; authentication vendor facts 2026-08-12.**
+
+| Section | Claim or content | Canonical source | Evidence label | Provenance | Review status |
+|---|---|---|---|---|---|
+| 1 — what the technology costs | USD $76 / $193 / $561 per month; volumes are assumptions; the unaudited legacy count sized nothing. | `cost-model.md` §1.1, §2.2 | `PROPOSED`; **volumes are stated ASSUMPTIONS** | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 2 — where the money goes | Per-category anatomy of the Pilot and Growth bills, reconciling exactly to the totals in section 1. | `cost-model.md` §3, §4; `cost-alternatives.md` §1 | `PROPOSED` | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 3 — why not the cheapest server | ~USD $8/hour break-even between managed and self-managed. | `cost-model.md` §6; `ADR-016`; `cost-alternatives.md` §2 | `PROPOSED`; **hourly rate is an ASSUMPTION**; the break-even form is rate-independent | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 4 — which decisions save the most | Zero-egress media, the governed `Place` model, A/V link-out, in-database search, no AI in the critical path. | `cost-alternatives.md` §4–§9; `ADR-018`, `ADR-019`, `ADR-014`; `ai-evaluation.md` §6 | `PROPOSED` | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 5 — the human cost, separately | ~USD $578 / $2,592 / $14,298 as an **illustrative sensitivity**, with both assumed rates visible and an explicit instruction not to add it to section 1. | `cost-model.md` §1.2, §5 | `PROPOSED`; **rates and workloads are ASSUMPTIONS, not a forecast or commitment** | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 6 — what is not included | Payments/booking, legacy migration, marketing/acquisition/content/legal, salaries, a rendered map. | `cost-model.md` §10; `cost-alternatives.md` §11 | Exclusions, stated | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 7 — what could raise the bill | Payments, legacy approval, a second operating language, runaway public traffic, a rendered map. | `cost-model.md` §8, §11; `internationalization-architecture.md` §4 | `PROPOSED` | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+| 8 — what remains open | Rendering, authentication, map, geocoding vendor, region, AI-assisted intake — each with a named owner. | `p03-decision-reconciliation.md` §2, §4; `ADR-017`, `ADR-019`, `ADR-020` | Open decisions | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
+
+**The explainer names no vendor and no product**, and states in both languages that it is an illustrative planning scenario rather than a forecast.

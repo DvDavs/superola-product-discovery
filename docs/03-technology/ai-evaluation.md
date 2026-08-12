@@ -309,11 +309,48 @@ Criteria applied: is it on a critical path? does a human still review the output
 | **Provider profile-completion suggestions** | **NO — the AI version is worse than the free version** | It generates provider-authored public content that Superola publishes. `R-011` warns thin or duplicate public pages *"convert a discovery strategy into search-quality and maintenance debt"*, and `ai-discoverability.md` requires people-first differentiated content with no mass thin pages. **An AI that fills profiles produces exactly that, at scale, on the surface carrying the acquisition hypothesis.** It also creates a truthfulness problem: machine-suggested claims a provider clicks through become claims Superola publishes. **The free alternative is strictly better — prompt the provider about which governed fields are missing. That is a completeness check V1 already has** |
 | **Spanish/English translation of governed labels** | **MARGINAL** | Not on a critical path; build-time and governance-time only. Human review mandatory — **a mistranslated category label is a permanent discovery defect that silently misroutes an entire category's demand in the second locale.** Volume is tens to low hundreds of labels; a human does that in hours. **The only item here with zero privacy exposure.** Use as a drafting aid; do not build a pipeline |
 
+### 8.1 AI-assisted request intake / form prefill — a bounded future experiment for P04
+
+**Added in P03.1. It reverses nothing above and nothing in §10.** The recommendation against a natural-language intent mapper on the **search** path stands unchanged, and no AI infrastructure is proposed for the V1 critical path. **What this section corrects is a wording problem: P03 read as though AI has no useful product role in Superola at all, and that is a stronger claim than the evidence supports.**
+
+**The shape.** A customer writes free text at the point of *submitting a request*:
+
+> *"I need a mariachi for a quinceañera in Houston next Saturday for 150 people, around $1,500."*
+
+The experiment would: extract **known structured request fields** — category, `Place`, event date, guest count, budget band — **show them to the user**, let the user **confirm or correct** every one, and then hand off to the ordinary deterministic marketplace flow. **The model proposes; the form disposes.**
+
+**What it explicitly is not.** Not authoritative ranking. Not eligibility. Not a replacement for the structured form, which `DB-08` requires to *"exist and be sufficient alone"*. **Nothing may depend on the model's output**, and a model outage degrades the flow to typing, not to failure.
+
+**Why this is a materially different proposition from the §1–§7 mapper**, and the difference is structural rather than a matter of degree:
+
+| | Search-path intent mapper (**recommended against**) | Assisted intake (**bounded experiment**) |
+|---|---|---|
+| Attaches to | **searches** — 8,000 / 80,000 / **600,000** per month | **submitted requests** — 300 / 3,000 / **20,000** per month |
+| Reachable by | **anonymous public traffic** — the acquisition hypothesis itself | an **authenticated, rate-limited, intentional** action |
+| Unbounded-cost exposure | **USD $3,875–$340,848 for one un-rate-limited month** | bounded by RFQ volume and an application-enforced ceiling |
+| Correction path | none — the user sees results, not an interpretation | **the user sees the extracted fields and fixes them** |
+| Failure mode | silently wrong results | visibly wrong fields the user corrects |
+
+**At Growth there are 30× fewer submitted requests than searches.** That is a difference in kind, not a discount.
+
+**Parametric cost only — no figure here is committed and none appears in any total in `cost-model.md`.** At USD $0.01 per submitted request: USD $3 / USD $30 / **USD $200** per month. At USD $0.05: USD $15 / USD $150 / **USD $1,000**. Comparison in `cost-alternatives.md` §9.
+
+**Preconditions, all of which are already required elsewhere and none of which this experiment may waive:**
+
+1. **A hard application-enforced cost ceiling**, not a vendor console alert — §6's distinction, unchanged.
+2. **Request free text is customer-private, assume-contains-contact-data** (`security-privacy-architecture.md` §12). **It may not leave Superola without a resolved lawful basis and a verified zero-retention term.** `Q-033` is unresolved and blocks this exactly as it blocks the mapper.
+3. **Optional and skippable.** The structured form remains the primary path and must be sufficient alone.
+4. **The guided structured entry flow ships first** (`ai-evaluation.md` §3(b)). It is a prerequisite, not an alternative — **you cannot measure whether prefill helps against a baseline that does not exist.**
+
+**Who decides: P04.** This is a UX question — does assisted intake measurably reduce request-composition abandonment (`R-022`) against the guided form? **If P04 does not find an interaction problem worth testing, the experiment does not happen, and P03.1 does not prejudge that.**
+
 ### Net finding
 
-One plausible yes behind a gate that may never open, on a baseline where the work may not exist. One narrow conditional yes that should use a purpose-built classifier rather than a general model. One marginal. Two nos.
+One plausible yes behind a gate that may never open, on a baseline where the work may not exist. One narrow conditional yes that should use a purpose-built classifier rather than a general model. One marginal. Two nos. **And one bounded, optional, capped experiment handed to P04 rather than to P03 — because it is a question about an interaction, not about a model.**
 
 **Measured against "is it genuinely cheaper than not doing it", AI is not a meaningful cost saver anywhere in Superola V1. The largest AI-adjacent saving available is not doing something at all — `D-06`'s link-out alternative, which removes the media-moderation cost by removing the media.**
+
+**One clarification P03.1 adds, because the sentence above is about *cost* and was being read as a verdict on *value*: "not a cost saver" is not the same as "no useful product role."** §8.1's assisted intake would not be funded to save money — **it would be funded to reduce request-composition abandonment**, which is a product outcome, not a cost line. **P03 should not be summarised as "AI is useless to Superola."** It should be summarised as: **no AI belongs in the V1 critical path, no AI is worth spending on to save money, and the first place worth *testing* is assisted intake — not ranking.**
 
 ## 9. Future agent readiness — nothing further is needed in V1
 

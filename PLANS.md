@@ -6,7 +6,7 @@ Plans are living coordination documents for substantial phases. They make work r
 
 Each plan under `plans/` must include:
 
-1. ID, title, owner, status, and last updated date.
+1. ID, title, owner, and status. **Dates are volatile metadata and belong in a footer at the end of the plan, not in the header** — see `AGENTS.md`, *Stable document prefix policy*. Status, owner and authorization stay at the top because they change how the plan is interpreted. **Plans written before this rule still carry a header date; that is grandfathered. Move it only when the plan is substantively modified — do not sweep the directory to comply.**
 2. Objective and non-goals.
 3. Context and authoritative inputs.
 4. Known constraints and evidence labels.

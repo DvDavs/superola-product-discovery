@@ -10,17 +10,35 @@
 
 ## 1. The headline, before the arithmetic
 
+**Currency: USD throughout this document.** Every `$` figure is US dollars.
+
+**Two quantities, deliberately not added together.** The technology cash bill is an invoice Superola would actually receive. The human figures are an **illustrative sensitivity** built on assumed hourly rates and assumed workloads, neither of which is owner-validated. Combining them into one headline presents an assumption as a bill, and `AGENTS.md` now forbids it.
+
+### 1.1 Technology / infrastructure cash bill — the invoice
+
 | | Pilot / Validation | Early Marketplace | Growth |
 |---|---|---|---|
-| **Fixed monthly platform** (§3) | $75.30 | $187.05 | $505.20 |
-| **Usage-variable** (§4) | $0.68 | $5.94 | $55.59 |
-| **CASH BILL** | **$75.98** | **$192.99** | **$560.79** |
-| Human — infrastructure operations (§5.1) | 3.25 h → $243.75 | 5.00 h → $375.00 | 9.00 h → $675.00 |
-| Human — marketplace operator case work (§5.2) | 8.35 h → $334 | 55.42 h → $2,217 | 340.58 h → $13,623 |
-| **TOTAL COST OF OWNERSHIP** | **~$654** | **~$2,784** | **~$14,859** |
-| **Human share of total** | **88%** | **93%** | **96%** |
+| **Fixed monthly platform** (§3) | USD $75.30 | USD $187.05 | USD $505.20 |
+| **Usage-variable** (§4) | USD $0.68 | USD $5.94 | USD $55.59 |
+| **CASH BILL** | **USD $75.98** | **USD $192.99** | **USD $560.79** |
 
-**The finding this model exists to deliver: the infrastructure bill is not the cost.** At every modelled volume, human time is between 88% and 97% of total cost of ownership. **Any decision that saves $30 on the invoice and adds one hour of monthly labour is a loss.** `system-architecture.md` P21 already required architecture decisions to be evaluated for the manual queue volume they create; this table is that requirement with numbers attached.
+**This table is the single arithmetic source of truth for technology cost in this repository.** `cost-alternatives.md` reproduces it and explains it; it does not recompute it. Every derived figure elsewhere must reconcile to these three totals.
+
+### 1.2 Human operational cost — an illustrative sensitivity, not a forecast
+
+| | Pilot / Validation | Early Marketplace | Growth |
+|---|---|---|---|
+| Infrastructure operations (§5.1) at an **assumed** USD $75/h | 3.25 h → USD $243.75 | 5.00 h → USD $375.00 | 9.00 h → USD $675.00 |
+| Marketplace operator case work (§5.2) at an **assumed** USD $40/h | 8.35 h → USD $334 | 55.42 h → USD $2,217 | 340.58 h → USD $13,623 |
+| **Illustrative human total** | **~USD $578** | **~USD $2,592** | **~USD $14,298** |
+
+**Every figure in §1.2 scales linearly with two assumed rates (sensitivity bands USD $40–150/h and USD $20–60/h) and with workload assumptions that have no measured basis.** It is not a forecast, not a budget, and not a committed Superola operating cost. **If David performs the work the cash cost is zero and the real cost is his unavailable development time.**
+
+### 1.3 What the two tables together are actually for
+
+**The finding this model exists to deliver: the infrastructure bill is not the cost.** Human time is the dominant sensitivity at every modelled volume — roughly 88% to 96% of §1.1 plus §1.2 combined. **The decision rule that follows is robust across the entire rate band: any decision that saves USD $30 on the invoice and adds one hour of monthly labour is a loss at any rate above USD $30/hour.** `system-architecture.md` P21 already required architecture decisions to be evaluated for the manual queue volume they create; this is that requirement with numbers attached.
+
+**What it is not for is quoting a total.** *"Superola costs USD $14,859/month"* is not a statement this model supports, and it must not appear in owner-facing material. **The invoice is §1.1. The staffing question is a separate question with a separate owner.**
 
 ## 2. Rate and volume assumptions
 
@@ -249,7 +267,7 @@ This is `D-13`'s unit-economics inversion appearing in a second capability — a
 | Item | Pilot | Early | Growth | Note |
 |---|---|---|---|---|
 | **Search engine, if a trigger fires** | — | +$0–35 | +$35–350 | **Verified: a usage-priced managed engine is ~$0 at Pilot and ~$295/month at Growth; a serverless cluster carries a $350.40/month floor from day one.** The dollar figure is the small part — the real costs are a full reindex on every taxonomy change (`R-010` guarantees these), a permanent divergence support queue, two sources of truth, and a new *published but not yet discoverable* product state |
-| **AI intent mapper** | *parametric* | *parametric* | *parametric* | **Recommended against** (`ai-evaluation.md`). Parametrically, at $0.001/query: $8 / $80 / **$600**. At $0.01/query: $80 / $800 / **$6,000** — **4.6× the entire verified infrastructure bill at Growth.** And one un-rate-limited month of an anonymously reachable endpoint is **$3,875 to $340,848** with zero marketplace effect |
+| **AI intent mapper** | *parametric* | *parametric* | *parametric* | **Recommended against** (`ai-evaluation.md`). Parametrically, at $0.001/query: $8 / $80 / **$600**. At $0.01/query: $80 / $800 / **$6,000** — **10.7× the entire technology cash bill at Growth** (6,000 ÷ 560.79). *(Corrected in P03.1; the figure was stated as 4.6× and reproduces from no denominator in this model.)* And one un-rate-limited month of an anonymously reachable endpoint is **$3,875 to $340,848** with zero marketplace effect |
 | **Video and audio hosting** | — | — | **~$429/month** | **Recommended against.** Scales with anonymous views; 15× per-asset human moderation; plus unpriced music-licensing exposure in the owner-reported categories (`R-043`) |
 | **On-the-fly image transformation** | — | — | ~$177/month | **Architecturally excluded** — incompatible with the processing-state requirement |
 | **Second locale content operations** | — | *staffing* | *staffing* | **Not an infrastructure line.** Structural cost is near-zero; operational cost is HIGH and recurring — *"a multiplier on every queue, not a new queue."* A headcount decision, deliberately not priced |
@@ -266,7 +284,7 @@ This is `D-13`'s unit-economics inversion appearing in a second capability — a
 | Delivery network | Zone export | **LOW** | Lower time-to-live values first |
 | Transactional email | Suppression list export | **LOW–MEDIUM** | Code is 2–4 days; **the 2–4 week sender-reputation warm-up is the real cost** |
 | Geocoding | Coordinates owned for own business use | **LOW** | ~$75 (15,000 × $5.00/1,000) and a few days to re-geocode the whole corpus, **because `GeoPoint.provenance` is mandatory** |
-| Authentication | **BUILD — you hold the hashes** | **LOW outbound** | **BUY→BUILD may be impossible. Hash exportability could not be verified for any vendor** |
+| Authentication | **BUILD — you hold the hashes** | **LOW outbound** | **Corrected in P03.1.** Hash exportability is now **VERIFIED self-service for Supabase and Clerk**, **GATED behind a support case for Auth0**, and **no documented mechanism for Cognito**. The blanket claim that BUY→BUILD may be impossible is **withdrawn**; `ADR-017` is on `HOLD` while the argument is re-run. Evidence: `docs/07-research/authentication-vendor-verification.md`, accessed 2026-08-12 |
 
 **Deletion proof is not a database feature and must not be recorded as one (`R-038`).** It is a product capability: a per-subject enumeration query complete by construction, an audit record written by a different role, a re-run returning zero retained as evidence, and **an explicitly disclosed exclusion for the backup and point-in-time-recovery window.** A recovery window that can restore to before a deletion is a truthful limit and must be stated, not hidden.
 
@@ -329,9 +347,18 @@ All accessed **2026-08-11**. **Re-verify before purchase.**
 | **Render instance and workspace prices; Hetzner per-plan prices; DigitalOcean load-balancer price** | Render cannot be selected until confirmed; the self-managed comparator's Early and Growth fixed cost is incomplete |
 | **All major-cloud supporting-cast lines** — load-balancer hours, network-gateway hours and per-GB, public-address hours, log ingestion, support-plan minimum | That option is **deferred, not costed**. No figure was estimated |
 | **Delivery-network cache-purge propagation time** | **No vendor publishes one.** P20's bounded propagation must be **measured in V1, never assumed** |
-| **Password-hash exportability for any authentication vendor** | The axis on which `ADR-017` is recommended. Not a price, and the most important unverified item in the phase |
+| ~~**Password-hash exportability for any authentication vendor**~~ | **CLOSED IN P03.1 — and the P03 claim was falsified for two of four vendors.** Verified self-service for Supabase (bcrypt in `auth.users.encrypted_password`) and Clerk (dashboard CSV *"includes their hashed passwords"*); gated behind a support case for Auth0; no documented mechanism for Cognito. `ADR-017` moved to `HOLD`. **Residual gaps carried instead: Clerk's exported hash format; whether Auth0 access tokens survive revocation; Auth0's support-case SLA.** Evidence: `docs/07-research/authentication-vendor-verification.md`, accessed 2026-08-12 |
+| **Managed MySQL pricing at the selected host** | Never read from an official page. **No price advantage is claimed for PostgreSQL and none may be stated** — the `ADR-014` case is capability and reversal, not price |
+| **Postmark plans above the published 10,000/month base** | The Growth email comparison in `cost-alternatives.md` §5 is an extrapolation of published overage rates, explicitly labelled as such, not a quoted plan |
+| **Dynamic-map pricing under any vendor** | Not modelled, because `ADR-019` assumed no rendered map. **If P04 approves a geographic surface, this line must be researched rather than estimated** |
 | **The object-storage custom-domain / content-type seam** | Highest-priority item before adopting `ADR-018` |
 | **The two geocoding legal readings** | Requires counsel, not research. Blocks `ADR-019` adoption |
 | **Sonnet-tier model pricing after 2026-08-31** | An introductory rate with a known expiry — see `ai-evaluation.md` §5 |
 
 **Repository inputs:** `docs/02-architecture/p03-decision-inputs.md` (cross-cutting criteria) · `system-architecture.md` (P21) · `domain-map.md` (per-module cost annotation) · `security-privacy-architecture.md` §4, §9, §10, §12 · `internationalization-architecture.md` §4 · `docs/05-roadmap/mvp-scope.md` · `risks.md` (`R-021`, `R-031`, `R-033`) · `technology-evaluation.md`, `ai-evaluation.md` · `SRC-013`, `SRC-014`.
+
+**Companion document:** `cost-alternatives.md` explains **why** each of these decisions was taken, what the runner-up was, and what would make a different option win. It reproduces the totals in §1.1 and does not recompute them — **this document remains the single arithmetic source of truth.**
+
+---
+
+*Record dates — model built 2026-08-11 (P03); all prices accessed 2026-08-11 from official vendor pages and requiring re-verification before purchase. Revised 2026-08-12 (P03.1): §1 split into a technology cash bill and a separately labelled illustrative human sensitivity; USD stated explicitly; the authentication hash-export gap closed and its P03 claim recorded as falsified for two vendors; three further `NOT VERIFIED` gaps added. **No cost arithmetic was changed** — the three scenario totals are identical to those committed in P03.*

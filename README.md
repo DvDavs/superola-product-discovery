@@ -26,14 +26,14 @@ This repository does **not** contain a production Superola application, and prod
 - `docs/00-context/`: canonical context, evidence, sources, assumptions, and terminology.
 - `docs/01-product/`: product discovery artifacts.
 - `docs/02-architecture/`: the P02 architecture recommendation and ADRs. Start at [architecture-overview.md](docs/02-architecture/architecture-overview.md), which indexes every P02 artifact. [decision-branches.md](docs/02-architecture/decision-branches.md) records what changes under each owner alternative and which release gates were unsatisfied.
-- `docs/03-technology/`: the P03 technology recommendation. Start at [technology-evaluation.md](docs/03-technology/technology-evaluation.md), which carries the recommended stack and the per-decision records; [cost-model.md](docs/03-technology/cost-model.md) holds the three cost scenarios; [technology-radar.md](docs/03-technology/technology-radar.md) is the one place vendor names carry a recommendation.
+- `docs/03-technology/`: the P03 technology recommendation, as reconciled by P03.1. **Start at [p03-decision-reconciliation.md](docs/03-technology/p03-decision-reconciliation.md)** — it holds the per-decision disposition table and the approval packet, and records that **three decisions are on `HOLD`**. [technology-evaluation.md](docs/03-technology/technology-evaluation.md) carries the recommended stack and the per-decision records; [cost-model.md](docs/03-technology/cost-model.md) holds the three cost scenarios and is the **single arithmetic source of truth** for cost; [cost-alternatives.md](docs/03-technology/cost-alternatives.md) explains why each cost decision was taken and what would flip it; [technology-radar.md](docs/03-technology/technology-radar.md) is the one place vendor names carry a recommendation.
 - `docs/04-ux/`: structural user-flow work.
 - `docs/05-roadmap/`: MVP, roadmap, risks, and dependencies.
 - `docs/06-migration/`: legacy-data discovery and migration strategy.
 - `docs/07-research/`: focused research work packages.
 - `plans/`: living execution plans and handoffs.
 - `.codex/agents/`: project-scoped specialist agents.
-- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the P01 bilingual working preview and the P01.1 bilingual owner-meeting guide; the mature P07 presentation pack remains not started.
+- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the bilingual owner-facing previews — discovery, architecture, technology, the P01.1 owner-meeting guide, and the P03.1 [cost explainer](presentation/cost-explainer-v0.1.md). The mature P07 presentation pack remains not started; its requirements, including the self-contained *Superola Decision & Cost Explorer* HTML artifact and the owner-facing diagram sources, are persisted in [presentation/outline.md](presentation/outline.md).
 
 ## Evidence discipline
 

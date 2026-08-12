@@ -155,13 +155,13 @@ Seven ADRs, all `PROPOSED — DAVID APPROVAL REQUIRED`, indexed in `docs/02-arch
 
 | ADR | Decision | Reversal |
 |---|---|---|
-| `ADR-013` | JVM/Spring server-rendered single deployable, with build-failing module-boundary enforcement | **VERY HIGH** |
+| `ADR-013` | JVM/Spring server-rendered single deployable, with build-failing module-boundary enforcement — **P03.1 split this: `ADR-013` is now platform-only and rendering moved to `ADR-020`, deferred to P04** | **VERY HIGH** (platform); LOW–MEDIUM (rendering) |
 | `ADR-014` | One PostgreSQL store, schema-per-module, geospatial confined to one predicate | MEDIUM |
 | `ADR-015` | Durable deferred work as a transactional outbox in the same store, not a broker | LOW |
 | `ADR-016` | Managed platform, single region, no orchestration, no general-purpose infrastructure-as-code | LOW today |
 | `ADR-017` | Application-owned authentication, credentials in the marketplace store | Asymmetric |
 | `ADR-018` | Zero-egress media storage, pre-generated derivatives, link-out for audio and video | LOW–MEDIUM |
-| `ADR-019` | Governed internal `Place` list, geocoding for provider base addresses only, no rendered map | LOW |
+| `ADR-019` | Governed internal `Place` list, geocoding for provider base addresses only — **P03.1 split this into three levels: architecture recommended, vendor on `HOLD` (legal), rendered map moved to P04** | LOW |
 
 **`ADR-004` moved `PROPOSED` → `ACCEPTED`** on an explicit `DAVID_DIRECTIVE`. First accepted ADR in the repository.
 
@@ -253,7 +253,7 @@ The first pass returned **FAIL**. Findings are recorded rather than summarised a
 The reasoning:
 
 - **P03 is complete and nothing it produced is adopted.** The next action on the technology track is not more evaluation — it is **David approving or rejecting `ADR-013`–`ADR-019`.** `ADR-013` deserves the most scrutiny, because its reversal difficulty is VERY HIGH and everything else is LOW to MEDIUM.
-- **Three verification tasks should precede any purchase**, and each could change a recommendation: password-hash exportability for the runner-up authentication vendor (`ADR-017`); the object-storage provider's custom-domain and content-type seam (`ADR-018`); and the two legal readings on geocoding terms (`ADR-019`). **None is expensive. Each is load-bearing.**
+- **Three verification tasks should precede any purchase**, and each could change a recommendation: password-hash exportability for the runner-up authentication vendor (`ADR-017`); the object-storage provider's custom-domain and content-type seam (`ADR-018`); and the two legal readings on geocoding terms (`ADR-019`). **None is expensive. Each is load-bearing.** *(P03.1 update: the first was performed on 2026-08-12 and **changed the recommendation's status** — hash export is self-service for two of four vendors, so `ADR-017` moved to `HOLD`. The other two remain open.)*
 - **P04 is still not authorized, and `G-06` is still the blocker.** The availability directive narrowed what V1 builds; it did not answer what "available" promises a customer, and the gate itself requires that resolved before P04 designs profile and request surfaces. `SRC-004` remains NOT RECEIVED.
 - **Owner reconciliation remains the highest-value parallel track**, and `G-02` remains the single question that would most change both the architecture and the cost model.
 - **P05 is unblocked in principle but gated in fact.** `D-14` recorded only what the store must provide; the pipeline needs `G-09` and its legal answers. **Note the schema consequence: per-field provenance must be designed into the first migration, because retrofitting field-level origin onto a populated table is unrecoverable.**
