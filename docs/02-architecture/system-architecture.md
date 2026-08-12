@@ -202,7 +202,7 @@ The single fast-path requirement is safety suppression. That conclusion removes 
 | Customer submits request | **Three phases, and the phase split is the design.** (1) Draft save — own transaction. (2) Verification challenge issue and confirm — own transactions in Identity. (3) Request creation with one-recipient binding, recipient provenance, consent reference, eligibility re-check against **Provider source truth**, block check, and the state transition to delivered — one transaction in Demand | Verification challenge send; notification; analytics. The request becomes durable in a pre-delivery state invisible to the provider, and **delivery is the verification-gated transition** — which satisfies "verified before provider delivery", avoids losing the customer's work on abandonment, and makes abandonment measurable as `R-022` requires. Submission must be idempotent |
 | Provider responds | Request state transition, plus the response entity, plus timestamp, plus (for an offer) content, currency, basis, conditions, version, and stable offer identifier | Notification; analytics; conversation creation; any external validation. **This single transaction is the core argument for keeping the response inside the request aggregate** |
 | Message creation | Message append, plus participant, restriction, and block checks, plus conversation last-activity | Notification; analytics; moderation scanning; **any request state change** — a message must never be able to fake a response |
-| Notification delivery | The delivery intent record, created **after** the business transaction commits, in its own transaction. Each attempt and outcome is its own transaction | The business transaction. Ever |
+| Notification delivery | **CORRECTED BY P03 — see the note below.** The durable delivery intent record commits **with** the business transaction. Each delivery **attempt** and its outcome is its own transaction, executed out of band | **The external send.** The vendor call, and any network I/O, never participate in the business transaction |
 | Read-model refresh | Not applicable in V1 — Discovery queries source truth. If a derived store is ever introduced: one idempotent unit per profile version, never in the source transaction | The source change |
 | Analytics event | Its own path; never a blocking participant in a business transaction | The business transaction as a failure-propagating participant |
 | Media processing | Media reference creation with pending state and rights acknowledgement (one transaction). Ready and failed transitions are separate transactions | Derivative generation; publication. A processing failure must not corrupt publication state |
@@ -210,6 +210,20 @@ The single fast-path requirement is safety suppression. That conclusion removes 
 | Claim grant | Claim decision, decider, basis, time, plus the record state at grant time, plus ownership binding, plus the audit record | Profile creation, which happens afterwards through the same governed commands a fresh provider uses; notification |
 | Customer-reported outcome | Outcome record with reporter and timestamp, plus the request transition to a terminal reported state | Notification; analytics. Outcome is *reported*, never inferred |
 | Moderation decision | The decision record, plus the governed state transition on the owning aggregate, plus the audit record | Notification; public-surface propagation, which is a separate fast-path step |
+
+### P03 correction — the notification delivery intent, 2026-08-11
+
+The original row read: *"The delivery intent record, created **after** the business transaction commits, in its own transaction"*, and forbade it from sharing the business transaction *"Ever"*.
+
+**That rule is correct for a message broker and wrong for a same-database job store, and P03 selected the latter.** It is correct when the queue is a separate system, because you cannot atomically commit to two systems — so you defer and accept a gap. Once the job store is a table in the same database, the rule creates the exact failure it was written to prevent:
+
+> A crash between the business commit and the intent insert leaves the request durable, the provider never notified, **and no dead-letter entry — because no entry was ever created.** `R-016` and principle P16 require that delivery failure and human non-response never collapse into one state. This failure mode produces **neither** state. It produces silence, which is the one outcome the whole notification design exists to make impossible.
+
+§3 of this document already states the requirement correctly — *"`best-effort` delivery over a **durable intent**"*. **An intent that can be lost is not durable.**
+
+**The prohibition is therefore re-scoped from the intent to the external call.** The durable intent commits **with** the business transaction, in one atomic unit. The side effect — the actual send — executes afterwards, in a separate process from the same artifact, in its own transaction per attempt, with retry and an operator-visible dead-letter state.
+
+This is the transactional outbox pattern, and it is why a same-database job store is **architecturally superior rather than merely cheaper**: it is the only mechanism under which this document's own durability requirement can be satisfied literally. Recorded as `R-044`. The corresponding lines in `domain-map.md` are corrected to match.
 
 **The cross-cutting rule that makes all of the above survivable in one deployable:** modules own their persisted data; cross-module references are by identifier only; no cross-module query joins and no cross-module referential constraints. The mechanism and engine are P03 decisions.
 

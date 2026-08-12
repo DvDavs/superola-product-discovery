@@ -1,7 +1,8 @@
 # ADR-004 — An Account is not typed by marketplace role; customer and provider are roles
 
-- Status: PROPOSED
+- Status: ACCEPTED
 - Date: 2026-08-11
+- Accepted: 2026-08-11 by David, at P03 start, as an explicit `DAVID_DIRECTIVE` (`SRC-014`). See "Ratification" below.
 - Decision owner: David (product decision; no owner input required)
 - Related evidence/requirements: `docs/02-architecture/domain-model.md` §1.1, §2.9, §2.10, §6; `security-privacy-architecture.md` §2; `docs/00-context/interview-evidence.md` (owner-reported overlapping performer categories); `Q-028`; `Q-006`
 - Supersedes / superseded by: N/A
@@ -32,9 +33,19 @@ Rejection factors: a flag that must be flipped is a partition with extra steps. 
 
 ## Decision
 
-Recommend Option A. There is no `Customer` entity, no `Provider` entity, and no account type. `Account` is the access principal; `Business` is the commercial party; role is derived from relationships and actions.
+Option A. There is no `Customer` entity, no `Provider` entity, and no account type. `Account` is the access principal; `Business` is the commercial party; role is derived from relationships and actions.
 
-**Approval still required:** David only. `Q-028` needs ratification, not owner input.
+### Ratification — 2026-08-11
+
+`Q-028` was open only for ratification. David ratified it at P03 start as an explicit `DAVID_DIRECTIVE`, in these terms:
+
+> One Account MAY act as both customer and provider. Do not create mutually exclusive customer/provider account types.
+
+This ADR therefore moves from `PROPOSED` to `ACCEPTED`. It is **the first accepted ADR in the repository.** Provenance is `DAVID_DIRECTIVE`, not owner validation — the decision was David's to make and the ADR index named no other approver.
+
+**Scope of what the ratification settles, and what it does not.** It settles the party model. It does not settle contact-disclosure policy (`A-010`, `OR-011`), verification timing (`Q-018`, a P04 comparison), or business-membership capability (`DB-14` defers multi-user businesses while keeping ownership a revocable relation).
+
+**Binding consequence for P03 technology selection:** no authentication mechanism may be selected that forces role-typed accounts, partitions users into disjoint populations, or makes the dual-role case require two identities. This is now a hard elimination criterion in `D-08`, not a preference.
 
 ## Rationale
 

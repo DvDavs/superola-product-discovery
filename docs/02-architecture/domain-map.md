@@ -163,7 +163,9 @@ flowchart TB
   LEG -.->|"claim seeds a NEW Draft profile<br/>through the same governed commands"| APP
 ```
 
-Two rules stated once: **any module may write to Analytics; no module may ever read from it.** **Audit is written by the domain at decision points and read only by an operator role, and that read is itself audited.**
+Two rules stated once: **any module may write to Analytics; no module may ever read from it.** **Audit is written by the domain at decision points and read only by an operator role, and that read is itself audited, with a recorded operational purpose (`DAVID_DIRECTIVE`, 2026-08-11, `SRC-014`).**
+
+> **P03 note, recorded rather than applied.** P03 initially softened the Analytics rule to *"as an input to a decision"*, on the theory that the absolute phrasing forbade viewing the funnel. **That edit was withdrawn on adversarial review, because the premise was wrong:** `docs/03-technology/technology-evaluation.md` §4.11 answers the funnel with **SQL against the transactional store**, not with Analytics reads, so the conflict never arises on the recommended design. The absolute rule stands, the forbidden-dependency row below stands, and the build-failing architecture rule *"no module reads Analytics"* enforces the strong form. **No technology constraint justified weakening it.**
 
 ### Forbidden dependencies
 
@@ -174,7 +176,7 @@ Two rules stated once: **any module may write to Analytics; no module may ever r
 | `Catalog / Geography / Provider → Discovery` | Governed data must not know about relevance. Also a cycle. | Discovery pulls. Source modules never learn it exists. |
 | `Demand → Conversation` | Would couple request lifecycle to chat, cycle with `Conversation → Demand`, and fuse two different retention clocks. | The offer and the request detail are Demand records. Conversation opens lazily on first message. |
 | `Notification → Conversation` | Enforces "minimal sensitive content" structurally rather than by reviewer vigilance. | The payload is a pointer; the recipient reads content in-platform. |
-| Any domain module → `Notification` | Domain semantics must be independent of delivery channel. | The application layer commits the domain transaction, then creates the delivery intent. Delivery state is composed into views by the application layer, never read by Demand. |
+| Any domain module → `Notification` | Domain semantics must be independent of delivery channel. | The application layer commits the domain transaction **and the delivery intent together**, then dispatches out of band (**corrected by P03**, `R-044`). Delivery state is composed into views by the application layer, never read by Demand. |
 | Any hot path → `Marketplace Operations` | Operational tooling must never sit on a public read path. | Moderation outcomes are applied as governed state transitions on the owning aggregate. |
 | Any module → `Marketplace Analytics` (read) | Prevents an observation sink from becoming a source of truth. | Derive from domain state. |
 | Anything → the legacy platform at runtime | Would make confirmed-broken legacy data a permanent liability. | Out-of-band pipeline; edge-level routing for coexistence. |
@@ -186,7 +188,7 @@ Two rules stated once: **any module may write to Analytics; no module may ever r
 
 | Situation | Minimum sufficient answer |
 |---|---|
-| Notification triggered by a marketplace action | A durable delivery intent created **after** the domain transaction commits, plus retry with an idempotent effect. One producer, one consumer. Not a bus. |
+| Notification triggered by a marketplace action | **Corrected by P03** (`system-architecture.md` §4, `R-044`): the durable delivery intent commits **with** the domain transaction; the external send happens afterwards, out of band, with retry and an idempotent effect. One producer, one consumer. Not a bus. |
 | Analytics | One-way append. No consumer makes a decision. Not a bus. |
 | Delivery state shown on a request | The application layer composes Demand plus Notification for the view. No domain dependency. |
 | Responsiveness as a future relevance input | Inverted: a published provider quality attribute on Provider. |

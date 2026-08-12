@@ -47,3 +47,21 @@ The guide states in both languages that the V1 slice is a proposal. It contains 
 | Preview 5 — what is needed from the owner | Two questions the technical team cannot answer (`G-02` stopping boundary, `G-06` availability meaning), plus one needing the owner and counsel (`G-09` legacy permission). | `docs/01-product/owner-reconciliation-matrix.md` gates; `Q-007`, `Q-025`, `Q-029` | Open questions | `TECHNICAL_DISCOVERY` | P02 REVIEWED |
 
 The preview names **no** framework, database, cloud, search product, payment vendor, price, target, or delivery date. It states in both languages that the design was built on working assumptions rather than on owner answers, and it does not present any `PROPOSED` item as approved.
+
+## Technology Preview v0.1
+
+> Status: `PROPOSED — DAVID APPROVAL REQUIRED`. `presentation/technology-preview-v0.1.md` is bilingual because it is shown directly to the owner; this register remains English only. Added by P03.
+>
+> **This is the first owner-facing artifact in the repository that contains cost figures.** Every figure is a **modelled band over stated volume assumptions, not a quote and not a budget**, and the preview says so in both languages in the same section as the table.
+
+| Section | Claim or content | Canonical source | Evidence label | Provenance | Review status |
+|---|---|---|---|---|---|
+| Preview 1 — the number that matters | Human cost is 88–96% of total cost of ownership at every modelled scenario; technology is $75.98/month at Pilot and $560.79/month at Growth. | `docs/03-technology/cost-model.md` §1, §5 | `PROPOSED`; **volumes and hourly rates are stated ASSUMPTIONS, not evidence** | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+| Preview 2 — the technical shape | One system with separated parts; one database with point-in-time recovery; server-built public pages; media on zero-egress storage; audio and video linked rather than hosted. | `technology-evaluation.md` §3; `ADR-013`, `ADR-014`, `ADR-016`, `ADR-018` | `PROPOSED — DAVID APPROVAL REQUIRED` | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+| Preview 3 — cost bands | Three scenarios with technology, people and total. **Explicitly qualified in both languages as working assumptions, with the unaudited legacy count named as not used for sizing.** Excludes payments, migration, marketing and legal. | `cost-model.md` §1–§5, §10 | `PROPOSED`; `A-001`/`R-001` qualifier carried onto the artifact | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+| Preview 4 — what makes this expensive | Operator labour first; anonymous-visitor bytes second; a second operating language third; legacy migration fourth; payments fifth. | `cost-model.md` §5, §7, §8; `R-033`, `R-043`; `internationalization-architecture.md` §4 | `PROPOSED` | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+| Preview 5 — what we deliberately did not add | No separate search engine, no map, no realtime messaging infrastructure, no AI in search, no paid monitoring. Each with a stated activation condition. | `technology-evaluation.md` §7; `ai-evaluation.md` §10; `ADR-019` | `PROPOSED` / `REJECTED` with triggers | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+| Preview 6 — how it scales | Three stages, each with a measurable trigger rather than a date. The whole marketplace peaks under ten requests per second at Growth. | `technology-evaluation.md` §1.1, §6; `infrastructure-options.md` §7 | `PROPOSED` | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+| Preview 7 — what is needed from the owner | Three decisions that materially change cost: the V1 stopping boundary (`G-02`), one or two operating languages (`G-05`), and legal permission for legacy records (`G-09`). | `docs/01-product/owner-reconciliation-matrix.md` gates; `A-004`, `A-016`, `A-007` | Open questions | `TECHNICAL_DISCOVERY` | P03 REVIEWED |
+
+**The preview names no vendor and no product.** It presents only the *shape* of the recommendation and the cost consequences, because vendor selection is David's decision to approve and is not an owner-facing question. It does not present any `PROPOSED` item as approved, and it states in both languages that no technology is bought or contracted.

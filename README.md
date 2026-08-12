@@ -4,9 +4,13 @@ Repository-based source of truth for Superola product discovery, architecture ex
 
 ## Current phase
 
-`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, current-evidence `P01 — Product Discovery`, `P01.1 — Owner Reconciliation Prep`, and `P02 — Domain & System Architecture` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. P01.1 added the reconciliation matrix, material intake process, P02/P04 release gate, and the bilingual owner-meeting guide.
+`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, current-evidence `P01 — Product Discovery`, `P01.1 — Owner Reconciliation Prep`, `P02 — Domain & System Architecture`, and `P03 — Technology & Cost Evaluation` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. P01.1 added the reconciliation matrix, material intake process, P02/P04 release gate, and the bilingual owner-meeting guide.
 
-P02 produced **one** `PROPOSED` logical architecture — ten domain modules, conceptual entities and lifecycles, an interaction and consistency map, search/internationalization/security requirements, twelve `PROPOSED` ADRs, fourteen decision branches, and P03 decision inputs. It was authorized explicitly by David and executed against a **David-accepted design envelope** (`SRC-013`), not against owner validation: the P01.1 release gate was **not satisfied** at P02 start (`G-06` and `G-10` unsatisfied; `G-01`, `G-04`, `G-05`, `G-07`, `G-09` partial). No architecture is accepted, no technology is selected, and **P02 does not authorize P04**. This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
+P02 produced **one** `PROPOSED` logical architecture — ten domain modules, conceptual entities and lifecycles, an interaction and consistency map, search/internationalization/security requirements, twelve `PROPOSED` ADRs, fourteen decision branches, and P03 decision inputs. It was authorized explicitly by David and executed against a **David-accepted design envelope** (`SRC-013`), not against owner validation: the P01.1 release gate was **not satisfied** at P02 start (`G-06` and `G-10` unsatisfied; `G-01`, `G-04`, `G-05`, `G-07`, `G-09` partial). No architecture is accepted, and **P02 does not authorize P04**.
+
+`P03 — Technology & Cost Evaluation` is also complete. It answered `D-01`–`D-15` and produced **one** recommended technology architecture with source-backed current prices, three cost scenarios, total-cost-of-ownership analysis, `ADR-013`–`ADR-019`, and a bilingual owner-facing technology preview. **Nothing is adopted** — every technology selection is `PROPOSED — DAVID APPROVAL REQUIRED`. `ADR-004` moved to `ACCEPTED` on a `DAVID_DIRECTIVE` and is the first accepted ADR in the repository. Payment technology was **not evaluated** (`G-02` unresolved), the AI gate was found **unanswerable during P03**, and the legacy pipeline remains gated on `G-09`. **P03 does not authorize P04**, which still needs `G-06`.
+
+This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
 
 ## Start here
 
@@ -22,7 +26,7 @@ P02 produced **one** `PROPOSED` logical architecture — ten domain modules, con
 - `docs/00-context/`: canonical context, evidence, sources, assumptions, and terminology.
 - `docs/01-product/`: product discovery artifacts.
 - `docs/02-architecture/`: the P02 architecture recommendation and ADRs. Start at [architecture-overview.md](docs/02-architecture/architecture-overview.md), which indexes every P02 artifact. [decision-branches.md](docs/02-architecture/decision-branches.md) records what changes under each owner alternative and which release gates were unsatisfied.
-- `docs/03-technology/`: technology, build-vs-buy, infrastructure, and cost research.
+- `docs/03-technology/`: the P03 technology recommendation. Start at [technology-evaluation.md](docs/03-technology/technology-evaluation.md), which carries the recommended stack and the per-decision records; [cost-model.md](docs/03-technology/cost-model.md) holds the three cost scenarios; [technology-radar.md](docs/03-technology/technology-radar.md) is the one place vendor names carry a recommendation.
 - `docs/04-ux/`: structural user-flow work.
 - `docs/05-roadmap/`: MVP, roadmap, risks, and dependencies.
 - `docs/06-migration/`: legacy-data discovery and migration strategy.
