@@ -4,7 +4,13 @@ Repository-based source of truth for Superola product discovery, architecture ex
 
 ## Current phase
 
-`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, current-evidence `P01 — Product Discovery`, and `P01.1 — Owner Reconciliation Prep` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. P01.1 added the reconciliation matrix, material intake process, P02/P04 release gate, and the bilingual owner-meeting guide; the gate is defined but not yet satisfied. This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
+`P00 — Bootstrap`, `P00.1 — Evidence & Workflow Hardening`, current-evidence `P01 — Product Discovery`, `P01.1 — Owner Reconciliation Prep`, `P02 — Domain & System Architecture`, and `P03 — Technology & Cost Evaluation` are complete. P01 recommends Marketplace Leads as `PROPOSED — OWNER VALIDATION REQUIRED`; pending owner materials and owner decisions must be reconciled before the hypothesis is treated as accepted scope. P01.1 added the reconciliation matrix, material intake process, P02/P04 release gate, and the bilingual owner-meeting guide.
+
+P02 produced **one** `PROPOSED` logical architecture — ten domain modules, conceptual entities and lifecycles, an interaction and consistency map, search/internationalization/security requirements, twelve `PROPOSED` ADRs, fourteen decision branches, and P03 decision inputs. It was authorized explicitly by David and executed against a **David-accepted design envelope** (`SRC-013`), not against owner validation: the P01.1 release gate was **not satisfied** at P02 start (`G-06` and `G-10` unsatisfied; `G-01`, `G-04`, `G-05`, `G-07`, `G-09` partial). No architecture is accepted, and **P02 does not authorize P04**.
+
+`P03 — Technology & Cost Evaluation` is also complete. It answered `D-01`–`D-15` and produced **one** recommended technology architecture with source-backed current prices, three cost scenarios, total-cost-of-ownership analysis, `ADR-013`–`ADR-019`, and a bilingual owner-facing technology preview. **Nothing is adopted** — every technology selection is `PROPOSED — DAVID APPROVAL REQUIRED`. `ADR-004` moved to `ACCEPTED` on a `DAVID_DIRECTIVE` and is the first accepted ADR in the repository. Payment technology was **not evaluated** (`G-02` unresolved), the AI gate was found **unanswerable during P03**, and the legacy pipeline remains gated on `G-09`. **P03 does not authorize P04**, which still needs `G-06`.
+
+This repository does **not** contain a production Superola application, and production implementation must not begin without an explicit approved phase.
 
 ## Start here
 
@@ -19,15 +25,15 @@ Repository-based source of truth for Superola product discovery, architecture ex
 
 - `docs/00-context/`: canonical context, evidence, sources, assumptions, and terminology.
 - `docs/01-product/`: product discovery artifacts.
-- `docs/02-architecture/`: architecture hypotheses and ADRs.
-- `docs/03-technology/`: technology, build-vs-buy, infrastructure, and cost research.
+- `docs/02-architecture/`: the P02 architecture recommendation and ADRs. Start at [architecture-overview.md](docs/02-architecture/architecture-overview.md), which indexes every P02 artifact. [decision-branches.md](docs/02-architecture/decision-branches.md) records what changes under each owner alternative and which release gates were unsatisfied.
+- `docs/03-technology/`: the P03 technology recommendation, as reconciled by P03.1. **Start at [p03-decision-reconciliation.md](docs/03-technology/p03-decision-reconciliation.md)** — it holds the per-decision disposition table and the approval packet, and records that **three decisions are on `HOLD`**. [technology-evaluation.md](docs/03-technology/technology-evaluation.md) carries the recommended stack and the per-decision records; [cost-model.md](docs/03-technology/cost-model.md) holds the three cost scenarios and is the **single arithmetic source of truth** for cost; [cost-alternatives.md](docs/03-technology/cost-alternatives.md) explains why each cost decision was taken and what would flip it; [technology-radar.md](docs/03-technology/technology-radar.md) is the one place vendor names carry a recommendation.
 - `docs/04-ux/`: structural user-flow work.
 - `docs/05-roadmap/`: MVP, roadmap, risks, and dependencies.
 - `docs/06-migration/`: legacy-data discovery and migration strategy.
 - `docs/07-research/`: focused research work packages.
 - `plans/`: living execution plans and handoffs.
 - `.codex/agents/`: project-scoped specialist agents.
-- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the P01 bilingual working preview and the P01.1 bilingual owner-meeting guide; the mature P07 presentation pack remains not started.
+- `diagrams/`, `prototype/`: later-phase scaffolds. `presentation/` contains the bilingual owner-facing previews — discovery, architecture, technology, the P01.1 owner-meeting guide, and the P03.1 [cost explainer](presentation/cost-explainer-v0.1.md). The mature P07 presentation pack remains not started; its requirements, including the self-contained *Superola Decision & Cost Explorer* HTML artifact and the owner-facing diagram sources, are persisted in [presentation/outline.md](presentation/outline.md).
 
 ## Evidence discipline
 

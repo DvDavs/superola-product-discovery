@@ -46,6 +46,27 @@ Use exactly: `CONFIRMED`, `OBSERVED`, `PROPOSED`, `ASSUMPTION`, `FUTURE`, `REJEC
 - Delegate independent research, audits, comparisons, and adversarial review. Avoid concurrent edits to the same canonical file.
 - Every handoff must cite repository inputs, label evidence, surface contradictions, and identify unresolved questions.
 
+## Stable document prefix policy
+
+Frequently edited documents must keep a stable semantic prefix.
+
+Do not place volatile metadata near the beginning of a Markdown document when it changes merely because the document was reviewed, regenerated, or edited. Examples: `Last updated`, `Modified at`, `Generated at`, generation timestamps, run timestamps, transient build or run IDs, and automatically refreshed hashes or counters.
+
+- If volatile metadata is genuinely required, place it in a footer at the end of the document.
+- Do not update a timestamp merely because a document was touched.
+- Stable semantic metadata MAY remain near the beginning when it affects interpretation: `Status`, decision status, `Owner`, `Scope`, canonical status, `PROPOSED` / `ACCEPTED` / `DEPRECATED`, and approval requirement.
+- Dates remain near the top when the date itself is semantic content: meeting records, incidents, dated research snapshots, releases, legal/compliance records, and evidence observations. A price verification date is semantic content and belongs beside the price it qualifies, not in a document header.
+
+Do not perform a repository-wide cleanup solely to move existing metadata. Apply this policy to new documents, and to existing documents when they are substantively modified.
+
+## Currency
+
+All monetary figures in this repository use **USD as the baseline currency** unless a figure explicitly states otherwise. Owner-facing artifacts must write `USD $76/month` rather than `$76/month` wherever a reader could reasonably misread a bare `$`. Do not add MXN or other conversions to comparison material: exchange rates are time-sensitive and add a second thing to re-verify without changing any comparison.
+
+## Cost framing
+
+Infrastructure/service cash cost and human operational cost are different quantities and must be presented separately. Do not publish a combined total-cost-of-ownership figure as an owner-facing headline. Human-cost estimates are an **illustrative sensitivity** whose hourly-rate and workload assumptions must be visible next to the figure, not a forecast and not a committed operating cost.
+
 ## Security and privacy
 
 - Never commit secrets, credentials, tokens, production data, or unnecessary PII.
