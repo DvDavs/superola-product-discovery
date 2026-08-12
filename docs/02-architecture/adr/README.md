@@ -117,8 +117,10 @@ All `PROPOSED`. **Nothing here is approved.** Reasoning lives in `docs/03-techno
 | [ADR-016](ADR-016-managed-platform-single-region-deployment.md) | Managed platform, single region, no orchestration and no general-purpose infrastructure-as-code | PROPOSED | RECOMMEND ACCEPT — region still deferred | LOW today; the window closes with data volume |
 | [ADR-017](ADR-017-application-owned-authentication.md) | Authentication is application-owned, with credentials in the marketplace store | PROPOSED | **HOLD** — its own reconsideration trigger fired | BUILD→BUY easy; **BUY→BUILD is vendor-specific and now verified**, not uniformly hard |
 | [ADR-018](ADR-018-media-zero-egress-storage-fixed-derivatives-and-link-out-for-audio-and-video.md) | Media: zero-egress object storage, pre-generated fixed derivatives, and link-out for audio and video | PROPOSED | RECOMMEND ACCEPT | LOW–MEDIUM |
-| [ADR-019](ADR-019-governed-place-list-with-geocoding-for-provider-addresses-only.md) | A governed internal Place list, with geocoding for provider base addresses only | PROPOSED | **SPLIT** — L1 architecture RECOMMEND ACCEPT · L2 vendor HOLD (legal) · L3 map MOVED TO P04 | LOW — ~USD $75, a few days |
-| [ADR-020](ADR-020-web-rendering-strategy-provisional-until-p04.md) | Web rendering strategy remains provisional until P04 establishes interaction requirements | **PROPOSED — DEFERRED, PENDING P04 UX VALIDATION** | **HOLD** — decided by P04 | LOW–MEDIUM, and per-surface |
+| [ADR-019](ADR-019-governed-place-list-with-geocoding-for-provider-addresses-only.md) | A governed internal Place list, with geocoding for provider base addresses only | PROPOSED | **SPLIT** — L1 architecture RECOMMEND ACCEPT · L2 vendor HOLD (legal) · **L3 map ANSWERED BY P04: no rendered map in V1, deferred with three triggers** | LOW — ~USD $75, a few days |
+| [ADR-020](ADR-020-web-rendering-strategy-provisional-until-p04.md) | Web rendering strategy: server rendering with progressive enhancement and three named client islands | **PROPOSED — P04 EVIDENCE DELIVERED; RECOMMENDS OPTION A; DAVID APPROVAL REQUIRED** | `HOLD` **discharged by P04** | LOW–MEDIUM, and per-surface |
+
+*The `ADR-020` filename retains its original slug. It was not renamed when the title changed, because committed records — including the P03.1 plan and the ADR index itself — cite the path, and rewriting history to tidy a filename is a worse trade than a stale slug.*
 
 #### Added by P03.1
 
@@ -129,6 +131,10 @@ All `PROPOSED`. **Nothing here is approved.** Reasoning lives in `docs/03-techno
 **`ADR-017` moved to `HOLD`.** Its own trigger — *"if password-hash exportability is verified for a specific vendor, the exit asymmetry that decides this ADR weakens"* — fired. Verification falsified P03's blanket claim for two of four vendors. Evidence: `docs/07-research/authentication-vendor-verification.md`.
 
 **`ADR-015` additionally corrects `system-architecture.md` §4.** The rule that the notification delivery intent is created *after* the business transaction commits is correct for a broker and wrong for a same-store queue, where it opens a silent lost-notification window producing **neither** a delivery-failure state nor a non-response state (`R-044`). The prohibition is re-scoped from the intent to the external call. **Note the corrected framing:** an outbox is also how a broker avoids the dual-write problem, so the argument for the same-store option is that the outbox table is required either way and the broker is therefore **strictly additive** — not that it is the only mechanism.
+
+#### Added by P04
+
+`ADR-020`'s deferral is **partially discharged**: over thirty-nine named surfaces P04 delivered **three of the four** per-surface items the ADR required — the fourth, what a progressive-enhancement implementation costs, is unavailable until code exists — and found **no V1 surface requiring client state that survives navigation**. The strongest counter-case, the multi-step request composer, resolves to `RequestDraft`, an aggregate `ADR-003` already owns. It recommends **Option A** with a proposed budget of **three** client islands against the ADR's own ceiling of five. `ADR-019` Level 3 is answered in the same phase and on independent grounds: **no rendered map in V1**, deferred with three named triggers, with the privacy invariant retained and explicitly **not** used as the reason. **Neither is approved. Both are recommendations requiring David's individual approval, and P04 satisfied no owner gate — `G-06` remains unsatisfied and `WA-01` is a working assumption, not an answer.**
 
 ### Deliberately not written as ADRs
 

@@ -95,3 +95,27 @@ The preview names **no** framework, database, cloud, search product, payment ven
 | 8 — what remains open | Rendering, authentication, map, geocoding vendor, region, AI-assisted intake — each with a named owner. | `p03-decision-reconciliation.md` §2, §4; `ADR-017`, `ADR-019`, `ADR-020` | Open decisions | `TECHNICAL_DISCOVERY` | P03.1 REVIEWED |
 
 **The explainer names no vendor and no product**, and states in both languages that it is an illustrative planning scenario rather than a forecast.
+
+## UX Preview v0.1
+
+> Status: `PROPOSED — OWNER VALIDATION REQUIRED`. `presentation/ux-preview-v0.1.md` is bilingual because it is shown directly to the owner; this register remains English only. Added by P04.
+>
+> **It contains no figures of any kind** — no price, no percentage, no response time, no traffic number. The one quantity it carries is a **question count**, and it is stated as a design target rather than a measured result.
+
+| Section | Claim or content | Canonical source | Evidence label | Provenance | Review status |
+|---|---|---|---|---|---|
+| 1 — customer journey | The customer describes a need, sees relevant providers, chooses one deliberately, sends one request, and receives a price, a question, or a no. **Superola does not send the request to everyone.** | `docs/04-ux/customer-journey.md`; `docs/04-ux/request-intake.md`; `WA-02` | `PROPOSED — OWNER VALIDATION REQUIRED` | `TECHNICAL_DISCOVERY` over `DAVID_DIRECTIVE` (`SRC-015`) | P04 REVIEWED |
+| 2 — provider journey | Register, describe the business, say what you do and where, publish, receive relevant requests, answer with a price, a question, or a no. The provider controls whether to answer and can pause requests. | `docs/04-ux/provider-onboarding.md`; `docs/04-ux/provider-workspace.md`; `ADR-005` | `PROPOSED` | `TECHNICAL_DISCOVERY` | P04 REVIEWED |
+| 3 — the request-intake principle | Superola asks only what the chosen service needs, so a mariachi request is short and a venue request asks different things. Compared against a competitor flow of roughly twenty presented steps. **Stated as a design target with the measurement that would confirm it, not as a measured improvement.** | `docs/04-ux/request-intake.md` §1–§3, §6–§7; `docs/07-research/gigsalad-request-flow-capture.md` | Superola target `PROPOSED`; competitor flow `OBSERVED` **as supplied, not independently re-verified** | `TECHNICAL_DISCOVERY`; competitor capture `DAVID_DIRECTIVE` (`SRC-015`) | P04 REVIEWED |
+| 3 — the date is a request, not a promise | The customer states the date; the provider confirms whether it works. **This is the decision still owed by the owner** (`G-06`), stated in owner language without the gate ID in the body. | `ADR-005`; `WA-01`; `docs/04-ux/provider-profile.md` | `ASSUMPTION`; `G-06` UNSATISFIED | `DAVID_DIRECTIVE` | P04 REVIEWED |
+| 4 — "what changes if…" | Payments in V1, sending to several providers, a real calendar with guaranteed dates, a mobile app, AI helping fill in the request, and no map drawn on screen. Each states what does **not** change alongside what does. | `docs/02-architecture/decision-branches.md` (`DB-01`, `DB-02`, `DB-06`, `DB-08`, `DB-10`); `docs/04-ux/map-decision.md`; `docs/04-ux/request-intake.md` §9 | `PROPOSED` / `FUTURE` | `TECHNICAL_DISCOVERY` | P04 REVIEWED |
+
+**The preview names no framework, database, vendor, price, target, or delivery date, and no color, typeface, or brand.** It states in both languages that the design was built on working assumptions rather than on owner answers, that nothing is approved, and that it is structure rather than visual design.
+
+### The competitor comparison, and its limit
+
+The only comparative claim in the preview is the intake-length contrast. Its basis is `docs/07-research/gigsalad-request-flow-capture.md`: **twenty-four items supplied by David, recorded at step-shape granularity, not independently re-verified, and asserting nothing about wording, ordering, required-versus-optional status, or friction.** The preview must say in both languages that the comparison comes from a flow David observed and supplied. **If any recommendation ever turns on current competitor behavior, `AGENTS.md` requires re-verification against first-party sources with an access date, and this capture is insufficient for that purpose.**
+
+## UX Walkthrough v0.1 — prototype, not a presentation artifact
+
+`presentation/superola-ux-walkthrough-v0.1.html` is a **marked structural prototype**, not an owner-facing presentation artifact and **not** the P07 *Superola Decision & Cost Explorer*. It carries a persistent bilingual `PROTOTYPE — NOT FINAL DESIGN` banner, is self-contained with no external requests, and exists to let a reader walk the primary journey rather than read it. Its grayscale palette and system font stack are **placeholders required for any HTML to render at all**; no product surface may take a color, typeface, or measurement from it, and `plans/P04-ux-architecture.md` records that as a non-goal. It makes no claim requiring a source row.

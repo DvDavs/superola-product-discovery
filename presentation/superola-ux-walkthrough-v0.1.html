@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Superola UX Walkthrough v0.1 — PROTOTIPO ESTRUCTURAL / STRUCTURAL PROTOTYPE</title>
+<style>
+  /* ------------------------------------------------------------------
+     NOTE / NOTA
+     Grayscale only. System fonts only. No imagery, no icons, no brand.
+     Nothing in this stylesheet is a design decision. It exists only to
+     make structure legible on screen.
+     Escala de grises solamente. Fuentes del sistema. Sin imagenes, sin
+     iconos, sin marca. Nada aqui es una decision de diseno.
+     ------------------------------------------------------------------ */
+  :root{
+    --bg:#f2f2f2; --paper:#ffffff; --line:#c9c9c9; --line2:#e2e2e2;
+    --ink:#1c1c1c; --ink2:#4a4a4a; --ink3:#6e6e6e; --fill:#ededed;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px; line-height:1.45;
+  }
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:.88em}
+
+  /* Persistent prototype banner */
+  .banner{background:var(--ink);color:#fff;padding:10px 14px;border-bottom:3px solid #000}
+  .banner b{letter-spacing:.06em}
+  .banner .l2{color:#d5d5d5;font-size:12.5px;margin-top:4px;max-width:1100px}
+
+  .bar{background:var(--paper);border-bottom:1px solid var(--line);padding:8px 14px;
+       display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12.5px}
+  .bar .grp{display:flex;gap:6px;align-items:center;border:1px solid var(--line2);padding:4px 6px}
+  .bar label{color:var(--ink3)}
+  select,button{font:inherit;font-size:12.5px;background:var(--paper);color:var(--ink);
+    border:1px solid var(--line);padding:4px 8px;cursor:pointer}
+  button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .note{color:var(--ink3);font-size:12px}
+
+  .outer{padding:16px 12px 60px;display:flex;justify-content:center}
+  .stage{width:100%;max-width:1040px;transition:max-width .12s linear}
+  .stage.phone{max-width:390px}
+
+  .cap{background:#dcdcdc;border:1px solid var(--line);border-bottom:none;
+       padding:6px 10px;font-size:11.5px;color:var(--ink2);letter-spacing:.02em}
+  .cap b{color:var(--ink)}
+  .screen{background:var(--paper);border:1px solid var(--line);padding:0 0 14px}
+  .screen[hidden]{display:none}
+
+  .reg{border-bottom:1px solid var(--line2);padding:12px 14px}
+  .reg:last-child{border-bottom:none}
+  .h{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:0 0 8px}
+  h2{font-size:19px;margin:0 0 4px;font-weight:600}
+  h3{font-size:15px;margin:12px 0 4px;font-weight:600}
+  p{margin:6px 0}
+  .sec{color:var(--ink3);font-size:12.5px;margin:4px 0}
+  .sec.box{border-left:3px solid var(--line);padding-left:8px}
+  .err{border:1px solid var(--ink2);background:var(--fill);padding:6px 8px;font-size:12.5px;margin:6px 0}
+  .err::before{content:"! ";font-weight:700}
+
+  .chip{display:inline-block;border:1px solid var(--ink2);padding:1px 6px;font-size:11.5px;
+        margin:2px 4px 2px 0;background:var(--paper)}
+  .fld{display:block;margin:8px 0}
+  .fld > span{display:block;font-size:12.5px;color:var(--ink2);margin-bottom:2px}
+  input[type=text],textarea,.picker{width:100%;border:1px solid var(--line);background:var(--paper);
+    padding:6px 8px;font:inherit;font-size:14px}
+  textarea{min-height:56px}
+  .picker::after{content:" \25BE";color:var(--ink3)}
+  .opt{display:block;margin:3px 0;font-size:14px}
+  .btn{display:inline-block;border:1px solid var(--ink);background:var(--paper);
+       padding:6px 12px;margin:6px 6px 0 0;font-size:13.5px;cursor:pointer}
+  .btn.pri{background:var(--ink);color:#fff}
+  .btn.dead{border-color:var(--line);color:var(--ink2)}
+  .cols{display:flex;flex-wrap:wrap;gap:14px}
+  .col{flex:1 1 300px;min-width:0}
+  .card{border:1px solid var(--line);padding:10px;margin:8px 0}
+  .kv{display:flex;gap:10px;border-bottom:1px solid var(--line2);padding:3px 0;font-size:13.5px}
+  .kv b{flex:0 0 150px;font-weight:500;color:var(--ink2)}
+  .list{margin:4px 0 4px 18px;padding:0}
+  .list li{margin:2px 0}
+  .thread > div{border-bottom:1px solid var(--line2);padding:8px 0}
+  .sysline{font-size:12px;color:var(--ink3);border-top:1px dashed var(--line);
+           border-bottom:1px dashed var(--line);padding:6px 0;background:var(--fill)}
+  .anchor{border:2px solid var(--ink2);padding:8px;background:var(--fill)}
+  .media{border:1px dashed var(--line);padding:14px;text-align:center;color:var(--ink3);font-size:12px}
+  .checklist li{margin:6px 0;font-size:13.5px}
+  .flow{font-size:11.5px;color:var(--ink3);word-break:break-word}
+  .flow b{color:var(--ink)}
+  .status{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;
+          font-size:12px;padding:6px 12px;display:none}
+  .stage.phone .kv{display:block}
+  .stage.phone .kv b{display:block;flex:none}
+  .stage.phone .cols{display:block}
+  .stage.phone .col{margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- ============================ PERSISTENT BANNER ============================ -->
+<div class="banner" role="note">
+  <b>PROTOTIPO — NO ES DISEÑO FINAL &nbsp;·&nbsp; PROTOTYPE — NOT FINAL DESIGN</b>
+  <div class="l2">
+    Este prototipo demuestra <b>solamente estructura</b>: qué información existe en cada pantalla, qué región la contiene y qué estados tiene.
+    No implica ninguna decisión de color, tipografía, iconografía ni marca, y ninguna puede inferirse de él.
+    Estado: <code>PROPOSED — OWNER VALIDATION REQUIRED</code>. <code>G-06</code> sigue sin resolver; todo descansa sobre <code>WA-01</code>.
+    <br>
+    This prototype demonstrates <b>structure only</b>: what information exists on each screen, which region owns it, and what states it has.
+    No color, typography, iconography, or branding decision is implied, and none may be inferred from it.
+    Status: <code>PROPOSED — OWNER VALIDATION REQUIRED</code>. <code>G-06</code> is unresolved; everything here rests on <code>WA-01</code>.
+  </div>
+</div>
+
+<!-- ============================ NAVIGATION CHROME ============================ -->
+<div class="bar">
+  <div class="grp">
+    <label for="jump">Pantalla / Screen</label>
+    <select id="jump"></select>
+  </div>
+  <div class="grp">
+    <button id="prev" type="button">&larr; Anterior / Prev</button>
+    <button id="next" type="button">Siguiente / Next &rarr;</button>
+  </div>
+  <div class="grp">
+    <label>Ancho / Width</label>
+    <button id="vDesk" type="button" aria-pressed="true">Escritorio / Desktop</button>
+    <button id="vPhone" type="button" aria-pressed="false">Teléfono / Phone</button>
+  </div>
+  <span class="note" id="pos"></span>
+</div>
+<div class="bar">
+  <span class="flow">
+    Recorrido / Journey:
+    <b>UX-01</b> &rarr; <b>UX-04</b> (+ sin resultados / zero results) &rarr; <b>UX-05</b> &rarr;
+    <b>UX-07</b> A/B/C &rarr; <b>UX-08</b> &rarr; <b>UX-09</b> &rarr; <b>UX-10</b> &rarr;
+    <b>UX-12</b> &rarr; <b>UX-14</b> &nbsp;|&nbsp; Rama proveedor / Provider branch:
+    <b>UX-18</b> &rarr; <b>UX-19</b> &rarr; respuesta / respond
+  </span>
+</div>
+
+<div class="outer">
+<div class="stage" id="stage">
+
+<!-- ================================ UX-01 ================================ -->
+<div class="cap" data-for="s-home"><b>UX-01</b> · Home / need entry · Rendering <b>DOC + I-1</b> · V1 · Público / Public</div>
+<section class="screen" id="s-home">
+  <div class="reg">
+    <div class="h">Encabezado global / Global header</div>
+    <span class="btn dead" data-dead>SUPEROLA</span>
+    <span class="btn dead" data-dead>Categorías / Browse categories</span>
+    <span class="btn dead" data-dead>Para proveedores / For providers</span>
+    <span class="btn dead" data-dead>Ingresar / Sign in</span>
+    <span class="btn dead" data-dead>ES / EN</span>
+    <p class="sec">No hay tipo de cuenta. Una <code>Account</code> puede ser cliente y proveedor (<code>ADR-004</code>). / No account type. One <code>Account</code> may be both.</p>
+  </div>
+
+  <div class="reg">
+    <h2>Encontrá un proveedor para tu evento / Find a provider for your event</h2>
+    <p class="sec">Sin cuenta para buscar, ver un perfil o empezar una solicitud. / No account needed to search, view a profile, or start a request.</p>
+    <div class="cols">
+      <div class="col">
+        <label class="fld"><span>¿Qué necesitás? / What do you need</span>
+          <div class="picker">Mariachi</div></label>
+        <p class="sec">Categoría gobernada. El texto libre es coincidencia secundaria, nunca la clave. / Governed category. Free text is secondary matching, never the key.</p>
+      </div>
+      <div class="col">
+        <label class="fld"><span>¿Dónde? / Where</span>
+          <div class="picker">Houston</div></label>
+        <p class="sec">Lista gobernada de <code>Place</code>, cero llamadas a proveedores externos (<code>ADR-019</code> Nivel 1). / Governed <code>Place</code> list, zero vendor calls.</p>
+      </div>
+    </div>
+    <button class="btn pri" data-go="s-results">Buscar proveedores / Find providers</button>
+    <div class="err">No pudimos interpretar “band for my party next month” como categoría. Elegí una de la lista. / We could not match that text to a category. Pick one from the list.
+      <div class="sec">Variante de error: la entrada irresoluble se rechaza y se muestra, nunca se aproxima. / Error variant: unresolvable input is rejected and shown, never approximated.</div></div>
+  </div>
+
+  <div class="reg">
+    <div class="h">Explorar por categoría / Browse by category</div>
+    <ul class="list">
+      <li>Mobile performer</li><li>Fixed venue</li>
+      <li>Delivery and food</li><li>Mobile professional</li>
+    </ul>
+    <p class="sec">Transportation está modelado pero fuera del lote de lanzamiento (§5.3.1). / Transportation is modelled but out of the launch cohort.</p>
+  </div>
+
+  <div class="reg">
+    <div class="h">Cómo funciona una solicitud / How a request works</div>
+    <ol class="list">
+      <li>Elegís una categoría y un lugar. / Choose a category and a place.</li>
+      <li>Elegís <b>un</b> proveedor. / Choose <b>one</b> provider.</li>
+      <li>Enviás <b>una</b> solicitud a ese proveedor. / Send <b>one</b> request to that provider.</li>
+      <li>El proveedor puede preguntar, rechazar, enviar una oferta, o no responder. / The provider may ask, decline, send an offer, or not reply.</li>
+    </ol>
+    <p class="sec box"><b>V1 has no availability model.</b> Superola no sabe ni afirma si un proveedor está libre en tu fecha; el proveedor te lo dice dentro de la solicitud. / Superola does not know and does not claim whether a provider is free on your date.</p>
+  </div>
+
+  <div class="reg">
+    <div class="h">Pie / Footer</div>
+    <p class="sec">Cómo funciona · Confianza y seguridad · Términos · Privacidad · Idioma (<code>UX-06</code>)</p>
+  </div>
+</section>
+
+<!-- ================================ UX-04 ================================ -->
+<div class="cap" data-for="s-results"><b>UX-04</b> · Search results · Rendering <b>DOC + I-1</b> · V1 · Público / Public</div>
+<section class="screen" id="s-results" hidden>
+  <div class="reg">
+    <span class="btn dead" data-dead>Mariachi &#9662;</span>
+    <span class="btn dead" data-dead>Houston &#9662;</span>
+    <span class="btn dead" data-dead>Buscar / Search</span>
+    <button class="btn" data-go="s-zero">Ver variante sin resultados / See zero-result variant</button>
+    <p class="sec">La fecha deseada <b>no es un filtro</b>. Es contexto de la solicitud (§5.3). / Desired date is <b>not a filter</b>; it is request context.</p>
+  </div>
+  <div class="cols">
+    <div class="col reg" style="flex:0 0 230px">
+      <div class="h">Filtros / Filters</div>
+      <p class="sec">Sin conteos por filtro (<code>Q-035</code>, recomendación P04). / No facet counts (P04 recommendation).</p>
+      <p class="sec box">Atributos de categoría gobernados (<code>CategoryAttributeDefinition</code>, <code>DR-04</code>). <b>Un filtro acota dentro de la clave gobernada y nunca es la clave.</b> Ningún filtro nombra una <code>Category</code>: una lista de “sub-tipo” cuyos valores son Categorías gobernadas volvería ambigua la clave de búsqueda. / A filter narrows within the governed key and is never the key; no filter names a <code>Category</code>.</p>
+      <div class="h" style="margin-top:8px">Ensemble size</div>
+      <label class="opt"><input type="checkbox" disabled> 3–5</label>
+      <label class="opt"><input type="checkbox" disabled> 6–10</label>
+      <label class="opt"><input type="checkbox" disabled> 11 or more</label>
+      <div class="h" style="margin-top:8px">Languages</div>
+      <label class="opt"><input type="checkbox" disabled> Spanish</label>
+      <label class="opt"><input type="checkbox" disabled> English</label>
+      <span class="btn dead" data-dead>Aplicar / Apply</span>
+    </div>
+    <div class="col reg">
+      <h2>Mariachi · Houston</h2>
+      <p class="sec"><code>Market</code> = la <code>Category</code> gobernada que eligió el cliente × el <code>Place</code> gobernado. El arquetipo <b>no</b> sustituye a la categoría en el encabezado ni en los resultados. / The header is Category × Place; the archetype never substitutes for the Category.</p>
+      <p class="sec box"><b>V1 has no availability model.</b> Ningún proveedor se muestra como libre en una fecha. / No provider is shown as free on any date.</p>
+
+      <div class="card">
+        <h3>Mariachi Estrella del Norte</h3>
+        <p class="sec">Mariachi · Mariachi ensemble · Serves Houston, Katy, Sugar Land</p>
+        <span class="chip">«Published»</span><span class="chip">«Accepting requests»</span>
+        <p class="sec">Estado de admisión, no disponibilidad. / Intake state, not availability.</p>
+        <details><summary>Por qué aparece este resultado / Why this result appears</summary>
+          <ul class="list">
+            <li>Listado en la categoría gobernada Mariachi. / Listed in the governed category Mariachi.</li>
+            <li>Declara cobertura que incluye Houston. / Declares coverage including Houston.</li>
+            <li>Perfil publicado y confirmado recientemente. / Published and recently confirmed.</li>
+            <li><code>placementBasis: organic</code>. Superola no tiene colocación paga en V1. / no paid placement in V1.</li>
+          </ul>
+          <p class="sec">No es un ranking de calidad ni una recomendación. / Not a quality ranking and not a recommendation.</p>
+        </details>
+        <p class="sec">Colocación: orgánica (por resultado). / Placement: organic (per slot).</p>
+        <button class="btn" data-go="s-profile">Ver perfil / View profile</button>
+        <button class="btn pri" data-go="s-comp-a">Enviar una solicitud / Send a request</button>
+      </div>
+
+      <div class="card">
+        <h3>Trío Aurora</h3>
+        <p class="sec">Mariachi · Mariachi ensemble · Serves Houston</p>
+        <span class="chip">«Not updated recently»</span><span class="chip">«Accepting requests»</span>
+        <p class="sec">Este proveedor no confirmó sus datos recientemente. Sigue siendo encontrable (<code>Stale</code> nunca se oculta). / Stale stays discoverable and flagged, never hidden.</p>
+        <p class="sec">Colocación: orgánica. / Placement: organic.</p>
+        <span class="btn dead" data-dead>Ver perfil / View profile</span>
+        <span class="btn dead" data-dead>Enviar una solicitud / Send a request</span>
+      </div>
+
+      <div class="card">
+        <h3>Sonora del Golfo</h3>
+        <p class="sec">Mariachi · Mariachi ensemble · Cobertura para Houston <b>no determinada</b> / coverage for Houston <b>undetermined</b></p>
+        <span class="chip">«Paused — not taking requests now»</span>
+        <p class="sec">Esto no es una afirmación sobre ninguna fecha. <code>LocationEligibility: undetermined</code> se muestra con su incertidumbre, nunca se descarta en silencio. / Not a statement about any date; <code>undetermined</code> is surfaced with its uncertainty.</p>
+        <p class="sec">Colocación: orgánica. / Placement: organic.</p>
+        <span class="btn dead" data-dead>Ver perfil / View profile</span>
+      </div>
+
+      <p class="sec">Sin estrellas, sin reseñas, sin precio, sin insignia de tiempo de respuesta, sin mapa. / No stars, no reviews, no price, no response-time badge, no map.</p>
+      <p class="sec box"><b>La acción nombra lo que hace el cliente, nunca lo que va a recibir.</b> <code>Quote</code> está retirado como nombre de entidad; un botón que dijera “pedir cotización” prometería uno de cuatro resultados posibles (<code>clarification</code>, <code>decline</code>, <code>offer</code>, <code>NoResponse</code>) justo en la superficie que existe para no crear esa expectativa. <code>RFQ</code> solo se usa en texto explícitamente dirigido al owner. / The CTA names the customer's action, never the provider's reply.</p>
+      <span class="btn dead" data-dead>&larr; Anterior</span><span class="btn dead" data-dead>Página 1</span><span class="btn dead" data-dead>Siguiente &rarr;</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= UX-04 zero results ========================= -->
+<div class="cap" data-for="s-zero"><b>UX-04</b> · Search results — zero-result variant · Rendering <b>DOC + I-1</b> · V1</div>
+<section class="screen" id="s-zero" hidden>
+  <div class="reg">
+    <span class="btn dead" data-dead>Banda &#9662;</span><span class="btn dead" data-dead>Rockport &#9662;</span>
+    <button class="btn" data-go="s-results">Volver a resultados / Back to results</button>
+  </div>
+  <div class="reg">
+    <h2>Ningún proveedor coincide / No providers match this search</h2>
+    <p>Listamos proveedores de Banda, pero ninguno declara cobertura para Rockport. Es un vacío de cobertura en esta zona, no una categoría que no soportemos.</p>
+    <p class="sec">We list Banda providers, but none declare coverage for Rockport. This is a coverage gap in this area, not an unsupported category. Ambos casos se registran por separado. / Both cases are recorded separately.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Probá una búsqueda más amplia / Try a wider search</div>
+    <ul class="list">
+      <li>Proveedores de Banda que viajan a Corpus Christi — <span class="sec">restricción relajada: <b>el lugar</b>, ampliado a un área gobernada más gruesa. La categoría Banda no cambia. / relaxed constraint: <b>the place</b>, widened to a coarser governed area; the Banda category is unchanged.</span></li>
+      <li>Proveedores de Banda en Rockport sin el filtro de tamaño de ensamble — <span class="sec">restricción relajada: <b>un filtro</b> de atributo gobernado. Categoría y lugar sin cambios. Solo se ofrece cuando hay un filtro aplicado. / relaxed constraint: <b>one governed attribute filter</b>; Category and place unchanged.</span></li>
+    </ul>
+    <p class="sec box"><b>La relajación nunca cruza la clave gobernada</b>: el <code>Place</code> puede ampliarse y un filtro puede quitarse, pero la <code>Category</code> que eligió el cliente <b>nunca se cambia por otra</b> (<code>docs/04-ux/discovery-and-results.md</code> §3.3). Mover Banda a Mobile performer respondería una pregunta que el cliente no hizo. / Relaxation never crosses the governed key; the Category is never swapped.</p>
+    <p class="sec">Cada relajación es una búsqueda que el cliente elige, nunca un ensanchamiento automático. / Each relaxation is a search the customer chooses, never an automatic widening.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Contanos qué buscabas (opcional) / Tell us what you were looking for (optional)</div>
+    <label class="fld"><span>Texto libre / Free text</span><input type="text" placeholder="…"></label>
+    <span class="btn dead" data-dead>Enviar / Send</span>
+    <p class="sec"><b>No prometemos avisarte y no hay nada a lo que suscribirse.</b> <code>DemandWatch</code> / búsquedas guardadas son <code>Q-031</code>, no ratificadas, fuera de V1. / <b>No notification is promised and there is nothing to sign up for.</b></p>
+  </div>
+  <div class="reg">
+    <p class="sec box">Tu búsqueda nunca se envía a ningún proveedor. Superola no convierte una búsqueda en un mensaje. / Your search is never sent to any provider. Superola never converts a search into a broadcast.</p>
+    <div class="h" style="margin-top:12px">Segunda forma: categoría no soportada / Second shape: unsupported category</div>
+    <p>Superola no tiene una categoría para “ice sculpture” en Houston. <span class="sec">Lo decimos claramente y capturamos la señal de demanda. / We say so plainly and capture the demand signal.</span></p>
+  </div>
+</section>
+
+<!-- ================================ UX-05 ================================ -->
+<div class="cap" data-for="s-profile"><b>UX-05</b> · Provider profile (public) · Rendering <b>DOC</b> · V1 · Público / Public</div>
+<section class="screen" id="s-profile" hidden>
+  <div class="reg">
+    <h2>Mariachi Estrella del Norte</h2>
+    <p class="sec">Mobile performer · Houston area</p>
+    <span class="chip">«Published»</span><span class="chip">«Accepting requests»</span>
+    <p class="sec">“Accepting requests” significa que este proveedor está tomando solicitudes nuevas. <b>No es una afirmación sobre ninguna fecha.</b> / It is not a statement about any date.</p>
+    <button class="btn pri" data-go="s-comp-a">Enviar una solicitud / Send a request</button>
+    <p class="sec">Sin estrellas, sin reseñas, sin “responde en X horas”, sin “miembro desde”. / No stars, no reviews, no response-time badge.</p>
+  </div>
+  <div class="cols">
+    <div class="col reg">
+      <div class="h">Dónde trabajan / Where they work</div>
+      <p>Based in the Houston area<br>Serves: Houston, Katy, Sugar Land, Pearland<br>Travels up to 50 miles from Houston</p>
+      <p class="sec">La cobertura es una <b>declaración del proveedor</b> (<code>ServiceAreaDeclaration</code>). Superola no verifica la distancia de viaje. Unidades tal como el proveedor las cargó. / Coverage is a provider claim; units preserved as entered.</p>
+      <span class="btn dead" data-dead>Abrir Houston en tu app de mapas / Open in your map app</span>
+      <p class="sec"><b>Superola no muestra un mapa.</b> Sin tiles, sin SDK de proveedor, sin chincheta dibujada desde un centroide (§5.9). / <b>No rendered map.</b></p>
+    </div>
+    <div class="col reg">
+      <div class="h">Servicios ofrecidos / Services offered</div>
+      <div class="card">
+        <b>Mariachi ensemble</b><br><span class="chip">«Accepting requests»</span>
+        <button class="btn" data-go="s-comp-a">Enviar una solicitud / Send a request</button>
+      </div>
+      <div class="card">
+        <b>Solo guitar and vocals</b><br><span class="chip">«Paused — not taking requests now»</span>
+        <p class="sec">Estado de admisión, no disponibilidad. La elegibilidad y la admisión son por <code>ServiceOffering</code>, nunca por <code>Business</code> (<code>ADR-006</code>). / Per offering, never per business.</p>
+      </div>
+      <div class="h" style="margin-top:10px">Detalles de categoría / Category details</div>
+      <div class="kv"><b>Ensemble size</b><span>6–10</span></div>
+      <div class="kv"><b>Languages</b><span>Spanish, English</span></div>
+      <div class="kv"><b>Brings own sound</b><span>Yes</span></div>
+      <p class="sec">Renderizado desde <code>CategoryAttributeDefinition</code> gobernadas. Una categoría nueva se renderiza sin pantalla nueva. / Rendered from governed definitions; a new Category needs no new screen.</p>
+    </div>
+  </div>
+  <div class="reg">
+    <div class="h">Sobre el proveedor / About</div>
+    <p>Narrativa escrita por el proveedor. / Narrative written by the provider.</p>
+    <p class="sec"><code>contentLocale</code> explícito: escrito en español, mostrado en español. Una traducción automática se marca como tal; ninguna superficie presenta una traducción como palabras propias del proveedor. / Machine translation is always marked.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Fotos · audio · video / Photos, audio and video</div>
+    <div class="media">[ imagen / image ] &nbsp; [ imagen / image ] &nbsp; [ imagen / image ]<br>cada una con texto alternativo / each with alternative text</div>
+    <ul class="list">
+      <li>Live set 2024 — abre el enlace externo del proveedor / opens the provider's external link</li>
+      <li>Wedding demo — <span class="chip">«Link is not working»</span> <span class="sec">estado real y visible / a real, visible state</span></li>
+    </ul>
+    <p class="sec">Imágenes alojadas; <b>audio y video se enlazan, nunca se suben</b> (<code>ADR-018</code>). / Audio and video are linked out, never uploaded.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Qué sabe y qué no sabe Superola / What Superola does and does not know</div>
+    <ul class="list">
+      <li>Superola confirmó que este proveedor controla un canal de contacto. / confirmed control of a contact channel.</li>
+      <li><b>V1 has no availability model.</b> No sabemos si está libre en tu fecha; preguntáselo en una solicitud. / Ask them in a request.</li>
+      <li>Superola no verifica precios, licencias, seguros ni calidad. / does not verify prices, licences, insurance, or quality.</li>
+    </ul>
+    <p class="sec">Los clientes ven solo <code>Published</code> y <code>Stale</code>. <code>Suspended</code> nunca aparece y no puede distinguirse de <code>Deactivated</code>. / Customers cannot distinguish Suspended from Deactivated.</p>
+    <button class="btn pri" data-go="s-comp-a">Enviar una solicitud / Send a request</button>
+    <span class="btn dead" data-dead>Reportar este perfil / Report this profile</span>
+  </div>
+</section>
+
+<!-- =========================== UX-07 stage A =========================== -->
+<div class="cap" data-for="s-comp-a"><b>UX-07</b> · Request composer — stage A “Your event” · Rendering <b>LOCAL + I-1, I-2</b> · V1</div>
+<section class="screen" id="s-comp-a" hidden>
+  <div class="reg">
+    <div class="h">Indicador de etapa (nombrado, sin denominador) / Named-stage indicator (no denominator)</div>
+    <p class="mono">Your need &rsaquo; <b>YOUR EVENT</b> &rsaquo; Service details &rsaquo; Optional details &rsaquo; Review</p>
+    <p class="sec">Las etapas dependen del servicio elegido. <b>Nunca “paso 3 de 6”</b>: el total depende de los datos y sería deshonesto (§5.1, §5.11). / Never “step 3 of 6” — the count is data-dependent.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Destinatario / Requesting from</div>
+    <p><b>Mariachi Estrella del Norte</b> · Mariachi ensemble <span class="chip">«Accepting requests»</span></p>
+    <p class="sec">Un solo destinatario deliberado (<code>WA-02</code>). No hay control para agregar proveedores ni para “enviar a proveedores similares”. / One deliberate recipient; no fan-out control anywhere.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Tu evento / Your event</div>
+    <label class="fld"><span>¿Cuál es la ocasión? / What is the occasion <code>PRE-SUBMIT</code></span>
+      <div class="picker">Quinceañera</div></label>
+    <div class="fld"><span>¿Cuándo es? / When is it <code>PRE-SUBMIT</code></span>
+      <label class="opt"><input type="radio" name="when" disabled> Una fecha específica / A specific date</label>
+      <label class="opt"><input type="radio" name="when" disabled> Un rango de fechas / A date range</label>
+      <label class="opt"><input type="radio" name="when" checked disabled> Todavía no la decidí — flexible / Not decided yet — flexible</label>
+    </div>
+    <p class="sec box"><code>flexible</code> es una respuesta válida de primera clase. La fecha es <b>contexto para el proveedor</b>: no es un filtro y no es una afirmación del sistema sobre el proveedor. / The date is request context only, never a filter and never a system claim.</p>
+    <button class="btn pri" data-go="s-comp-b">Continuar / Continue</button>
+    <button class="btn" data-go="s-profile">Volver / Back</button>
+  </div>
+  <div class="reg">
+    <p class="sec">Tus respuestas se guardan <b>en este dispositivo</b>. Nada se envía al proveedor hasta que revises y envíes. El <code>RequestDraft</code> es local y anónimo hasta que exista una <code>Account</code> (§5.2). / Local and anonymous until an <code>Account</code> exists.</p>
+  </div>
+</section>
+
+<!-- ============ UX-07 stage B — category-conditional reveal ============ -->
+<div class="cap" data-for="s-comp-b"><b>UX-07</b> · Request composer — stage B, category-conditional reveal · Rendering <b>LOCAL + I-1, I-2</b> · V1</div>
+<section class="screen" id="s-comp-b" hidden>
+  <div class="reg">
+    <p class="mono">Your need &rsaquo; Your event &rsaquo; <b>SERVICE DETAILS</b> &rsaquo; Optional details &rsaquo; Review</p>
+  </div>
+  <div class="reg">
+    <div class="h">Demostración de la revelación condicional / Conditional reveal demonstration</div>
+    <p class="sec">Cambiá el arquetipo para ver qué preguntas se revelan. Las preguntas son <b>datos</b> derivados de <code>CategoryAttributeDefinition</code>, no un formulario a mano por categoría. / The question set is data, not a hand-built form per category.</p>
+    <label class="opt"><input type="radio" name="arch" value="perf" checked> Mobile performer</label>
+    <label class="opt"><input type="radio" name="arch" value="venue"> Fixed venue</label>
+    <label class="opt"><input type="radio" name="arch" value="food"> Delivery and food</label>
+  </div>
+
+  <div class="reg" id="revealRegion" tabindex="-1">
+    <h3 id="revealHeading">Detalles del servicio / Service details</h3>
+    <p class="sec" id="revealWhy" role="status">Estas preguntas aparecieron por el servicio que elegiste: <b>Mobile performer</b>. / These questions appeared because of the service you chose.</p>
+
+    <div data-arch="perf">
+      <label class="fld"><span>Hora aproximada de inicio / Approximate start time <code>CATEGORY</code></span><input type="text" placeholder="6:00 PM"></label>
+      <label class="fld"><span>¿Cuánto tiempo? / How long do you need <code>CATEGORY</code></span><input type="text" placeholder="2 hours"></label>
+      <div class="fld"><span>Interior o exterior / Indoor or outdoor <code>CATEGORY</code></span>
+        <label class="opt"><input type="radio" name="io" disabled> Indoor</label>
+        <label class="opt"><input type="radio" name="io" disabled> Outdoor</label>
+        <label class="opt"><input type="radio" name="io" disabled> Both</label>
+        <label class="opt"><input type="radio" name="io" disabled> Not sure</label>
+      </div>
+      <div class="fld"><span>¿Hay escenario o área de actuación? / Stage or performance area <code>CATEGORY</code></span>
+        <label class="opt"><input type="radio" name="stg" disabled> Yes</label>
+        <label class="opt"><input type="radio" name="stg" disabled> No</label>
+        <label class="opt"><input type="radio" name="stg" disabled> Not sure</label>
+      </div>
+      <details><summary>Pedidos de repertorio (opcional) / Song requests (optional) <code>QUALITY</code></summary>
+        <textarea placeholder="…"></textarea></details>
+    </div>
+
+    <div data-arch="venue" hidden>
+      <label class="fld"><span>Cantidad de invitados / Guest count <code>CATEGORY</code> — bloqueante para venue / blocking for venue</span><input type="text" placeholder="120"></label>
+      <label class="fld"><span>Hora de inicio y fin / Start and end time <code>CATEGORY</code></span><input type="text" placeholder="6:00 PM – 11:00 PM"></label>
+      <div class="fld"><span>¿Necesitás catering en el lugar? / On-site catering needed <code>CATEGORY</code></span>
+        <label class="opt"><input type="radio" name="cat" disabled> Yes</label>
+        <label class="opt"><input type="radio" name="cat" disabled> No</label>
+        <label class="opt"><input type="radio" name="cat" disabled> Not sure</label>
+      </div>
+      <p class="sec">Nunca le preguntamos a un venue por “equipo de sonido que trae el artista”. Ese es el defecto del formulario universal. / We never ask a venue the performer's questions — that is the universal-form defect.</p>
+    </div>
+
+    <div data-arch="food" hidden>
+      <label class="fld"><span>Cantidad de porciones / Servings <code>CATEGORY</code> — bloqueante / blocking</span><input type="text" placeholder="120"></label>
+      <label class="fld"><span>Ventana de entrega o servicio / Delivery or service window <code>CATEGORY</code></span><input type="text" placeholder="…"></label>
+      <div class="fld"><span>¿Entrega o servicio en el lugar? / Delivery or on-site service <code>CATEGORY</code></span>
+        <label class="opt"><input type="radio" name="dv" disabled> Delivery</label>
+        <label class="opt"><input type="radio" name="dv" disabled> On-site service</label>
+      </div>
+      <label class="fld"><span>Restricciones alimentarias / Dietary restrictions <code>CATEGORY</code></span><input type="text" placeholder="…"></label>
+      <p class="sec">La factibilidad de plazo se <b>deriva de la fecha</b>, no se pregunta. / Lead-time feasibility is derived from the date, not asked.</p>
+    </div>
+
+    <p class="sec box">Accesibilidad: la región se anuncia cortésmente al revelarse, el foco va al <b>encabezado de la región</b> (no al primer campo), y las respuestas ya dadas no se reordenan (§5.11). / The region is announced politely, focus moves to the region heading, answered questions are not reordered.</p>
+    <button class="btn pri" data-go="s-comp-c">Continuar / Continue</button>
+    <button class="btn" data-go="s-comp-a">Volver / Back</button>
+  </div>
+
+  <div class="reg">
+    <div class="h">Cambio de categoría — advertencia previa al hecho / Category change — before-the-fact warning</div>
+    <p>Estás cambiando de <b>Mobile performer</b> a <b>Delivery and food</b>. Se eliminarán: hora de inicio, duración, interior/exterior, escenario, equipo de sonido. Se conservan: ocasión, fecha, lugar.</p>
+    <p class="sec">Los descartes quedan en sesión: deshacer inmediato los restaura (§5.2). El cambio de <b>tipo de evento</b> no descarta nada. / Dropped answers are retained in session for immediate undo; an event-type change drops nothing.</p>
+    <span class="btn dead" data-dead>Mantener Mobile performer / Keep</span><span class="btn dead" data-dead>Cambiar el servicio / Change</span>
+  </div>
+</section>
+
+<!-- =========================== UX-07 stage C =========================== -->
+<div class="cap" data-for="s-comp-c"><b>UX-07</b> · Request composer — stage C “Optional details” · Rendering <b>LOCAL + I-1, I-2</b> · V1</div>
+<section class="screen" id="s-comp-c" hidden>
+  <div class="reg">
+    <p class="mono">Your need &rsaquo; Your event &rsaquo; Service details &rsaquo; <b>OPTIONAL DETAILS</b> &rsaquo; Review</p>
+    <p class="sec">Todo opcional. Saltear no bloquea nada. Clase <code>QUALITY</code>: mejora la <code>ProviderResponse</code> y no condiciona elegibilidad. / All optional; blocks nothing.</p>
+  </div>
+  <div class="reg">
+    <label class="fld"><span>¿Cuántos invitados aproximadamente? / About how many guests <code>QUALITY</code> para performer</span><input type="text" placeholder="120"></label>
+    <div class="fld"><span>Rango de presupuesto / Budget range <code>QUALITY</code></span>
+      <label class="opt"><input type="radio" name="bud" disabled> Banda A / Band A</label>
+      <label class="opt"><input type="radio" name="bud" disabled> Banda A–B / Band A–B</label>
+      <label class="opt"><input type="radio" name="bud" disabled> Banda B–C / Band B–C</label>
+      <label class="opt"><input type="radio" name="bud" disabled> Sobre banda C / Above band C</label>
+      <label class="opt"><input type="radio" name="bud" checked disabled> Prefiero no decirlo / Prefer not to say</label>
+    </div>
+    <p class="sec"><b>Nunca un par numérico min/max obligatorio</b> (§5.4). Si se informa, llega al proveedor solo dentro de la superficie autenticada, <b>nunca en el cuerpo de una notificación</b> (<code>ADR-010</code>).</p>
+    <div class="fld"><span>¿Qué tan avanzado estás? / How far along are you <code>QUALITY</code></span>
+      <label class="opt"><input type="radio" name="pi" disabled> Just exploring</label>
+      <label class="opt"><input type="radio" name="pi" disabled> Comparing providers</label>
+      <label class="opt"><input type="radio" name="pi" disabled> Ready to decide</label>
+    </div>
+    <label class="fld"><span>Algo más que el proveedor deba saber / Anything else <code>QUALITY</code></span>
+      <textarea placeholder="…"></textarea></label>
+    <p class="sec">Por favor no pongas tu teléfono ni tu email acá; vas a agregar un canal de contacto al enviar. <b>No afirmamos que la plataforma proteja el contacto</b> (<code>ADR-010</code>): el texto libre se clasifica como posible portador de datos de contacto. / We do not claim in-platform means contact-protected.</p>
+    <button class="btn pri" data-go="s-review">Revisar solicitud / Review request</button>
+    <button class="btn" data-go="s-review">Saltear / Skip</button>
+    <button class="btn" data-go="s-comp-b">Volver / Back</button>
+  </div>
+</section>
+
+<!-- ================================ UX-08 ================================ -->
+<div class="cap" data-for="s-review"><b>UX-08</b> · Request review and send · Rendering <b>DOC</b> · V1 · Público / Public</div>
+<section class="screen" id="s-review" hidden>
+  <div class="reg">
+    <h2>Revisá tu solicitud / Review your request</h2>
+    <p class="sec">Todavía no se envió nada. / Nothing has been sent yet.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Va a un solo proveedor / Going to one provider</div>
+    <p><b>Mariachi Estrella del Norte</b> · Mariachi ensemble <span class="chip">«Accepting requests»</span></p>
+    <p class="sec box">Solo este proveedor va a recibir esta solicitud. Superola no la envía a nadie más. <b>No hay lista de destinatarios ni control de difusión</b> (<code>WA-02</code>, <code>DB-01</code>). / No recipient list and no fan-out control.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Lo que estás enviando / What you are sending</div>
+    <div class="kv"><b>Service</b><span>Mariachi ensemble</span></div>
+    <div class="kv"><b>Place</b><span>Houston</span></div>
+    <div class="kv"><b>Occasion</b><span>Quinceañera</span></div>
+    <div class="kv"><b>Date</b><span>Not decided yet — flexible</span></div>
+    <div class="kv"><b>Start time</b><span>6:00 PM (approximate)</span></div>
+    <div class="kv"><b>Duration</b><span>2 hours</span></div>
+    <div class="kv"><b>Indoor or outdoor</b><span>Outdoor</span></div>
+    <div class="kv"><b>Sound equipment</b><span>Provider brings it</span></div>
+    <div class="kv"><b>Guests</b><span>About 120</span></div>
+    <div class="kv"><b>Budget</b><span>Prefer not to say</span></div>
+    <div class="kv"><b>Notes</b><span>“Looking for a 45-minute set, mostly traditional…”</span></div>
+    <p class="sec">Cada línea es editable en su etapa sin perder respuestas posteriores. Un campo <code>QUALITY</code> sin responder muestra “Not provided” y no es un error. / Each line is editable; an unanswered <code>QUALITY</code> field is not an error.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Qué pasa después / What happens next</div>
+    <ul class="list">
+      <li>Te vamos a pedir que confirmes un email o teléfono. / We will ask you to confirm an email or phone.</li>
+      <li>Tu solicitud queda guardada mientras confirmás. No la vas a perder (<code>PendingVerification</code>). / Your request is saved while you confirm.</li>
+      <li>Después de confirmar, el proveedor la recibe. / After you confirm, the provider receives it.</li>
+      <li><b>El proveedor puede preguntar, rechazar, ofertar, o no responder. Superola no puede prometer una respuesta.</b> / The provider may not reply; Superola cannot promise a reply.</li>
+    </ul>
+    <p class="sec box">Enviar una solicitud <b>no es una reserva</b> y no crea obligación para nadie. / Sending a request is not a booking and creates no obligation.</p>
+    <button class="btn pri" data-go="s-verify">Continuar para confirmar y enviar / Continue to confirm and send</button>
+    <button class="btn" data-go="s-comp-c">Volver / Back</button>
+  </div>
+</section>
+
+<!-- ================================ UX-09 ================================ -->
+<div class="cap" data-for="s-verify"><b>UX-09</b> · Identity and channel verification · Rendering <b>DOC</b> · V1 · Transicional / Transitional</div>
+<section class="screen" id="s-verify" hidden>
+  <div class="reg">
+    <h2>Confirmá cómo puede contactarte el proveedor / Confirm how the provider can reach you</h2>
+    <p class="sec">Tu solicitud está guardada. Confirmar no envía nada al proveedor hasta que se complete (<code>WA-05</code> guest-then-verify). / Your request is saved; nothing is delivered until this succeeds.</p>
+  </div>
+  <div class="reg">
+    <div class="fld"><span>¿A dónde van las respuestas? / Where should replies go</span>
+      <label class="opt"><input type="radio" name="ch" checked disabled> Email</label>
+      <input type="text" placeholder="tu@email">
+      <label class="opt"><input type="radio" name="ch" disabled> Teléfono / Phone</label>
+      <input type="text" placeholder="+1 …">
+    </div>
+    <p class="sec">Los datos de contacto <b>no son un atributo de la solicitud</b>: se resuelven al entregar o renderizar mediante una decisión de divulgación registrada (<code>ADR-010</code>). Esta pantalla es idéntica bajo las tres respuestas posibles del owner a <code>Q-008</code>; solo cambia el valor resuelto.</p>
+    <span class="btn dead" data-dead>Enviame un código / Send me a code</span>
+  </div>
+  <div class="reg">
+    <label class="fld"><span>Ingresá el código / Enter the code</span><input type="text" placeholder="______"></label>
+    <div class="err">Ese código no es correcto o expiró. / That code is not correct or has expired. <span class="btn dead" data-dead>Enviar otro / Send a new code</span></div>
+    <div class="err">No pudimos enviar el código a esa dirección. Probá otro email o teléfono. <b>Tu solicitud sigue guardada.</b> / We could not send the code. Your request is still saved.</div>
+    <button class="btn pri" data-go="s-submitted">Confirmar y enviar solicitud / Confirm and send request</button>
+    <button class="btn" data-go="s-review">Volver / Back</button>
+  </div>
+  <div class="reg">
+    <p class="sec box">Esto confirma que <b>controlás este email o teléfono</b>. <b>No es una verificación de identidad</b> y Superola no verifica quién sos. <code>verificationBasis</code> = se probó el control de este canal en el momento T. Sin verificación de identidad gubernamental, sin insignia de “usuario verificado”.</p>
+    <p class="sec">El abandono en verificación se instrumenta por separado del abandono en el compositor: los arreglos son distintos (§5.10, <code>R-022</code>). / Verification abandonment is instrumented separately from composer abandonment.</p>
+  </div>
+</section>
+
+<!-- ================================ UX-10 ================================ -->
+<div class="cap" data-for="s-submitted"><b>UX-10</b> · Request submitted confirmation — both states · Rendering <b>DOC</b> · V1 · Autenticado / Auth</div>
+<section class="screen" id="s-submitted" hidden>
+  <div class="reg">
+    <div class="h">Estado 1 de 2 — entregada / State 1 of 2 — delivered</div>
+    <h2>Tu solicitud llegó al proveedor / Your request reached the provider</h2>
+    <p><b>Mariachi Estrella del Norte</b> · Mariachi ensemble</p>
+    <span class="chip">«Delivered — waiting for a reply»</span>
+    <ul class="list">
+      <li>El proveedor puede preguntar, rechazar, enviar una oferta, o no responder. / may ask, decline, offer, or not reply.</li>
+      <li><b>Vamos a intentar</b> avisarte en la dirección que confirmaste. <b>Esta página y tu lista de solicitudes son el registro.</b> / <b>We will try</b> to notify you at the address you confirmed. This page and your requests list are the record.</li>
+    </ul>
+    <p class="sec">La confirmación en pantalla es la autoritativa; la notificación es una conveniencia, <b>nunca el registro</b> (<code>surface-inventory.md</code>, <code>UX-10</code>). Una promesa de aviso sin calificar comprometería una entrega que la arquitectura no puede garantizar. / The on-screen confirmation is authoritative; the notification is a convenience, never the record.</p>
+    <p class="sec box">Esto no es una reserva. No se muestra ningún tiempo estimado de respuesta porque no existe. / This is not a booking. No estimated reply time is shown because none exists.</p>
+    <button class="btn pri" data-go="s-request">Ver esta solicitud / View this request</button>
+    <button class="btn" data-go="s-comp-a">Pedir otro servicio para este evento / Request another service for this event</button>
+    <p class="sec">Eso siembra un <b>nuevo</b> <code>RequestDraft</code> pre-cargado con el <code>EventContext</code> anterior y su <code>eventGroupingHint</code> (§5.5). No es un RFQ multi-servicio, no es ruteo, y no existe un agregado <code>Event</code>.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Estado 2 de 2 — enviada y pendiente de verificación / State 2 of 2 — submitted and pending verification</div>
+    <h2>Tu solicitud está guardada. Todavía no llegó al proveedor. / Your request is saved. It has not reached the provider yet.</h2>
+    <p>Para <b>Mariachi Estrella del Norte</b> · Mariachi ensemble</p>
+    <span class="chip">«Saved — waiting for you to confirm your address»</span>
+    <ul class="list">
+      <li><b>No se entregó nada.</b> El proveedor no puede ver esta solicitud y no sabe que existe. / Nothing has been delivered; the provider cannot see this request and does not know it exists.</li>
+      <li>Va a llegarle cuando confirmes el email o teléfono que nos diste. Tus respuestas quedan guardadas hasta entonces (<code>PendingVerification</code>). / It will reach them once you confirm the email or phone you gave us.</li>
+      <li><b>Vamos a intentar</b> enviar el código a esa dirección. Esta página y tu lista de solicitudes son el registro. / We will try to send the code to that address; this page and your requests list are the record.</li>
+    </ul>
+    <p class="sec box">Esto no es una reserva. / This is not a booking.</p>
+    <span class="btn dead" data-dead>Confirmar mi dirección / Confirm my address</span>
+    <span class="btn dead" data-dead>Usar otra dirección / Use a different address</span>
+    <button class="btn" data-go="s-request">Ver esta solicitud / View this request</button>
+    <p class="sec box"><b>“Enviada” es una palabra prohibida en este estado</b> (<code>docs/04-ux/identity-and-verification.md</code>, <code>PV-02</code>): presentar como enviada una solicitud no entregada es la falla de honestidad más dañina disponible acá, porque el cliente queda esperando una respuesta que nunca fue posible. Los dos estados se redactan para que no puedan confundirse. / “Sent” is a prohibited word on this surface.</p>
+    <p class="sec">Corregir una dirección mal tipeada no exige recomponer la solicitud (<code>PV-03</code>). Sin cuenta regresiva, sin animación de “esperando”, sin estado consultado en vivo: no hay transporte en tiempo real (<code>PV-05</code>, <code>system-architecture.md</code> §3); el estado se actualiza al navegar o por una acción explícita. / No countdown, no live status; there is no realtime transport.</p>
+  </div>
+</section>
+
+<!-- ============================ UX-12 response ============================ -->
+<div class="cap" data-for="s-request"><b>UX-12</b> · Request detail: response + conversation (customer) · Rendering <b>LOCAL</b> · V1 · Autenticado / Auth</div>
+<section class="screen" id="s-request" hidden>
+  <div class="reg">
+    <h2>Quinceañera · Houston · Mariachi ensemble</h2>
+    <p class="sec">Con Mariachi Estrella del Norte <span class="chip">«They sent an offer»</span></p>
+    <p class="sec">Estás escribiendo <b>como vos mismo</b> / You are writing as yourself. <span class="sec">(§5.15 — toda superficie con capacidad ambigua lo declara.)</span></p>
+  </div>
+  <div class="reg">
+    <div class="anchor">
+      <div class="h">Tu solicitud · 14 de marzo / Your request · 14 March</div>
+      <p>Quinceañera · Houston · fecha flexible · 2 horas · exterior · ~120 invitados</p>
+      <details><summary>Ver todo lo que enviaste / See everything you sent</summary>
+        <p class="sec">La solicitud original es una entrada anclada y distinta, no un mensaje. / An anchored entry, not a message.</p></details>
+    </div>
+  </div>
+  <div class="reg">
+    <div class="anchor">
+      <div class="h">Oferta de Mariachi Estrella del Norte · 15 de marzo / Offer · 15 March</div>
+      <div class="kv"><b>Price</b><span>USD $650 total</span></div>
+      <div class="kv"><b>As of</b><span>15 March</span></div>
+      <div class="kv"><b>Includes</b><span>6 musicians, 2 hours, own sound system</span></div>
+      <div class="kv"><b>Not included</b><span>Travel beyond 30 miles, extra hours</span></div>
+      <div class="kv"><b>Conditions</b><span>Covered performance area required</span></div>
+      <p class="sec box">Esto es lo que el proveedor dice que cobraría. <b>No es una reserva</b>, Superola no procesa pagos y nada queda reservado. / Not a booking; Superola does not process payment; nothing is reserved.</p>
+      <button class="btn pri" data-go="s-conversation">Responder / Reply</button>
+      <button class="btn" data-go="s-conversation">Hacer una pregunta / Ask a question</button>
+      <button class="btn" data-go="s-outcome">Contanos qué pasó / Tell us what happened</button>
+      <span class="btn dead" data-dead>Retirar solicitud / Withdraw</span>
+      <p class="sec"><b>No hay botón de aceptar.</b> Ningún control en V1 crea una obligación. Si estás de acuerdo, coordinalo con el proveedor. Se declara la ausencia para que nadie asuma que el flujo está roto. / <b>There is no accept button.</b> Its absence is stated, not silent.</p>
+      <p class="sec">Donde no existe <code>PriceStatement</code>, <b>no se muestra ningún precio</b>: ni rango, ni estimado, ni promedio, ni marcador. / No price where no <code>PriceStatement</code> exists.</p>
+    </div>
+  </div>
+  <div class="reg">
+    <div class="h">Las tres clases de respuesta son visiblemente distintas / The three response kinds are user-visibly distinct</div>
+    <ul class="list">
+      <li><code>clarification</code> — una pregunta, el hilo continúa, sin precio.</li>
+      <li><code>decline</code> — con razón opcional escrita por el proveedor, no punitiva, inmutable.</li>
+      <li><code>offer</code> — <code>PriceStatement</code> opcional con moneda, base, inclusiones, exclusiones, condiciones y fecha de vigencia.</li>
+      <li><b><code>NoResponse</code></b> — cuarto resultado, <b>observado por el sistema, no una acción del proveedor</b>. No punitivo, no terminal, ventana <code>POLICY PENDING</code>. El silencio nunca se presenta como un juicio (<code>Q-032</code>).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================ UX-12 / UX-20 ============================ -->
+<div class="cap" data-for="s-conversation"><b>UX-12</b> / <b>UX-20</b> · Conversation · Rendering <b>LOCAL</b> · V1 · Autenticado / Auth</div>
+<section class="screen" id="s-conversation" hidden>
+  <div class="reg">
+    <h2>Conversación / Conversation</h2>
+    <p class="sec">Quinceañera · Houston · con Mariachi Estrella del Norte. Estás escribiendo como vos mismo / You are writing as yourself.</p>
+    <p class="sec">Un solo hilo cronológico: Demand posee la solicitud y cada <code>ProviderResponse</code>; Conversation posee los mensajes. Renderizarlos juntos es una decisión de presentación permitida por P02 (§5.16).</p>
+  </div>
+  <div class="reg thread">
+    <div class="sysline">— TU SOLICITUD · 14 de marzo — <span class="sec">entrada anclada, no un mensaje / anchored entry, not a message</span></div>
+    <div class="sysline">— SISTEMA / SYSTEM · El proveedor abrió tu solicitud —
+      <span class="sec"><code>ThreadEvent</code>: visualmente distinto y <b>nunca contado como mensaje</b> en ningún conteo de no leídos.</span></div>
+    <div><b>Mariachi Estrella del Norte</b> · 14 de marzo<br>“Is the outdoor area covered? We need shade for the instruments.”</div>
+    <div><b>Vos / You</b> · 14 de marzo<br>“Yes, there is a covered patio.”</div>
+    <div class="anchor">— OFERTA / OFFER · 15 de marzo — USD $650 total · 6 musicians, 2 hours, own sound system <span class="chip">«Current offer»</span>
+      <div class="sec">Donde <code>revisionEnabled</code> no está habilitado, “oferta actual” es simplemente la más reciente. Una respuesta <code>Superseded</code> sigue visible para ambas partes.</div></div>
+    <div class="sysline">— SISTEMA / SYSTEM · Falló la entrega de tu notificación por email —
+      <span class="sec">Visible para su propia parte y <b>nunca presentado como la no-respuesta de la contraparte</b> (§5.16).</span></div>
+  </div>
+  <div class="reg">
+    <label class="fld"><span>Escribir un mensaje / Write a message</span><textarea placeholder="…"></textarea></label>
+    <p class="sec">No envíes datos de pago acá. / Do not send payment details here.</p>
+    <span class="btn dead" data-dead>Enviar / Send</span>
+    <p class="sec box"><b>Sin transporte en tiempo real</b>: sin indicador de escritura, sin presencia, sin acuse de lectura, sin “visto”, sin insignia que se actualiza sola, sin push. Los no leídos se calculan en el servidor y se renderizan al navegar. <b>Sin polling global.</b> / No realtime affordances; no global polling.</p>
+    <span class="btn dead" data-dead>Reportar / Report</span><span class="btn dead" data-dead>Bloquear / Block</span>
+    <p class="sec">Una parte bloqueada ve que no puede publicar y una razón a nivel política — nunca quién reportó ni el contenido del reporte. / A blocked party sees a policy-level reason only.</p>
+    <button class="btn pri" data-go="s-outcome">Ir a captura de resultado / Go to outcome capture</button>
+  </div>
+</section>
+
+<!-- ================================ UX-14 ================================ -->
+<div class="cap" data-for="s-outcome"><b>UX-14</b> · Outcome capture · Rendering <b>LOCAL</b> · V1 · Autenticado / Auth</div>
+<section class="screen" id="s-outcome" hidden>
+  <div class="reg">
+    <h2>¿Qué pasó con esta solicitud? / What happened with this request</h2>
+    <p class="sec">Quinceañera · Houston · Mariachi Estrella del Norte</p>
+    <p class="sec box">Responder nos ayuda a entender si Superola sirve. <b>No cambia nada para el proveedor y no es una reseña.</b> No hay estrellas, ni puntaje, ni reputación pública en V1. / It changes nothing for the provider and is not a review.</p>
+  </div>
+  <div class="reg">
+    <div class="fld"><span><code>ReportedOutcome</code> — solo el cliente, base <code>self_declared</code></span>
+      <label class="opt"><input type="radio" name="oc" disabled> Voy a seguir con este proveedor / I am going ahead with this provider <code>proceeding</code></label>
+      <label class="opt"><input type="radio" name="oc" disabled> No voy a seguir con este proveedor / I am not going ahead <code>not_proceeding</code></label>
+      <label class="opt"><input type="radio" name="oc" disabled> Todavía no sé / I do not know yet <code>unknown</code></label>
+    </div>
+    <p class="sec"><b>“Todavía no sé” es una respuesta real</b> (<code>unknown</code>). Dejarlo sin responder es distinto (<code>Unreported</code>) y también está bien. <b>Nunca se colapsan.</b> / <code>unknown</code> and <code>Unreported</code> are never collapsed.</p>
+  </div>
+  <div class="reg">
+    <details open><summary>Por qué (opcional) / Why (optional)</summary>
+      <label class="opt"><input type="radio" name="wr" disabled> Elegí otro proveedor / I chose another provider</label>
+      <label class="opt"><input type="radio" name="wr" disabled> El proveedor no respondió / The provider did not respond</label>
+      <label class="opt"><input type="radio" name="wr" disabled> El precio era muy alto / The price was too high</label>
+      <label class="opt"><input type="radio" name="wr" disabled> Cambiaron mis planes / My plans changed</label>
+      <label class="opt"><input type="radio" name="wr" disabled> Todavía estoy decidiendo / I am still deciding</label>
+      <label class="opt"><input type="radio" name="wr" disabled> Otro / Other</label>
+    </details>
+    <p class="sec">Razón secundaria <b>opcional, junto al triple gobernado, nunca en su reemplazo</b>. Extensión <code>PROPOSED</code> de P04 a <code>ADR-003</code>, no P02 existente (§5.16). Nunca se muestra al proveedor como calificación. / A <code>PROPOSED</code> extension, never a replacement enum, never shown as a rating.</p>
+    <p class="sec box"><b>Accesibilidad de la revelación condicional.</b> Esta región aparece en respuesta al triple gobernado, así que sigue <b>el mismo contrato de anuncio y foco que el compositor</b> (<code>docs/04-ux/accessibility-and-responsive.md</code> §4): se inserta en orden de DOM inmediatamente después del control que la causó, se <b>anuncia cortésmente</b> y nunca de forma asertiva, el <b>foco va al encabezado de la nueva región</b> y no a su primer campo, y la revelación <b>nunca reordena las opciones ya respondidas</b>. Sin JavaScript la revelación es una continuación renderizada en el servidor con las mismas palabras. El mismo contrato rige la revelación de motivos por tipo de acción de <code>UX-27</code>, que no se dibuja acá (<code>docs/04-ux/operator-surfaces.md</code>). / The reveal follows the composer's announcement and focus contract; the same contract binds <code>UX-27</code>.</p>
+  </div>
+  <div class="reg">
+    <p class="sec box">Esto es lo que vos nos contás. Superola no procesa pagos ni confirma reservas, así que no tenemos otra forma de saberlo (<code>WA-03</code>). Sin lenguaje de reserva, pago o finalización. / Self-declared because there is no transaction to observe.</p>
+    <span class="btn dead" data-dead>Guardar / Save</span><span class="btn dead" data-dead>Ahora no / Skip for now</span>
+    <button class="btn" data-go="s-inbox">Ver la rama de proveedor / See the provider branch &rarr;</button>
+  </div>
+</section>
+
+<!-- ================================ UX-18 ================================ -->
+<div class="cap" data-for="s-inbox"><b>UX-18</b> · Provider workspace home / request inbox · Rendering <b>DOC</b> · V1 · Autenticado / Auth</div>
+<section class="screen" id="s-inbox" hidden>
+  <div class="reg">
+    <div class="h">Contexto de rol dual / Dual-role context</div>
+    <span class="btn dead" data-dead>Hiring</span> <span class="btn pri" data-dead>MY BUSINESS: Mariachi Estrella</span>
+    <p class="sec">Una <code>Account</code>, una sesión, <b>sin toggle que cambie estado global</b> (<code>ADR-004</code>, §5.15). Los dos contextos conviven; “My business” existe solo si hay <code>BusinessMembership</code>. Ninguna decisión de autorización depende del contexto mostrado (<code>ADR-011</code>).</p>
+  </div>
+  <div class="cols">
+    <div class="col reg" style="flex:0 0 220px">
+      <div class="h">Espacio de trabajo / Workspace</div>
+      <ul class="list">
+        <li>Requests (2)</li><li>Conversations</li><li>Offerings</li>
+        <li>Profile</li><li>Media</li><li>Publication</li><li>Settings</li>
+      </ul>
+      <p class="sec"><b>No es un CRM</b>: sin etapas de pipeline, campos custom, etiquetas, acciones masivas, constructor de reportes ni calendario (§5.14). / Not a CRM.</p>
+      <div class="h" style="margin-top:12px">Taking requests</div>
+      <label class="opt"><input type="radio" name="ri" checked disabled> Accepting requests</label>
+      <label class="opt"><input type="radio" name="ri" disabled> Paused</label>
+      <label class="opt"><input type="radio" name="ri" disabled> Not confirmed</label>
+      <p class="sec box">Es un ajuste de <b>admisión</b>. <b>No es un calendario y no es tu disponibilidad en ninguna fecha</b>, y a los clientes se les dice lo mismo (<code>ADR-005</code>).</p>
+      <div class="h" style="margin-top:12px">Publication</div>
+      <span class="chip">«Published»</span> <span class="sec">confirmado hace 12 días</span>
+      <button class="btn" data-go="s-onboard">Confirmar que mis datos están vigentes / Confirm my details are current</button>
+      <p class="sec"><code>Stale</code> &rarr; <code>reconfirm</code> en una sola acción desde el enlace de una notificación: la acción de mantenimiento más frecuente del producto (§5.13).</p>
+    </div>
+    <div class="col reg">
+      <div class="h">Solicitudes / Requests — más nuevas primero / newest first</div>
+      <span class="btn dead" data-dead>All</span><span class="btn dead" data-dead>New</span><span class="btn dead" data-dead>Answered</span><span class="btn dead" data-dead>Declined</span><span class="btn dead" data-dead>No reply</span>
+      <div class="card">
+        <b>Quinceañera · Houston · Mariachi ensemble</b><br>
+        <span class="sec">Recibida hace 2 horas</span> <span class="chip">«New»</span><br>
+        <span class="sec">Date: flexible · About 120 guests</span><br>
+        <button class="btn pri" data-go="s-prov-detail">Abrir / Open</button>
+      </div>
+      <div class="card">
+        <b>Wedding · Katy · Mariachi ensemble</b><br>
+        <span class="sec">Recibida ayer</span> <span class="chip">«You sent an offer»</span><br>
+        <span class="btn dead" data-dead>Abrir / Open</span>
+      </div>
+      <div class="card">
+        <b>Corporate · Sugar Land · Solo guitar</b><br>
+        <span class="sec">Recibida hace 9 días</span> <span class="chip">«No reply from you»</span><br>
+        <span class="sec">No respondiste. Esto <b>no es una penalización</b> y la solicitud sigue abierta. <code>NoResponse</code> es observado por el sistema, no punitivo, no terminal; su ventana es <code>POLICY PENDING</code> y no se dibuja ninguna cuenta regresiva.</span><br>
+        <span class="btn dead" data-dead>Abrir / Open</span>
+      </div>
+      <p class="sec">Una fila no contiene nombre del cliente, canal de contacto, dirección del evento ni presupuesto: es un resumen y la costura de divulgación aplica al renderizar (<code>ADR-010</code>). <b>Ninguna métrica de tasa de respuesta existe en el producto.</b></p>
+      <p class="sec box">Variante vacía / Empty variant: “Todavía no hay solicitudes. Aparecen acá cuando un cliente envía una. No se requiere nada de tu parte más allá de estar publicado y aceptando solicitudes.”</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ UX-19 ================================ -->
+<div class="cap" data-for="s-prov-detail"><b>UX-19</b> · Provider request detail · Rendering <b>LOCAL</b> · V1 · Autenticado / Auth</div>
+<section class="screen" id="s-prov-detail" hidden>
+  <div class="reg">
+    <h2>Solicitud · Quinceañera · Houston / Request</h2>
+    <p class="sec">Para tu oferta / For your offering: <b>Mariachi ensemble</b> <span class="chip">«New»</span> · hace 2 horas</p>
+    <p class="sec">Estás viendo esto <b>como Mariachi Estrella del Norte</b> / You are viewing this as Mariachi Estrella del Norte.</p>
+  </div>
+  <div class="reg">
+    <div class="h">Lo que pidió el cliente / What the customer asked for</div>
+    <div class="kv"><b>Occasion</b><span>Quinceañera</span></div>
+    <div class="kv"><b>Place</b><span>Houston</span></div>
+    <div class="kv"><b>Date</b><span>Not decided yet — flexible</span></div>
+    <div class="kv"><b>Start time</b><span>6:00 PM (approximate)</span></div>
+    <div class="kv"><b>Duration</b><span>2 hours</span></div>
+    <div class="kv"><b>Indoor or outdoor</b><span>Outdoor</span></div>
+    <div class="kv"><b>Sound equipment</b><span>Customer expects you to bring it</span></div>
+    <div class="kv"><b>Guests</b><span>About 120</span></div>
+    <div class="kv"><b>Budget</b><span>Prefer not to say</span></div>
+    <div class="kv"><b>Planning stage</b><span>Not provided</span></div>
+    <div class="kv"><b>Notes</b><span>“Looking for a 45-minute set, mostly traditional…”</span></div>
+    <p class="sec">Superficie autenticada: el presupuesto y el texto libre pueden aparecer <b>solo acá</b>, nunca en el cuerpo de una notificación (<code>ADR-010</code>).</p>
+    <p class="sec box"><b>“Prefer not to say” es una respuesta, no un blanco.</b> El cliente la eligió explícitamente en <code>UX-07</code>, así que se renderiza como la respuesta que es. <b>“Not provided” queda reservado para un campo que el cliente realmente salteó</b> — acá, <i>Planning stage</i>, para que ambos casos se vean lado a lado. Colapsarlos repetiría el defecto que el repositorio prohíbe: una respuesta explícita no es silencio, y <code>unknown</code> nunca es <code>Unreported</code>. La ausencia debe seguir siendo distinguible de la negación. Ninguno de los dos estados es un defecto ni una señal sobre el cliente. / An explicit “prefer not to say” is an answer, not a blank; “Not provided” is reserved for a genuinely skipped field.</p>
+    <p class="sec box"><b>La dirección del evento no es parte de esta solicitud.</b> Preguntásela al cliente si la necesitás. Es el campo de mayor daño en V1 y nunca se expone. / The event address is not part of the request.</p>
+  </div>
+  <div class="reg">
+    <button class="btn pri" data-go="s-prov-respond">Responder / Reply</button>
+    <button class="btn" data-go="s-inbox">Volver a la bandeja / Back to inbox</button>
+    <span class="btn dead" data-dead>Reportar / Report</span><span class="btn dead" data-dead>Bloquear / Block</span>
+    <p class="sec">También podés no hacer nada. Se registra como “sin respuesta” y no es una penalización. / You can also do nothing; that is recorded as no reply and is not a penalty.</p>
+  </div>
+</section>
+
+<!-- ========================= UX-19 respond forms ========================= -->
+<div class="cap" data-for="s-prov-respond"><b>UX-19</b> · Provider respond — clarify / decline / offer · Rendering <b>LOCAL</b> · V1</div>
+<section class="screen" id="s-prov-respond" hidden>
+  <div class="reg">
+    <div class="h">Responder a esta solicitud / Reply to this request</div>
+    <p class="sec">Respondiendo como <b>Mariachi Estrella del Norte</b> / Replying as Mariachi Estrella del Norte.</p>
+    <p class="sec">Superficie de mayor riesgo móvil del producto: los proveedores trabajan desde el teléfono (<code>DB-06</code>, §5.12). Probá el ancho “Teléfono / Phone”. / The single highest-risk mobile surface — try the phone width.</p>
+  </div>
+  <div class="reg">
+    <h3>1. Preguntar / Ask a question — <code>clarification</code></h3>
+    <textarea placeholder="…"></textarea>
+    <p class="sec">Continúa la conversación. <b>No incluye precio y no es una oferta.</b> / Continues the thread; includes no price and is not an offer.</p>
+    <span class="btn dead" data-dead>Enviar pregunta / Send question</span>
+  </div>
+  <div class="reg">
+    <h3>2. Rechazar / Decline — <code>decline</code></h3>
+    <div class="fld"><span>Razón (opcional, se muestra al cliente) / Reason (optional, shown to the customer)</span>
+      <label class="opt"><input type="radio" name="dr" disabled> Not available for that date</label>
+      <label class="opt"><input type="radio" name="dr" disabled> Outside the area I travel to</label>
+      <label class="opt"><input type="radio" name="dr" disabled> Not the kind of event I take</label>
+      <label class="opt"><input type="radio" name="dr" disabled> Too short notice</label>
+      <label class="opt"><input type="radio" name="dr" disabled> Other</label>
+    </div>
+    <p class="sec">Opcional, <b>escrita por el proveedor, nunca derivada por el operador, nunca punitiva</b> (<code>ADR-005</code>). “Not available for that date” es una <b>afirmación del proveedor dentro de una solicitud</b>, que es exactamente donde <code>WA-01</code> ubica la factibilidad: no es un modelo de disponibilidad, no se almacena como tal y nunca se vuelve una afirmación pública.</p>
+    <p class="sec">Una vez enviado, un rechazo <b>no se puede editar</b>. Se dice antes, no se descubre después. / Immutable — stated before sending.</p>
+    <span class="btn dead" data-dead>Enviar rechazo / Send decline</span>
+  </div>
+  <div class="reg">
+    <h3>3. Enviar una oferta / Send an offer — <code>offer</code></h3>
+    <p class="sec box">Una oferta es lo que cobrarías y qué incluye. <b>No es una reserva y Superola no procesa pagos.</b> / Not a booking; Superola does not process payment.</p>
+    <label class="opt"><input type="checkbox" checked disabled> Quiero incluir un precio / I want to include a price <span class="sec">(<code>PriceStatement</code> opcional)</span></label>
+    <div class="cols">
+      <div class="col"><label class="fld"><span>Amount</span><input type="text" placeholder="650"></label></div>
+      <div class="col"><label class="fld"><span>Currency</span><div class="picker">USD</div></label></div>
+      <div class="col"><label class="fld"><span>As of</span><input type="text" placeholder="15 March"></label></div>
+    </div>
+    <div class="fld"><span>Basis</span>
+      <label class="opt"><input type="radio" name="bs" disabled> Total</label>
+      <label class="opt"><input type="radio" name="bs" disabled> Per hour</label>
+      <label class="opt"><input type="radio" name="bs" disabled> Per person</label>
+      <label class="opt"><input type="radio" name="bs" disabled> Starting from</label>
+    </div>
+    <label class="fld"><span>What is included</span><textarea placeholder="…"></textarea></label>
+    <label class="fld"><span>What is not included</span><textarea placeholder="…"></textarea></label>
+    <label class="fld"><span>Conditions</span><textarea placeholder="…"></textarea></label>
+    <p class="sec box"><b>Si no incluís un precio, el cliente no ve ningún precio. No estimamos uno.</b> Ni rango, ni promedio, ni marcador. Moneda siempre explícita: <code>USD $650</code>, nunca un “$” pelado.</p>
+    <p class="sec">Vencimiento (<code>expiryEnabled</code>) y revisión (<code>revisionEnabled</code>): <b>no habilitados para esta categoría</b> — el control lo dice en lugar de estar ausente en silencio. Campos estructurados y revisión son banderas por arquetipo (§5.16).</p>
+    <p class="sec">La validación vive en el dominio (<code>ADR-011</code>): el formulario del cliente nunca es la autoridad. / Validation lives in the domain; the client form is never the authority.</p>
+    <span class="btn dead" data-dead>Enviar oferta / Send offer</span>
+    <button class="btn" data-go="s-onboard">Ver alta y edición de proveedor / See provider onboarding and editing &rarr;</button>
+  </div>
+</section>
+
+<!-- ==================== UX-17 / UX-24 / UX-21 / UX-22 ==================== -->
+<div class="cap" data-for="s-onboard"><b>UX-17</b> + <b>UX-24</b> + <b>UX-22</b> · Provider onboarding, publication checklist, offering editor · Rendering <b>LOCAL + I-1, I-3</b> / <b>DOC</b> · V1</div>
+<section class="screen" id="s-onboard" hidden>
+  <div class="reg">
+    <h2>Configurá tu negocio en Superola / Set up your business on Superola</h2>
+    <p class="mono">Account &rsaquo; Business &rsaquo; <b>YOUR FIRST SERVICE</b> &rsaquo; Where you work &rsaquo; Service details &rsaquo; About you &rsaquo; Photos and links &rsaquo; Preview &rsaquo; Publish</p>
+    <p class="sec">Etapas nombradas, sin denominador. El progreso se guarda en cada paso; nada se pierde (§5.13). / Named stages; progress saved at every step.</p>
+  </div>
+  <div class="cols">
+    <div class="col reg">
+      <div class="h">Tu primer servicio / Your first service</div>
+      <label class="fld"><span>¿Qué servicio ofrecés? / What service do you offer</span><div class="picker">Mobile performer &rsaquo; Mariachi</div></label>
+      <span class="btn dead" data-dead>Sugerir un servicio / Suggest a service</span>
+      <p class="sec">La entrada de categoría del proveedor se vuelve un <code>CategoryProposal</code>, <b>nunca un nodo</b> (<code>ADR-007</code>). Sugerir <b>no crea una categoría y no publica nada</b>, así el proveedor no queda esperando.</p>
+      <p class="sec">Tu negocio puede tener más de un servicio. Cada uno se lista por separado: la elegibilidad es por <code>ServiceOffering</code>, nunca por <code>Business</code>.</p>
+    </div>
+    <div class="col reg">
+      <div class="h">Qué te falta para aparecer en búsqueda / What you still need to appear in search</div>
+      <p class="sec">Lista viva, visible <b>desde la primera pantalla</b>, no al final. Separa “requerido para crear una cuenta” (un canal de contacto y su control probado) de “requerido para aparecer en descubrimiento”.</p>
+      <ul class="list checklist">
+        <li>[x] Confirmar tu canal de contacto — <span class="sec">Por qué: para que los clientes puedan contactarte. Desbloquea: recibir solicitudes.</span></li>
+        <li>[x] Agregar un servicio — <span class="sec">Por qué: la búsqueda es por servicio. Desbloquea: aparecer en los resultados de ese servicio.</span></li>
+        <li>[ ] Decir dónde trabajás — <span class="sec">Por qué: emparejamos por área. Desbloquea: aparecer en los resultados de esa área.</span></li>
+        <li>[ ] Responder los detalles requeridos de este servicio — <span class="sec">Por qué: los clientes filtran por ellos.</span></li>
+        <li>[ ] Confirmar que tenés los derechos de las fotos — <span class="sec">Requisito de publicación (<code>ADR-018</code>).</span></li>
+        <li>[ ] Dirección base con precisión suficiente para este servicio — <span class="sec">Tu dirección exacta <b>nunca</b> se muestra públicamente.</span></li>
+      </ul>
+      <p class="sec">Los ítems sin marcar <b>no son errores</b>: una lista incompleta es un estado normal durante el alta.</p>
+      <span class="chip">«Draft — not visible to customers»</span>
+      <span class="btn dead" data-dead>Previsualizar mi perfil público / Preview my public profile</span>
+      <p class="sec box"><b>Valor antes que completitud</b>: podés previsualizar antes de cumplir todo, y la lista dice exactamente qué falta. Lo que no puede pasar es la <b>publicación silenciosa de un perfil incompleto</b> (§5.13).</p>
+    </div>
+  </div>
+  <div class="reg">
+    <div class="h"><b>UX-24</b> · Estado de publicación / Publication state — Rendering <b>DOC</b></div>
+    <p><span class="chip">«Published»</span> confirmado hace 12 días · <span class="sec">Los clientes pueden encontrarte.</span></p>
+    <span class="btn dead" data-dead>Confirmar que mis datos están vigentes / Confirm my details are current</span>
+    <div class="kv"><b>«Draft»</b><span>No visible. Todavía estás configurando.</span></div>
+    <div class="kv"><b>«Pending review»</b><span>Estamos revisando esta categoría de servicio.</span></div>
+    <div class="kv"><b>«Stale»</b><span>Sigue siendo encontrable, mostrado como “no confirmado recientemente”.</span></div>
+    <div class="kv"><b>«Deactivated»</b><span>Vos lo apagaste. Podés reactivarlo cuando quieras.</span></div>
+    <div class="kv"><b>«Suspended»</b><span>Nosotros lo pausamos. Razón y siguiente paso se muestran acá.</span></div>
+    <div class="kv"><b>«Rejected»</b><span>No aprobado. Razón y qué cambiar se muestran acá.</span></div>
+    <div class="kv"><b>«Closed»</b><span>Finalizado.</span></div>
+    <p class="sec">Los clientes solo ven <code>Published</code> y <code>Stale</code>. Se le dice al proveedor cuáles ven los clientes, para que nadie asuma que una suspensión está etiquetada públicamente. Subir un requisito de publicación <b>no despublica retroactivamente</b>.</p>
+  </div>
+  <div class="reg">
+    <div class="h"><b>UX-22</b> · Editor de oferta / Offering editor — Rendering <b>LOCAL + I-1</b></div>
+    <p><b>Editar: Mariachi ensemble</b> <span class="chip">«Published»</span></p>
+    <p class="sec">Los cambios se guardan como borrador de este servicio hasta que los publiques. <b>Tu versión pública actual sigue arriba.</b> Editar no despublica.</p>
+    <div class="cols">
+      <div class="col">
+        <div class="h">Dónde trabajás / Where you work</div>
+        <label class="opt"><input type="radio" name="how" checked disabled> Yo viajo al cliente / I travel to the customer</label>
+        <label class="opt"><input type="radio" name="how" disabled> El cliente viene a mí / The customer comes to me</label>
+        <p class="sec">Encuadre por arquetipo: venue = viaja el cliente; performer = viaja el proveedor (§5.9).</p>
+        <label class="fld"><span>Based in</span><div class="picker">Houston</div></label>
+        <label class="fld"><span>I travel up to</span><input type="text" placeholder="50 miles"></label>
+        <p class="sec">Unidades preservadas tal como el proveedor las cargó; sin conversión silenciosa.</p>
+        <p class="sec">Los clientes ven estos nombres de lugar y tu distancia de viaje. <b>Nunca ven tu dirección exacta.</b></p>
+        <div class="err">No pudimos ubicar “Sugar Land, TX 77478” en nuestra lista. Elegí un lugar de la lista o dejalo afuera. <span class="sec"><code>undetermined</code> se muestra con su consecuencia, <b>nunca se fuerza</b> a la coincidencia más cercana; va a la cola de operador <code>UX-31</code>.</span></div>
+      </div>
+      <div class="col">
+        <div class="h">Detalles del servicio / Service details</div>
+        <div class="kv"><b>Ensemble size</b><span>6–10 &nbsp;<span class="sec">required</span></span></div>
+        <div class="kv"><b>Languages</b><span>Spanish, English &nbsp;<span class="sec">required</span></span></div>
+        <div class="kv"><b>Brings own sound</b><span>Yes &nbsp;<span class="sec">required</span></span></div>
+        <div class="kv"><b>Typical set length</b><span>45 min &nbsp;<span class="sec">optional</span></span></div>
+        <p class="sec">Desde <code>CategoryAttributeDefinition</code> gobernadas por el operador, <b>nunca escribibles por el proveedor</b> (<code>ADR-007</code>). Requerido/opcional en texto.</p>
+        <div class="h" style="margin-top:10px">Taking requests for this service</div>
+        <label class="opt"><input type="radio" name="ri2" checked disabled> Accepting requests</label>
+        <label class="opt"><input type="radio" name="ri2" disabled> Paused — until (____) reason (____)</label>
+        <label class="opt"><input type="radio" name="ri2" disabled> Not confirmed</label>
+        <p class="sec box">Controla si los clientes pueden enviarte una solicitud. <b>No es un calendario, no es tu disponibilidad en ninguna fecha</b>, y a los clientes se les dice lo mismo.</p>
+      </div>
+    </div>
+    <div class="h" style="margin-top:12px">Fotos, audio y video / Photos, audio and video (island <code>I-3</code>)</div>
+    <span class="btn dead" data-dead>Elegir fotos / Choose photos</span>
+    <ul class="list">
+      <li>rehearsal.jpg <span class="chip">«Processing»</span></li>
+      <li>stage-2024.jpg <span class="chip">«Ready»</span> — Alt text <span class="sec">(propiedad de la colocación del <code>MediaReference</code>, ítem de calidad de publicación)</span></li>
+      <li>quartet.jpg <span class="chip">«Could not be processed»</span> <span class="sec">estado visible y recuperable</span></li>
+      <li>Live set 2024 <span class="chip">«Link is not working»</span> <span class="sec">audio y video son <b>enlaces</b>, nunca subidas (<code>ADR-018</code>)</span></li>
+    </ul>
+    <span class="btn dead" data-dead>Previsualizar / Preview</span><span class="btn dead" data-dead>Guardar borrador / Save draft</span><span class="btn dead" data-dead>Publicar cambios / Publish changes</span>
+    <p class="sec">La publicación se condiciona al hecho en base de datos de que el medio existe, <b>nunca a si un proveedor externo lo está sirviendo ahora</b>.</p>
+    <button class="btn" data-go="s-home">Volver al inicio del recorrido / Back to the start &rarr;</button>
+  </div>
+</section>
+
+</div><!-- /stage -->
+</div><!-- /outer -->
+
+<div class="status" id="status"></div>
+
+<script>
+/* ---------------------------------------------------------------------
+   Navigation only. No business logic, no validation, no storage.
+   Solo navegacion. Sin logica de negocio, sin validacion, sin storage.
+   --------------------------------------------------------------------- */
+(function(){
+  "use strict";
+
+  var SCREENS = [
+    ["s-home",         "UX-01 · Home / need entry"],
+    ["s-results",      "UX-04 · Search results"],
+    ["s-zero",         "UX-04 · Zero results / Sin resultados"],
+    ["s-profile",      "UX-05 · Provider profile"],
+    ["s-comp-a",       "UX-07 · Composer A — Your event"],
+    ["s-comp-b",       "UX-07 · Composer B — Category reveal"],
+    ["s-comp-c",       "UX-07 · Composer C — Optional details"],
+    ["s-review",       "UX-08 · Request review and send"],
+    ["s-verify",       "UX-09 · Verification"],
+    ["s-submitted",    "UX-10 · Request submitted — both states"],
+    ["s-request",      "UX-12 · Response / offer"],
+    ["s-conversation", "UX-12 / UX-20 · Conversation"],
+    ["s-outcome",      "UX-14 · Outcome capture"],
+    ["s-inbox",        "UX-18 · Provider request inbox"],
+    ["s-prov-detail",  "UX-19 · Provider request detail"],
+    ["s-prov-respond", "UX-19 · Provider respond"],
+    ["s-onboard",      "UX-17 / UX-24 / UX-22 · Onboarding and editing"]
+  ];
+
+  var jump = document.getElementById("jump");
+  var pos  = document.getElementById("pos");
+  var idx  = 0;
+
+  SCREENS.forEach(function(s, i){
+    var o = document.createElement("option");
+    o.value = String(i); o.textContent = (i+1) + ". " + s[1];
+    jump.appendChild(o);
+  });
+
+  function caption(id){
+    var caps = document.querySelectorAll(".cap");
+    for (var i=0;i<caps.length;i++){
+      caps[i].hidden = (caps[i].getAttribute("data-for") !== id);
+    }
+  }
+
+  function show(i){
+    if (i < 0) i = 0;
+    if (i > SCREENS.length-1) i = SCREENS.length-1;
+    idx = i;
+    SCREENS.forEach(function(s, k){
+      var el = document.getElementById(s[0]);
+      if (el) el.hidden = (k !== i);
+    });
+    caption(SCREENS[i][0]);
+    jump.value = String(i);
+    pos.textContent = "Pantalla / Screen " + (i+1) + " de / of " + SCREENS.length;
+    window.scrollTo(0,0);
+  }
+
+  function indexOfId(id){
+    for (var i=0;i<SCREENS.length;i++){ if (SCREENS[i][0] === id) return i; }
+    return 0;
+  }
+
+  document.addEventListener("click", function(e){
+    var t = e.target;
+    while (t && t !== document.body){
+      if (t.hasAttribute && t.hasAttribute("data-go")) { show(indexOfId(t.getAttribute("data-go"))); return; }
+      if (t.hasAttribute && t.hasAttribute("data-dead")) { flash(); return; }
+      t = t.parentNode;
+    }
+  });
+
+  var st = document.getElementById("status"), stTimer = null;
+  function flash(){
+    st.textContent = "Prototipo: este control no hace nada. / Prototype: this control does nothing.";
+    st.style.display = "block";
+    if (stTimer) clearTimeout(stTimer);
+    stTimer = setTimeout(function(){ st.style.display = "none"; }, 1800);
+  }
+
+  jump.addEventListener("change", function(){ show(parseInt(jump.value,10)); });
+  document.getElementById("prev").addEventListener("click", function(){ show(idx-1); });
+  document.getElementById("next").addEventListener("click", function(){ show(idx+1); });
+
+  /* Viewport width toggle — constrains the stage so desktop and phone
+     behaviour can be compared without resizing the browser.
+     Alterna el ancho del escenario para comparar escritorio y telefono. */
+  var stage = document.getElementById("stage");
+  var bD = document.getElementById("vDesk"), bP = document.getElementById("vPhone");
+  function width(phone){
+    stage.classList.toggle("phone", phone);
+    bD.setAttribute("aria-pressed", phone ? "false" : "true");
+    bP.setAttribute("aria-pressed", phone ? "true" : "false");
+  }
+  bD.addEventListener("click", function(){ width(false); });
+  bP.addEventListener("click", function(){ width(true); });
+
+  /* Category-conditional reveal demonstration (UX-07 stage B).
+     Shows one pre-written question block, announces why it appeared, and
+     moves focus to the region heading — never to the first input (§5.11). */
+  var archInputs = document.querySelectorAll('input[name="arch"]');
+  var LABEL = { perf:"Mobile performer", venue:"Fixed venue", food:"Delivery and food" };
+  for (var a=0;a<archInputs.length;a++){
+    archInputs[a].addEventListener("change", function(){
+      var v = this.value;
+      var blocks = document.querySelectorAll("#revealRegion [data-arch]");
+      for (var b=0;b<blocks.length;b++){
+        blocks[b].hidden = (blocks[b].getAttribute("data-arch") !== v);
+      }
+      document.getElementById("revealWhy").innerHTML =
+        "Estas preguntas aparecieron por el servicio que elegiste: <b>" + LABEL[v] +
+        "</b>. / These questions appeared because of the service you chose.";
+      document.getElementById("revealRegion").focus();
+    });
+  }
+
+  show(0);
+})();
+</script>
+</body>
+</html>

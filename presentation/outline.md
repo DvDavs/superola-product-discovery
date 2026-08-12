@@ -47,6 +47,8 @@ Every factual or comparative claim needs a source in `presentation/sources.md` a
 
 `REQUIREMENT — RECORDED IN P03.1 FOR P07. Do not build it before P07 is explicitly started.`
 
+**P04 did not build it.** P04 produced `presentation/superola-ux-walkthrough-v0.1.html`, which is a **different artifact**: a marked structural prototype for walking the primary customer journey across low-fidelity screens, carrying a persistent bilingual `PROTOTYPE — NOT FINAL DESIGN` banner and explaining no cost, no decision packet, and no roadmap. **The Explorer's scope below is untouched and still belongs to P07.** The prohibition above is read as forbidding the Explorer, not as forbidding any HTML in this directory; a marked prototype whose palette and font stack are placeholders required for HTML to render is permitted, and no product surface may take a color, typeface, or measurement from it.
+
 P07 must generate a **presentation-quality, self-contained HTML artifact** intended for David and the owner. It is the mature replacement for the current Markdown previews, not an addition to them.
 
 ### What it must visually explain
@@ -86,3 +88,16 @@ At minimum P04/P07 should produce Excalidraw (or equivalent editable) sources fo
 **Diagram B — Customer journey.** Need/event → structured request → relevant results → provider profile → RFQ → quote/clarification → conversation → outcome.
 
 **Diagram C — What changes if…** Payments · Matching/fan-out · Legacy migration · Mobile · AI.
+
+### Delivered by P04
+
+All three exist, plus a fourth. **Because this repository contains no diagram toolchain**, each is a Markdown source carrying a Mermaid rendering **plus a precise Excalidraw build specification**, which the P04 directive authorized as the substitute for generated sources; one hand-authored `.excalidraw` scene was produced for Diagram B and validated as JSON.
+
+| Diagram | File | Note |
+|---|---|---|
+| A — Superola in one page | `diagrams/context/superola-ux-map.md` | Rendered as the surface map: public, customer, provider, channel and operator lanes, with `FUTURE` surfaces visually separated. |
+| B — Customer journey | `diagrams/journeys/customer-journey.md` + `diagrams/journeys/customer-journey.excalidraw` | The `.excalidraw` scene is a **subset** of the build specification and says so on the canvas. |
+| C — What changes if… | `diagrams/journeys/decision-overlay.md` | **P04 substituted guaranteed calendar availability for legacy migration** in the branch set, on the P04 directive's own list, and recorded the substitution rather than dropping legacy migration silently. |
+| — Provider journey | `diagrams/journeys/provider-journey.md` | Not in the P03.1 requirement; added because the provider side is half the marketplace and the owner asks about it. |
+
+**The Mermaid was reviewed by hand and not machine-validated**, because installing a renderer would add tooling to a repository that deliberately has none.
