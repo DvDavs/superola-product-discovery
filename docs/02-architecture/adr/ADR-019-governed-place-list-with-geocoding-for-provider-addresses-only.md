@@ -3,7 +3,7 @@
 - Status: **PROPOSED — SPLIT.** This ADR carried three decisions at different levels. P03.1 separates them:
   - **Architecture/technology portion** (governed `Place` identity, customer-side resolution against it, provider-only geocoding, precision and provenance): **RECOMMEND ACCEPT**.
   - **Geocoding vendor selection**: **HOLD — LEGAL/TERMS VERIFICATION REQUIRED.** Two legal readings are unresolved; see Validation. A legal interpretation must not be recorded as a technical fact.
-  - **Rendered map**: **REMOVED from this technology decision and moved to P04** as a UX/product question. Only the privacy invariant is retained here.
+  - **Rendered map**: **REMOVED from this technology decision and moved to P04** as a UX/product question. Only the privacy invariant is retained here. **P04 has now answered: no rendered map in V1, deferred with three named triggers** — see Level 3 below and `docs/04-ux/map-decision.md`.
 - Decision owner: David (technical decision owner for this repository), plus counsel for the two legal readings, plus P04 for any map surface
 - Related evidence/requirements: `docs/03-technology/technology-evaluation.md` §4.7; `cost-model.md` §7; `docs/03-technology/p03-decision-reconciliation.md`; `p03-decision-inputs.md` `D-07`; `domain-model.md` §1.4, §4.2; `ADR-014`; `internationalization-architecture.md` §3; `security-privacy-architecture.md` §12; `integration-architecture.md`; `R-022`, `R-045`; `SRC-013`
 - Supersedes / superseded by: N/A
@@ -61,7 +61,19 @@ The recommended source is recorded in `technology-radar.md`, and the runner-up h
 
 **That invariant does not prohibit a map.** P04 may decide to render coarse location, a city centroid, a declared service area, an approximate area, market coverage, or another privacy-preserving geographic visualization. **The technology must not prohibit a UX decision P04 has not been asked yet**, and P03's *"no rendered map in V1"* did exactly that by promoting a product conclusion into an architecture record. What P03 legitimately established is narrower and is preserved: **no V1 requirement discovered so far needs a map**, and the cost model is built on the assumption that none is rendered.
 
-**Approval still required:** David for Level 1. Counsel for Level 2. P04 for Level 3.
+#### P04's answer — `NO RENDERED MAP IN V1`, deferred rather than rejected
+
+**P04 exercised this decision and declined the map**, on user value rather than on vendor capability or privacy. The full argument is in `docs/04-ux/map-decision.md`; the load-bearing parts are:
+
+- **No V1 journey needs one.** Discovery is category-first and `Place`-first over a governed, enumerable list; eligibility is a predicate, not a visual search.
+- **The privacy invariant is retained absolutely and is explicitly NOT the reason.** A city centroid or a declared coverage area emits nothing private. Recording privacy as the reason would repeat exactly the conflation P03.1 corrected.
+- **The strongest candidate is Fixed venue**, where the customer travels to the provider — and there the customer's real question is answered by a coarse `Place` label, the venue address where the provider chose to publish it, and a **link-out to the customer's own map application**, which is not a rendered map: no tiles, no vendor SDK, no dynamic-map line, no attribution or storage clause.
+- **Misleading precision:** a pin drawn from a coarse centroid asserts what the data does not support, and `LocationEligibility` = `undetermined` has no honest pin at all.
+- **Interaction cost:** a map would be the only plausible surface in the product requiring client state that survives navigation, which couples this decision to `ADR-020` — the two were taken on independent grounds and both point the same way.
+
+**This is a deferral with named triggers, not a rejection.** The triggers are recorded in Reconsideration, below.
+
+**Approval still required:** David for Level 1. Counsel for Level 2. **Level 3 is answered by P04 and its answer is `PROPOSED`, like every other P04 output.**
 
 ## Rationale
 
@@ -120,7 +132,9 @@ The precision gate is evaluated **before** any distance computation, so an insuf
 
 **Level 2 (vendor):** verified confirmation that the selected vendor's termination clause reaches permanently-licensed geocodes, which flips the recommendation to the runner-up. **Until counsel answers, the vendor stays on HOLD and no purchase may proceed.**
 
-**Level 3 (map):** **P04 approves any rendered geographic surface.** That is not a reversal of this ADR — it is P04 exercising a decision this ADR deliberately does not hold. The consequence is a re-price: a dynamic-map line enters the cost model, the map-coupled storage and attribution clauses become live again, and Option C's disqualification must be re-read against the specific surface. **Level 1 survives all of it**, because a coarse governed label rendered on a tile is still a governed label.
+**Level 3 (map): P04 has exercised this decision and declined a rendered map for V1.** The deferral reopens on any one of three named triggers, recorded in `docs/04-ux/map-decision.md`: **(a)** a Fixed-venue-heavy launch cohort is approved **and** venue-selection comprehension failure is observed in evaluation; **(b)** an approved requirement introduces street-level *customer* location input — for example a delivery archetype — which is the same condition that reopens Level 1; or **(c)** service-area comprehension is measured as a named cause of provider-side ineligible requests.
+
+If any trigger fires and a geographic surface is approved, the consequence is unchanged from what this ADR already recorded — a re-price: a dynamic-map line enters the cost model, the map-coupled storage and attribution clauses become live again, **Level 2's unresolved legal reading 2 — whether rendering a vendor-derived coordinate on a public page constitutes distribution — becomes live again**, `ADR-020`'s reconsideration trigger 4 fires because a tile surface is the first plausible candidate for client state that survives navigation, and Option C's disqualification must be re-read against the specific surface. **Level 1 survives all of it**, because a coarse governed label rendered on a tile is still a governed label.
 
 ## Validation
 
@@ -135,4 +149,4 @@ Required instrumentation: eligibility outcome per evaluation with the `undetermi
 
 ---
 
-*Record dates — ADR authored 2026-08-11 (P03). Split into three decision levels 2026-08-12 (P03.1). Vendor terms, pricing and licence evidence accessed 2026-08-11; re-verify before purchase.*
+*Record dates — ADR authored 2026-08-11 (P03). Split into three decision levels 2026-08-12 (P03.1). Level 3 answered by P04 2026-08-12 — no rendered map in V1, deferred with three named triggers; Levels 1 and 2 unchanged and no cost arithmetic changed. Vendor terms, pricing and licence evidence accessed 2026-08-11; re-verify before purchase.*
