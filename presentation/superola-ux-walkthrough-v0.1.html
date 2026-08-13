@@ -110,6 +110,10 @@
     This prototype demonstrates <b>structure only</b>: what information exists on each screen, which region owns it, and what states it has.
     No color, typography, iconography, or branding decision is implied, and none may be inferred from it.
     Status: <code>PROPOSED — OWNER VALIDATION REQUIRED</code>. <code>G-06</code> is unresolved; everything here rests on <code>WA-01</code>.
+    <br><br>
+    <b>Alcance / Scope.</b> Esta es una muestra estructural representativa de 17 pantallas, no un inventario completo del catálogo de 39 superficies (<code>docs/04-ux/surface-inventory.md</code>). No dibuja <code>UX-11</code> (Mis solicitudes), <code>UX-13</code>, <code>UX-16</code>, <code>UX-26</code>–<code>UX-35</code>, ni <code>UX-39</code>. En este recorrido, la confirmación de envío enlaza directo a <code>UX-12</code> (detalle) sin pasar por <code>UX-11</code>: en el producto real ese salto pasa por <code>UX-11</code>, la lista de todas las solicitudes del cliente. <code>UX-35</code> (correo) y <code>UX-39</code> (reporte/bloqueo) no son pantallas de este recorrido por diseño — la primera es un cuerpo de correo, la segunda requiere autenticación con un destino concreto — y las nueve superficies de operador (<code>UX-26</code>–<code>UX-34</code>) están fuera de alcance porque este recorrido es de cara al cliente y al proveedor, no al operador.
+    <br>
+    <b>Scope.</b> This is a representative structural sample of 17 screens, not a complete rendering of the 39-surface catalog (<code>docs/04-ux/surface-inventory.md</code>). It does not draw <code>UX-11</code> (My requests), <code>UX-13</code>, <code>UX-16</code>, <code>UX-26</code>–<code>UX-35</code>, or <code>UX-39</code>. In this walkthrough, the submission confirmation links straight to <code>UX-12</code> (detail) without passing through <code>UX-11</code>; in the real product that jump passes through <code>UX-11</code>, the customer's full request list. <code>UX-35</code> (email) and <code>UX-39</code> (report/block) are not screens in this walkthrough by design — the first is an email body, the second requires authentication against a concrete target — and the nine operator surfaces (<code>UX-26</code>–<code>UX-34</code>) are out of scope because this walkthrough is customer- and provider-facing, not operator-facing.
   </div>
 </div>
 
@@ -326,8 +330,7 @@
       <div class="h">Dónde trabajan / Where they work</div>
       <p>Based in the Houston area<br>Serves: Houston, Katy, Sugar Land, Pearland<br>Travels up to 50 miles from Houston</p>
       <p class="sec">La cobertura es una <b>declaración del proveedor</b> (<code>ServiceAreaDeclaration</code>). Superola no verifica la distancia de viaje. Unidades tal como el proveedor las cargó. / Coverage is a provider claim; units preserved as entered.</p>
-      <span class="btn dead" data-dead>Abrir Houston en tu app de mapas / Open in your map app</span>
-      <p class="sec"><b>Superola no muestra un mapa.</b> Sin tiles, sin SDK de proveedor, sin chincheta dibujada desde un centroide (§5.9). / <b>No rendered map.</b></p>
+      <p class="sec"><b>Superola no muestra un mapa, y aquí tampoco hay enlace a una app de mapas.</b> Este proveedor declaró un área base ("Houston area"), no una dirección de venue publicada — el enlace a mapa externo solo existe cuando hay una dirección fija publicada (<code>PP-63</code>). / <b>No rendered map, and no map-app link here either.</b> This provider declared a base area, not a published venue address — the external map link-out exists only where a fixed address is published.</p>
     </div>
     <div class="col reg">
       <div class="h">Servicios ofrecidos / Services offered</div>
@@ -594,20 +597,21 @@
     <button class="btn pri" data-go="s-request">Ver esta solicitud / View this request</button>
     <button class="btn" data-go="s-comp-a">Pedir otro servicio para este evento / Request another service for this event</button>
     <p class="sec">Eso siembra un <b>nuevo</b> <code>RequestDraft</code> pre-cargado con el <code>EventContext</code> anterior y su <code>eventGroupingHint</code> (§5.5). No es un RFQ multi-servicio, no es ruteo, y no existe un agregado <code>Event</code>.</p>
+    <p class="sec box"><b>No dibujado aquí:</b> en el producto real, este botón entra primero a <code>UX-11</code> (Mis solicitudes) — la lista de todas las solicitudes de este cliente, con estado y marcador de no leído — y de ahí a esta pantalla de detalle. Este recorrido salta directo por brevedad. / <b>Not drawn here:</b> in the real product this button lands on <code>UX-11</code> (My requests) first — the list of every request this customer has sent, with state and an unread marker — and from there into this detail screen. This walkthrough skips straight through for brevity.</p>
   </div>
   <div class="reg">
     <div class="h">Estado 2 de 2 — enviada y pendiente de verificación / State 2 of 2 — submitted and pending verification</div>
     <h2>Tu solicitud está guardada. Todavía no llegó al proveedor. / Your request is saved. It has not reached the provider yet.</h2>
     <p>Para <b>Mariachi Estrella del Norte</b> · Mariachi ensemble</p>
-    <span class="chip">«Saved — waiting for you to confirm your address»</span>
+    <span class="chip">«Saved — waiting for you to confirm your contact»</span>
     <ul class="list">
       <li><b>No se entregó nada.</b> El proveedor no puede ver esta solicitud y no sabe que existe. / Nothing has been delivered; the provider cannot see this request and does not know it exists.</li>
-      <li>Va a llegarle cuando confirmes el email o teléfono que nos diste. Tus respuestas quedan guardadas hasta entonces (<code>PendingVerification</code>). / It will reach them once you confirm the email or phone you gave us.</li>
-      <li><b>Vamos a intentar</b> enviar el código a esa dirección. Esta página y tu lista de solicitudes son el registro. / We will try to send the code to that address; this page and your requests list are the record.</li>
+      <li><b>Vamos a intentar</b> entregarla una vez que confirmes el email o teléfono que nos diste, y solo si sigue siendo un destinatario elegible en ese momento. Tus respuestas quedan guardadas hasta entonces (<code>PendingVerification</code>). / <b>We will try</b> to deliver it once you confirm the email or phone you gave us, and only if the recipient is still eligible at that time. Your answers stay saved until then.</li>
+      <li><b>Vamos a intentar</b> enviar el código a ese contacto. Esta página y tu lista de solicitudes son el registro. / We will try to send the code to that contact; this page and your requests list are the record.</li>
     </ul>
     <p class="sec box">Esto no es una reserva. / This is not a booking.</p>
-    <span class="btn dead" data-dead>Confirmar mi dirección / Confirm my address</span>
-    <span class="btn dead" data-dead>Usar otra dirección / Use a different address</span>
+    <span class="btn dead" data-dead>Confirmar mi contacto / Confirm my contact</span>
+    <span class="btn dead" data-dead>Usar otro contacto / Use a different contact</span>
     <button class="btn" data-go="s-request">Ver esta solicitud / View this request</button>
     <p class="sec box"><b>“Enviada” es una palabra prohibida en este estado</b> (<code>docs/04-ux/identity-and-verification.md</code>, <code>PV-02</code>): presentar como enviada una solicitud no entregada es la falla de honestidad más dañina disponible aquí, porque el cliente queda esperando una respuesta que nunca fue posible. Los dos estados se redactan para que no puedan confundirse. / “Sent” is a prohibited word on this surface.</p>
     <p class="sec">Corregir una dirección mal tipeada no exige recomponer la solicitud (<code>PV-03</code>). Sin cuenta regresiva, sin animación de “esperando”, sin estado consultado en vivo: no hay transporte en tiempo real (<code>PV-05</code>, <code>system-architecture.md</code> §3); el estado se actualiza al navegar o por una acción explícita. / No countdown, no live status; there is no realtime transport.</p>

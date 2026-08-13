@@ -19,7 +19,7 @@ Este documento es una **fuente de diagrama**. Es el mapa completo de superficies
 | Cada caja de este dibujo es una **superficie**: un lugar donde una persona hace algo. No es un servicio, no es un microservicio, no es una base de datos, no es una unidad de despliegue y no es un módulo. | Every box in this drawing is a **surface**: a place where a person does something. It is not a service, not a microservice, not a database, not a deployment unit, and not a module. |
 | Treinta y tantas cajas **no** significan treinta y tantas cosas que operar. `ADR-013` fija la plataforma como **un solo desplegable**. Contar cajas de este diagrama para estimar costo de infraestructura da un número equivocado. | Thirty-odd boxes do **not** mean thirty-odd things to operate. `ADR-013` fixes the platform as **one deployable**. Counting boxes on this diagram to estimate infrastructure cost produces a wrong number. |
 | Una capacidad no se convierte automáticamente en un servicio ni en una unidad de despliegue. Es una regla explícita del repositorio (`AGENTS.md`), no una opinión de este documento. | A capability does not automatically become a service or a deployment unit. That is an explicit repository rule (`AGENTS.md`), not this document's opinion. |
-| Lo que sí mide este diagrama es **alcance de diseño y de operación**: cuántas pantallas hay que diseñar, y cuántas colas hay que atender. Nueve colas de operador ya es una afirmación de carga de trabajo. | What this diagram does measure is **design and operating scope**: how many screens must be designed, and how many queues must be worked. Nine operator queues is already a workload claim. |
+| Lo que sí mide este diagrama es **alcance de diseño y de operación**: cuántas pantallas hay que diseñar, y cuántas colas hay que atender. Ocho colas de dominio más un índice de colas cruzado, en nueve superficies, ya es una afirmación de carga de trabajo. | What this diagram does measure is **design and operating scope**: how many screens must be designed, and how many queues must be worked. Eight domain queues plus one cross-queue index, on nine surfaces, is already a workload claim. |
 
 ---
 
@@ -27,7 +27,7 @@ Este documento es una **fuente de diagrama**. Es el mapa completo de superficies
 
 | Documento fuente / Source document | Qué aporta / What it supplies | Evidencia / Evidence | Procedencia / Provenance |
 |---|---|---|---|
-| `docs/04-ux/surface-inventory.md` | Los IDs y nombres canónicos `UX-01`–`UX-38`, usuario, autenticación, clasificación de renderizado / The canonical IDs and names `UX-01`–`UX-38`, user, auth, rendering classification | `PROPOSED` | `TECHNICAL_DISCOVERY` |
+| `docs/04-ux/surface-inventory.md` | Los IDs y nombres canónicos `UX-01`–`UX-39`, usuario, autenticación, clasificación de renderizado / The canonical IDs and names `UX-01`–`UX-39`, user, auth, rendering classification | `PROPOSED` | `TECHNICAL_DISCOVERY` |
 | `docs/04-ux/information-architecture.md` | Agrupación de superficies y navegación de doble rol / Surface grouping and dual-role navigation | `PROPOSED` | `TECHNICAL_DISCOVERY` |
 | `docs/04-ux/customer-journey.md`, `provider-onboarding.md`, `provider-workspace.md`, `operator-surfaces.md` | Qué superficies participan en cada recorrido / Which surfaces participate in each journey | `PROPOSED` | `TECHNICAL_DISCOVERY` |
 | `docs/02-architecture/adr/ADR-013-application-platform-and-module-boundary-enforcement.md` | Un solo desplegable; la plataforma está fija / One deployable; the platform is fixed | `PROPOSED` | `TECHNICAL_DISCOVERY` |
@@ -87,8 +87,9 @@ flowchart TB
     end
 
     U35["UX-35 · Mensaje de notificación, limitado por lista blanca<br/>Notification message (email body, allowlist-bound)"]
+    U39["UX-39 · Reporte y confirmación de bloqueo<br/>Report intake and block confirmation"]
 
-    subgraph OPS["CARRIL DE OPERADOR — separado / OPERATOR LANE — separate · nueve colas, solo excepciones / nine queues, exception-only"]
+    subgraph OPS["CARRIL DE OPERADOR — separado / OPERATOR LANE — separate · ocho colas de dominio más un índice, solo excepciones / eight domain queues plus one index, exception-only"]
         direction LR
         U26["UX-26 · Índice de colas de casos<br/>Operator case queue index"]
         U27["UX-27 · Detalle de reporte o caso de moderación<br/>Report / moderation case detail"]
@@ -112,6 +113,8 @@ flowchart TB
     PUB --> PRO
     CUS --> U35
     PRO --> U35
+    CUS -.-> U39
+    PRO -.-> U39
     CUS -.-> OPS
     PRO -.-> OPS
     PUB -.-> OPS
@@ -126,7 +129,7 @@ flowchart TB
     classDef future fill:#ffffff,stroke:#8a8a8a,stroke-width:1px,stroke-dasharray:6 4,color:#3d3d3d;
 
     class U01,U02,U03,U04,U05,U06,U16 public;
-    class U07,U08,U09,U10,U11,U12,U13,U14,U15,U17,U18,U19,U20,U21,U22,U23,U24,U25 auth;
+    class U07,U08,U09,U10,U11,U12,U13,U14,U15,U17,U18,U19,U20,U21,U22,U23,U24,U25,U39 auth;
     class U35 channel;
     class U26,U27,U28,U29,U30,U31,U32,U33,U34 operator;
     class U36,U37,U38 future;
@@ -140,6 +143,7 @@ flowchart TB
 | **El carril de operador se separa a propósito.** Es interno, solo por excepción, y ninguna de sus colas está en el camino del cliente ni del proveedor. Aparece en el mismo dibujo porque es **trabajo real de personas**, no porque sea parte del recorrido. | **The operator lane is separated deliberately.** It is internal, exception-only, and none of its queues sits on the customer or provider path. It appears on the same drawing because it is **real human work**, not because it is part of the journey. |
 | **Una sola cuenta cruza dos carriles.** `ADR-004`: una `Account` puede ser cliente y proveedor al mismo tiempo. Los carriles son **contextos** — *Contratar* y *Mi negocio* — no tipos de cuenta. No hay cuenta de cliente ni cuenta de proveedor. | **One account spans two lanes.** `ADR-004`: one `Account` may be both customer and provider. The lanes are **contexts** — *Hiring* and *My business* — not account types. There is no customer account and no provider account. |
 | **`UX-35` no está en ningún carril, y eso es correcto.** No es una pantalla: es un cuerpo de correo limitado por lista blanca. Nunca lleva datos de contacto, texto libre de la solicitud, dirección o fecha del evento, cantidad de invitados, presupuesto, montos de oferta ni contenido de conversación. | **`UX-35` is in no lane, and that is correct.** It is not a screen: it is an allowlist-bound email body. It never carries contact data, request free text, event address or date, guest count, budget, offer amounts, or conversation content. |
+| **`UX-39` tampoco está en un solo carril, por una razón distinta.** Sí es una pantalla real, pero la usan tanto el cliente como el proveedor para reportar contenido y confirmar un bloqueo, siempre autenticados. Se llega a ella desde `UX-04`/`UX-05` a través de `UX-16`, o directamente desde `UX-12`/`UX-20`. Nunca la usa un operador. | **`UX-39` is also in no single lane, for a different reason.** It is a real screen, but both the customer and the provider use it to report content and confirm a block, always authenticated. It is reached from `UX-04`/`UX-05` through `UX-16`, or directly from `UX-12`/`UX-20`. An operator never reaches it. |
 | **Las superficies públicas cargan la hipótesis de adquisición.** Por eso son anónimas e indexables, y por eso no hay muro de inicio de sesión delante del descubrimiento (`WA-05`). | **Public surfaces carry the acquisition hypothesis.** That is why they are anonymous and indexable, and why there is no login wall in front of discovery (`WA-05`). |
 
 ---
@@ -177,7 +181,7 @@ This repository has **no Excalidraw tooling**. This section is the normative sou
 | `L1` Public surfaces | 40, 100, 1600, 180 | 60, 118 | public |
 | `L2` Customer authenticated | 40, 300, 1600, 260 | 60, 318 | authenticated |
 | `L3` Provider workspace | 40, 580, 1600, 260 | 60, 598 | authenticated |
-| `L4` Channel (`UX-35`) | 40, 860, 1600, 140 | 60, 878 | channel |
+| `L4` Channel and cross-role (`UX-35`, `UX-39`) | 40, 860, 1600, 140 | 60, 878 | channel; `UX-39` uses the authenticated box style |
 | — Separator rule | line from `40,1030` to `1640,1030` | label at 60, 1040 | — |
 | `L5` Operator lane | 40, 1080, 1600, 260 | 60, 1098 | operator |
 | `L6` FUTURE | 40, 1360, 1600, 120 | 60, 1378 | future |
@@ -228,6 +232,7 @@ Draw order: the six lane frames first, then the separator rule, then the titles,
 | 36 | `UX-36` | `L6` | Reclamo de perfil heredado | `Legacy profile claim` | 60 | 1400 | 200 | 60 | `g-future` |
 | 37 | `UX-37` | `L6` | Superficies de posición patrocinada | `Sponsored placement surfaces` | 280 | 1400 | 200 | 60 | `g-future` |
 | 38 | `UX-38` | `L6` | Reserva, pago y liquidación | `Booking / payment / payout surfaces` | 500 | 1400 | 200 | 60 | `g-future` |
+| 39 | `UX-39` | `L4` | Reporte y confirmación de bloqueo | `Report intake and block confirmation` | 280 | 900 | 200 | 80 | `g-crossrole` |
 
 Every box carries its ID on a third 11 px line left-aligned inside the box, or as free text at the box's top-left corner at `(x + 8, y + 6)`. The ID is **never** omitted: it is the only way to reconcile the drawing with `docs/04-ux/surface-inventory.md`.
 
@@ -239,7 +244,8 @@ Every box carries its ID on a third 11 px line left-aligned inside the box, or a
 | `g-customer` | `UX-07`–`UX-15` + frame `L2` | *Hiring* context, not an account type. |
 | `g-provider` | `UX-17`–`UX-25` + frame `L3` | *My business* context, present only when a `BusinessMembership` exists. |
 | `g-channel` | `UX-35` + frame `L4` | Not a screen. Grouped alone so nobody counts it as a product surface. |
-| `g-operator` | `UX-26`–`UX-34` + frame `L5` + separator rule | Nine internal, exception-only queues, below the rule. |
+| `g-crossrole` | `UX-39` + frame `L4` | A real, authenticated screen used by either role — customer or provider — to report content and confirm a block. Shares `L4` with `g-channel` for space only; it is not a channel body and is drawn in the authenticated box style, not the dotted channel style. |
+| `g-operator` | `UX-26`–`UX-34` + frame `L5` + separator rule | Eight internal, exception-only domain queues plus one cross-queue index, on nine surfaces, below the rule. |
 | `g-future` | `UX-36`, `UX-37`, `UX-38` + frame `L6` | Not built, not included, dashed, opacity 60. |
 
 ### 4.5 Cross-lane connectors
@@ -268,7 +274,7 @@ The `FUTURE` group **receives no arrow.** It is drawn at the bottom, dashed, at 
 | **Ninguna superficie de patrocinio dentro de V1.** `UX-37` vive solo en `FUTURO`. En V1 todo resultado lleva `placementBasis` con el único valor `organic`. | `ADR-008`. El patrocinio, cuando llegue, es una sección **asignada y etiquetada aparte**, nunca mezclada con los resultados orgánicos. / Sponsorship, when it ships, is a separately allocated and separately labelled section, never mixed into organic results. |
 | **Ningún mapa, ningún calendario, ninguna difusión.** Sin superficie de mapa, sin superficie de disponibilidad o calendario, sin superficie de "pedir a varios proveedores". | `ADR-019` nivel 3, `ADR-005`, `DB-01`. Ninguna de las tres existe en el inventario, y dibujarlas las inventaría. / None of the three exists in the inventory, and drawing them would invent them. |
 | **Ningún dato privado en `UX-35`.** Sin datos de contacto, texto libre, dirección o fecha del evento, cantidad de invitados, presupuesto, montos de oferta ni contenido de conversación. | `ADR-010`. La lista blanca permite: que ocurrió un evento y de qué tipo, el nombre público de quien actuó, un enlace no adivinable y un momento aproximado. Nada más. / The allowlist permits: that an event occurred and its type, the acting party's public display name, a non-guessable link, and coarse timing. Nothing else. |
-| **Ningún panel de administración genérico**, ningún motor de derechos, ningún sistema de campañas patrocinadas, ninguna cola inventada. | Canon `§5.17`. Nueve colas es el conjunto completo, y ya es una afirmación de carga de trabajo no medida. / Nine queues is the complete set, and it is already an unmeasured workload claim. |
+| **Ningún panel de administración genérico**, ningún motor de derechos, ningún sistema de campañas patrocinadas, ninguna cola inventada. | Canon `§5.17`. Ocho colas de dominio más un índice de colas cruzado es el conjunto completo, y ya es una afirmación de carga de trabajo no medida. / Eight domain queues plus one cross-queue index is the complete set, and it is already an unmeasured workload claim. |
 
 ---
 

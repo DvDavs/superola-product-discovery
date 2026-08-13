@@ -14,7 +14,7 @@ This is the **evidence base for `ADR-020`** — the rendering decision. It is a 
 | Class | Meaning | Consequence |
 |---|---|---|
 | `DOC` | Mostly document and navigation. | Server-rendered views are sufficient. No island is required **by the class**; an island may still be attached to a `DOC` surface and must then be named. |
-| `LOCAL` | Local interactive state that **does not need to survive navigation**. | A progressive-enhancement or island treatment, decided per surface. |
+| `LOCAL` | Local interactive state that **does not need to survive navigation** — or, as one bounded exception, browser-local state that **does** survive navigation for a defined window while its durable owner is a server-side domain object (`UX-07`'s anonymous pre-`Account` window; see that record). The exception is bounded by three conditions: a named island covers it, a named domain object takes ownership as soon as it exists, and the surface still degrades to a working server-rendered path. | A progressive-enhancement or island treatment, decided per surface. |
 | `RICH` | Rich client state that **must survive navigation**. | Would justify `ADR-020` Option B **for that surface**. |
 
 ### 1.2 Named islands (`docs/04-ux/design-canon.md` §5.8) — budget of three, reconsideration trigger at five
@@ -160,7 +160,7 @@ A standing note on the geocoder: **customer-side location resolves against the g
 | V1 / Future | V1 |
 | Rendering class | `LOCAL` + `I-1`, `I-2` |
 | Client-interaction complexity | **Highest in the customer set, and still `LOCAL`.** Conditional question reveal, local draft writes, and a governed combobox. The hard part is accessibility, not state: the revealed region must be announced politely, focus must move to the new region's heading rather than the first input, and answered questions must not reorder. Validation lives in the domain (`ADR-011`), never in the island |
-| Client state survives navigation | State survives navigation on this surface, and it is held by `RequestDraft` — a domain aggregate (`ADR-003`) — plus browser-local storage before an `Account` exists; therefore **no client-held state must survive navigation**, and the surface is not `RICH`. This is the answer to `ADR-020`'s `RQ-02` for `UX-07`, stated in these same words in `docs/04-ux/rendering-evidence.md` §3 and §4.1 |
+| Client state survives navigation | **Yes, and this surface is the one bounded exception in the inventory.** After an `Account` exists the state is held by `RequestDraft`, a server-persisted domain aggregate (`ADR-003`), and survival is a database read. **Before an `Account` exists (`WA-05`), `UX-07` does contain navigation-persistent anonymous browser-local state, and that state lives nowhere but the client for that window.** P04 proposes satisfying that requirement with the bounded `I-2` island plus local draft persistence rather than adopting a richer client rendering model, and therefore classes the surface `LOCAL` rather than `RICH`. **This is an implementation hypothesis, not a measurement, until `ADR-020`'s `RQ-03` is measured against real code.** This is the answer to `ADR-020`'s `RQ-02` for `UX-07`, stated in these same words in `docs/04-ux/rendering-evidence.md` §3 and §4.1 |
 | Public | Yes |
 
 ### `UX-08` — Request review and send

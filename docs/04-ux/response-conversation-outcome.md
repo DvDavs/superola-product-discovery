@@ -104,7 +104,7 @@ The honest alternative is **state, not forecast**. The surface describes what ha
 | Waiting, before the governed window elapses | "No reply yet. Superola does not set a reply deadline and does not estimate reply times." |
 | After the governed window elapses (`NoResponse`) | "No reply yet." Plus, once and non-repeating: "Providers reply on their own schedule and some do not reply at all. This is not a rating and it is not held against them." |
 | What the customer can do | "You can send a separate request to a different provider at any time. You do not need to wait for this one." |
-| Where updates appear | "This page always shows the current state. We will email you when something changes." |
+| Where updates appear | "This page always shows the current state. We will try to notify you when something changes." No channel is named: `UX-35`'s allowlist-bound body is delivered through whichever channel is approved (`Q-032` is unresolved and no vendor/channel decision exists), and the notification is a convenience, never the record. |
 
 ## 3. The four user-visible outcomes of a delivered request
 

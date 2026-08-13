@@ -47,19 +47,20 @@ Source of truth for every ID and classification: `docs/04-ux/surface-inventory.m
 
 | Quantity | Count | Basis |
 |---|---|---|
-| V1 surfaces, total | **35** (`UX-01`–`UX-35`) | Surface inventory. |
+| V1 surfaces, total | **36** (`UX-01`–`UX-35` plus `UX-39`) | Surface inventory. |
 | Surfaces shown as `FUTURE` extension points only | **3** (`UX-36` legacy claim, conditional; `UX-37` sponsored placement; `UX-38` booking/payment/payout) | Not in the V1 slice. Inventoried to record constraints, not to request work. |
 | Rendering class `DOC` | **24** | Mostly document and navigation; server rendering is sufficient. |
-| Rendering class `LOCAL` | **10** | Local interactive state that does not need to survive navigation. |
-| Rendering class `RICH` | **0** | **No V1 surface is `RICH`.** The one candidate — the multi-step composer — has its cross-navigation state solved by `RequestDraft`, a domain object that already exists. |
+| Rendering class `LOCAL` | **11** | Local interactive state that does not need to survive navigation, **plus one bounded exception** — `UX-07` holds navigation-persistent anonymous browser-local state in the pre-`Account` window, covered by island `I-2` (`docs/04-ux/rendering-evidence.md` §4.1). Includes `UX-39`. |
+| Rendering class `RICH` | **0** | **No V1 surface is classed `RICH`.** The one candidate — the multi-step composer (`UX-07`) — genuinely does hold client state surviving navigation while the customer is anonymous; P04 proposes meeting it with island `I-2` plus `RequestDraft` rather than a second rendering model. **That is an argued judgement, not a measurement** (`RQ-03` is unmeasurable until code exists), and `ADR-020` stays `PROPOSED`. |
 | Not a rendered surface | **1** (`UX-35`, notification message body, `ADR-010` allowlist-bound) | Channel content, not a page. |
 | Primary user: customer | **13** | `UX-01`–`UX-05`, `UX-07`–`UX-14`. |
 | Primary user: provider | **9** | `UX-17`–`UX-25`. |
 | Primary user: operator | **9** | `UX-26`–`UX-34`. |
 | Primary user: any or anyone | **4** | `UX-06`, `UX-15`, `UX-16`, `UX-35`. |
+| Primary user: customer or provider, either role, authenticated | **1** | `UX-39` — reached by a customer or a provider acting as a participant; never by an operator; not a generic "any" surface because it always requires a specific authenticated party. |
 | Auth class: public | **9** | `UX-01`–`UX-08`, `UX-16`. Bound by `ADR-020` rule 4 (public surfaces) and by the allowlist public projection (`ADR-012`). |
 | Auth class: transitional | **1** | `UX-09`, identity and channel verification. |
-| Auth class: authenticated | **24** | Everything else except `UX-35`. |
+| Auth class: authenticated | **25** | Everything else except `UX-35`. Includes `UX-39`. |
 | Auth class: channel | **1** | `UX-35`. |
 
 ### 2.2 Category-question system
@@ -67,9 +68,9 @@ Source of truth for every ID and classification: `docs/04-ux/surface-inventory.m
 | Quantity | Count | Basis |
 |---|---|---|
 | Governed `CategoryArchetype`s modelled | **5** — Mobile performer · Fixed venue · Mobile professional · Delivery and food · Transportation and route | `ADR-007`. |
-| Archetypes in the P04 validation set | **4** — Mobile performer · Fixed venue · Delivery and food · Mobile professional | Representative, not exhaustive. **Four is a P04 recommendation against a one-archetype baseline, not an inherited assumption**: `docs/05-roadmap/mvp-scope.md` fixes the bounded envelope at **one owner-approved geography, one production locale, and the smallest coherent category archetype**, with cohorts added only through explicit gates. **`G-04` is PARTIAL** — archetype set yes, launch cohort no (`docs/02-architecture/decision-branches.md`). P06 must plan against the approved envelope, not against P04's recommendation. |
+| Archetypes in the P04 representative design set | **4** — Mobile performer · Fixed venue · Delivery and food · Mobile professional | Representative, not exhaustive; not authoritatively validated — no usability evidence exists (`SRC-006` NOT RECEIVED). **Four is a P04 recommendation against a one-archetype baseline, not an inherited assumption**: `docs/05-roadmap/mvp-scope.md` fixes the bounded envelope at **one owner-approved geography, one production locale, and the smallest coherent category archetype**, with cohorts added only through explicit gates. **`G-04` is PARTIAL** — archetype set yes, launch cohort no (`docs/02-architecture/decision-branches.md`). P06 must plan against the approved envelope, not against P04's recommendation. |
 | Archetypes recommended **out** of the launch cohort | **1** — Transportation and route | Route-corridor semantics do not reduce to a containment predicate. P02 argues it; P04 agrees and records it. |
-| Question classification classes | **5** — `DISCOVERY` · `PRE-SUBMIT` · `QUALITY` · `CATEGORY` · `FUTURE` | Used verbatim across P04 documents. |
+| Question classification classes | **5** — `DISCOVERY` · `PRE-SUBMIT` · `QUALITY` · `CATEGORY` · `NOT-V1` | Used verbatim across P04 documents. |
 | Governed intake tiers | **3** | The progressive intake model. |
 | Design target: composer answers for a mobile performer | **5** on the discovery path (`UX-01` → `UX-04` → `UX-05` → `UX-07`); **up to 8** on the direct-arrival path, where the customer reaches `UX-05` from a search engine or a shared link and none of the three discovery answers exists | **A design target, not a measurement.** The two entry paths are separate figures and **`FM-01` and `FM-03` abandonment must be segmented by entry path** — the direct-arrival composer is three answers longer and it is the path the acquisition hypothesis depends on. `docs/04-ux/request-intake.md` §3. |
 | Design target: **total blocking items to submit** a mobile performer request | **10–11**, identity included — **the same on both entry paths** | **This supersedes the earlier "6–9 answers" figure, which was net of identity and is withdrawn.** The total counts every `PRE-SUBMIT` item, which §6.1 of `request-intake.md` defines as blocking submission: 3 carried in or asked (`Category`, `Place`, recipient `ServiceOffering`), 5 composer answers, and **3 identity items** — contact channel, display name, and proof of channel control (`DB-12`). Eleven items, of which ten are answers and one is a proof; hence the range. |
@@ -84,7 +85,7 @@ Source of truth for every ID and classification: `docs/04-ux/surface-inventory.m
 | Operator surfaces in V1 | **9** (`UX-26`–`UX-34`) | One case-queue index plus the queue and case surfaces. |
 | Queues named at launch | **9** — reports and moderation cases · profile publication review · duplicate suspicion · ownership claims · `CategoryProposal` review · geocode/`undetermined` and eligibility exceptions · delivery-attempt failures · provider staleness and `RequestIntake` decay/reactivation · audited private-content access | Duplicate suspicion and ownership claims share `UX-29`. |
 | Case queues empty or conditional at launch | **2 of 8** — `OQ-04`'s ownership-claims kind is **empty unless a legacy cohort is approved**, and `OQ-03` publication review exists only where the Category requires review | `ADR-009`; the publication-review condition is category-governed. **So the true launch case-queue load is smaller than eight, and P04 cannot say how much smaller because nothing has been measured** (`CX-19`, `R-053`). |
-| Operator-hours frame | **8.35 / 55.42 / 340.58 per month** at the three modelled scenarios | **The frame, not a plan.** The assumption that nine queues fit inside it is **unmeasured**. See `docs/04-ux/ux-complexity-review.md` `CX-19`. |
+| Operator-hours frame | **8.35 / 55.42 / 340.58 per month** at the three modelled scenarios | **The frame, not a plan.** The assumption that eight domain queues plus one cross-queue index fit inside it is **unmeasured**. See `docs/04-ux/ux-complexity-review.md` `CX-19`. |
 | **P04 recommends** that, before launch approval, every case queue carries | named owner · escalation path · language coverage · backlog-age measure · resolution-time measure · stop or expansion rule | `PROPOSED`. **These six are `docs/05-roadmap/mvp-scope.md`'s existing operating-envelope requirement, not a new P04 gate** — P04 supplies the queue inventory it applies to and has no authority to set a release gate. P06 owns turning it into capacity planning, and whether a queue without an owner blocks launch is P06's call, not P04's. |
 
 ### 2.4 Responsive and accessibility requirements
@@ -145,7 +146,7 @@ Source of truth for every ID and classification: `docs/04-ux/surface-inventory.m
 | Canonical-locale recommendation for a profile and a request conversation | **`PROPOSED` recommendation; `Q-020` is OPEN and its authorship limb is unanswered** | Owner + P04 + content operations + compliance. |
 | Alternative text as a publication-quality checklist item rather than a hard `publicationGateMet` gate | `PROPOSED`, `OPEN` | David + product. Raising it later must not retroactively unpublish. |
 | Dual-role shell with two persistent contexts and no mode toggle | `PROPOSED` | Discharges `ADR-004`'s assigned negative consequence; `ADR-004` itself is `ACCEPTED`. |
-| Nine operator queues at launch | `PROPOSED`; **the operator-hours assumption is unmeasured** | P06 capacity planning + owner. |
+| Eight domain operator queues plus one cross-queue index at launch | `PROPOSED`; **the operator-hours assumption is unmeasured** | P06 capacity planning + owner. |
 
 ### 3.1 Owner gate status, reproduced from the canonical register
 

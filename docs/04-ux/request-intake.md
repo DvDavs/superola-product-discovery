@@ -184,6 +184,18 @@ These two behave differently, and the difference is not arbitrary.
 
 `draft created` is a named measurable transition in the Demand family. The composer must also emit, at minimum: the named stage at abandonment (`FM-01`); draft-to-submit conversion per archetype (`FM-03`); category-change events with whether the warning was accepted and whether undo was used (which is the direct test of whether `RD-10`'s warning is working); and the answer-count distribution (`FM-02`). None of these may carry request free text, which is classified as possibly containing contact data and can never reach an analytics export (`ADR-010`, `Q-033`).
 
+### 4.6 Local draft privacy contract
+
+`R-050` requires the anonymous, browser-local draft to be bounded, visibly discardable, cleared on promotion, and expiring. This section makes those four properties explicit rather than leaving them implicit in `RD-01`–`RD-05`.
+
+| ID | Rule | Detail |
+|---|---|---|
+| `RD-17` | **Local storage holds structured answers only** | The anonymous browser-local draft (`RD-02`) persists structured composer answers only — governed references, dates, counts, selected options. `GC-12`'s optional free-text notes field is never written to local storage while the draft is anonymous: it is held in page memory for that composer session only and is lost on navigation away or reload, exactly like any unsaved form field, until the customer signs in or submits and the whole draft — including any free-text notes present at that moment — promotes under `RD-03`, `RD-19` and the existing `ADR-010` request-free-text handling. |
+| `RD-18` | **Visible discard** | Wherever a local draft exists (composer or `UX-13`), the customer sees an explicit "discard this draft" action. Discard clears the local store immediately and returns the customer to an empty composer. It is a distinct control from simply navigating away. |
+| `RD-19` | **Clear-on-promotion** | The moment a local draft promotes to a server `RequestDraft` (`RD-03`), the local copy is cleared from browser storage. The server aggregate is the sole record after promotion; no local duplicate survives it. |
+| `RD-20` | **Local expiry** | An anonymous local draft that is never promoted expires after a bounded window of inactivity and is cleared automatically. **The window's length is `POLICY PENDING`** — P04 requires the expiry mechanism to exist and does not set the duration, the same posture already taken for the `NoResponse` window and the `RequestIntake` decay window. |
+| `RD-21` | **Whether this contract requires disclosure, and whether anonymous local storage is acceptable at all** | **`OPEN` — `Q-038`, owned by David + counsel.** `RD-17`–`RD-20` design the contract without resolving `Q-038`; P04 does not assume an answer either way. If `Q-038` is answered "no", the fallback is `RD-09`'s no-local-persistence path — the composer already works without local storage. |
+
 ---
 
 ## 5. `EventType` is not `ServiceCategory`
@@ -328,6 +340,8 @@ Catering, cake, dessert tables.
 **Lead time is never asked.** It is derived from `IQ-04` (`IQ-11`).
 
 **The `flexible`-date consequence must be surfaced, not coerced.** When the customer answers `flexible` and the recipient archetype is delivery and food, the resulting `LocationEligibility` is `undetermined`. The customer is shown that uncertainty in words — that the provider will need to confirm whether the timing works — and is **never** silently reclassified as ineligible, never silently dropped from results, and never presented as a confirmed match. Coercing `undetermined` into either certainty is prohibited (`ADR-019`, `ADR-006`).
+
+**Why this does not reopen `G-06`.** `IQ-04` states the general rule: the requested date is request context, never a filter and never a system claim, because `V1 has no availability model` (`ADR-005`) and a date filter would assert one — exactly the claim `WA-01` and `G-06` forbid. The delivery-and-food `LocationEligibility` predicate above does not violate that rule; it is a **narrower, different computation**. It tests whether the provider's own declared production-and-delivery constraint (lead time) is logistically satisfiable by the requested date — a deterministic fact about the provider's declared process, not a claim about whether the provider is free. Clearing this predicate means only that the request is logistically eligible to reach this provider; it says nothing about whether the provider will accept, and the provider still resolves actual feasibility inside the request exchange, exactly as every other archetype does under `WA-01`. **`flexible` producing `undetermined` — rather than the predicate being skipped or defaulted to `eligible` — is what keeps this a logistics filter and not an availability claim**: an unanswered date cannot be run through a deterministic feasibility test, so the honest result is uncertainty, shown to the customer, not a guess.
 
 **Answer count.** 2 universal + 3 blocking (`DF-01`–`DF-03`) = **5 composer answers**; plus 3 carried in and 3 identity items = **10–11 blocking items in total**.
 

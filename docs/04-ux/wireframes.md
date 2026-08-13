@@ -501,9 +501,9 @@ Rendering `DOC`. Public, anonymous.
 |     ~ Coverage is declared by the         |       «Paused — not taking    |
 |       provider. Superola does not         |        requests now»          |
 |       verify travel distance. ~     {5}   |       ~ Intake state, not    |
-|     [ Open Houston in your map app ] {6}  |         availability. ~      |
-|     ~ Opens your own map application.     |                              |
-|       Superola does not show a map. ~     | {9} CATEGORY DETAILS         |
+|     ~ No map, and no map-app link:  {6}   |         availability. ~      |
+|       this base is a declared area,       |                              |
+|       not a published venue address. ~    | {9} CATEGORY DETAILS         |
 |                                           |     Ensemble size: 6-10      |
 | {7} ABOUT                                 |     Languages: Spanish,      |
 |     Narrative written by the provider.    |       English                |
@@ -554,7 +554,8 @@ Rendering `DOC`. Public, anonymous.
 |     Sugar Land, Pearland             |
 |     Travels up to 50 miles           |
 |     ~ Declared by the provider. ~    |
-|     [ Open Houston in your map app ] |
+|     ~ No map-app link: base is a     |
+|       declared area, not a venue. ~  |
 +--------------------------------------+
 | {7} > About this provider            |
 | {9} > Category details               |
@@ -581,7 +582,7 @@ Rendering `DOC`. Public, anonymous.
 3. **Primary action, and its wording.** Enters `UX-07` with the recipient already selected and the discovery answers (category, place) carried forward — three of the blocking items are already answered before the composer opens (`docs/04-ux/request-intake.md` §3; the earlier "6–9 answers" target was net of identity and is withdrawn). **The label names the customer's action, never the provider's reply.** `Quote` is retired as an entity name (`§2` of `docs/04-ux/design-canon.md`), and a button reading *request a quote* would promise one of four outcomes on the very surface whose job is to prevent outcome expectations: a customer who receives a `clarification`, a `decline`, or `NoResponse` was misled by the control they pressed. `RFQ` remains acceptable only in explicitly owner-facing text, never here. Where the shorter label does not fit, *Request this provider* is the permitted variant; *request a quote* is not. Disabled variant: on an offering in `«Paused»` the action is replaced by an explanation, not by a greyed control with no text.
 4. **Location region — words, not a map.** Coarse `Place` labels plus a declared-coverage statement in the provider's own units (`§5.9`). Precise provider base location is never exposed. Fixed-venue variant: where the provider has chosen to publish a venue address, the published address appears here; where they have not, only the coarse `Place` does.
 5. **Claim framing.** `ServiceAreaDeclaration` is a provider claim, worded as one. `verificationBasis` language is reserved for facts with a defined auditable event.
-6. **Map link-out.** Opens the customer's own map application. **Not a rendered map**: no tiles, no vendor SDK, no pin drawn from a centroid. `§5.9` records that the reason is that no journey needs a map, not that privacy forbids it.
+6. **Map link-out — mobile performer variant: absent.** `PP-63` permits a link-out to the customer's own map application only from a **published fixed venue address**. This provider's base is a declared area ("Houston area"), not a published address, so no map-app link appears here; the coverage statement in region 4 is the only location detail this archetype gets. Where a link-out does appear (a fixed-venue provider with a published address), it is **not a rendered map**: no tiles, no vendor SDK, no pin drawn from a centroid.
 7. **Provider narrative.** `contentLocale` is explicit. If a machine translation is ever offered it is marked as such so no surface presents a translation as the provider's own words (`§5.11`, `Q-020` open).
 8. **Offerings region.** Eligibility and `RequestIntake` are per `ServiceOffering`, never per `Business` (`ADR-006`). Two offerings of the same business may carry different intake states, which is why the chip is repeated per offering rather than stated once at the top.
 9. **Governed category attributes.** Rendered from `CategoryAttributeDefinition`s. A new Category renders here with no new screen (`§5.3`). Empty variant: an attribute the provider has not answered is omitted, never shown as "unknown" in a way that reads as a defect.
@@ -691,15 +692,16 @@ State 2 — submitted and pending verification:
 +--------------------------------------------------------------------------+
 | {18} YOUR REQUEST IS SAVED. IT HAS NOT REACHED THE PROVIDER YET          |
 |      For Mariachi Estrella del Norte · Mariachi ensemble                 |
-|      «Saved — waiting for you to confirm your address»                    |
+|      «Saved — waiting for you to confirm your contact»                    |
 |      • Nothing has been delivered. This provider cannot see this         |
 |        request and does not know it exists.                              |
-|      • It will reach them once you confirm the email or phone you        |
-|        gave us. Your answers are kept until then.                        |
-|      • We will try to send the code to that address. This page and       |
+|      • We will try to deliver it once you confirm the email or phone     |
+|        you gave us, and only if the recipient is still eligible at       |
+|        that time. Your answers are kept until then.                      |
+|      • We will try to send the code to that contact. This page and       |
 |        your requests list are the record.                                |
 |      ~ This is not a booking. ~                                          |
-|      [ Confirm my address ]  [ Use a different address ]                 |
+|      [ Confirm my contact ]  [ Use a different contact ]                 |
 |      [ View this request ]                                        {19}   |
 +--------------------------------------------------------------------------+
 ```
@@ -746,25 +748,27 @@ UX-08                                  UX-09                            UX-10 st
 | PROVIDER YET               |
 | For Mariachi Estrella      |
 | «Saved — waiting for you    |
-|  to confirm your address»   |
+|  to confirm your contact»   |
 +----------------------------+
 | • Nothing has been         |
 |   delivered. This provider |
 |   cannot see it and does   |
 |   not know it exists.      |
-| • It reaches them once you |
-|   confirm the email or     |
-|   phone you gave us. Your  |
-|   answers are kept.        |
+| • We will try to deliver   |
+|   it once you confirm the  |
+|   email or phone you gave  |
+|   us, and only if you're   |
+|   still an eligible        |
+|   recipient at that time.  |
 | • We will try to send the  |
-|   code to that address.    |
+|   code to that contact.    |
 |   This page and your       |
 |   requests list are the    |
 |   record.                  |
 | ~ This is not a booking. ~ |
 +----------------------------+
-| [ Confirm my address ]     |
-| [ Use a different address ]|
+| [ Confirm my contact ]     |
+| [ Use a different contact ]|
 | [ View this request ]      |
 +----------------------------+
 ```
@@ -1467,7 +1471,7 @@ Any drawing, prototype, or later visual work that breaks one of these is a defec
 
 | ID | Constraint | Applies to |
 |---|---|---|
-| `WF-C-01` | **No rendered map on any surface.** Coarse `Place` labels, declared coverage in words, and a link out to the customer's own map application only (`§5.9`). | All |
+| `WF-C-01` | **No rendered map on any surface.** Coarse `Place` labels and declared coverage in words everywhere; a link out to the customer's own map application only where a **published fixed venue address** exists (`PP-63`, `§5.9`) — never from a declared base area. | All |
 | `WF-C-02` | **No calendar, no availability picker, no availability claim, and no availability boolean.** `V1 has no availability model` appears in substance on every profile and search surface (`ADR-005`). | `UX-01`, `UX-04`, `UX-05`, `UX-07`, `UX-22` |
 | `WF-C-03` | **No accept-quote button and no control that creates an obligation.** Customer forward actions are reply, clarify, report an outcome, withdraw (`§5.16`). | `UX-12`, `UX-20` |
 | `WF-C-04` | **No fan-out, no multi-recipient control, no "send to similar providers", and no conversion of a search into a message** (`WA-02`). | `UX-04`, `UX-07`, `UX-08` |

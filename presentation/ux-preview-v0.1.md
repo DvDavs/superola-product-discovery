@@ -17,16 +17,17 @@
 ```text
 "Necesito un mariachi para el quinceañero de mi hija"
   → Elijo el servicio y el lugar
-  → Veo proveedores que sí pueden servir ahí
+  → Veo proveedores que declaran cubrir esa zona
   → Elijo UNO deliberadamente
   → Contesto solo lo que ese servicio necesita saber
   → Confirmo que el contacto que dejé es mío, y se envía
-  → El proveedor responde con un precio, con una pregunta, o con un no
+  → El proveedor responde con un precio, con una pregunta, o con un no — o no responde
   → Conversamos
   → Decido
   → AQUÍ TERMINA EL PRIMER LANZAMIENTO
 ```
 
+- **No responder es un resultado tan válido como los otros tres.** Si el proveedor no contesta, la solicitud queda marcada así — sin sanción, sin calificación, sin cuenta regresiva — y el cliente puede escribirle a otro proveedor cuando quiera.
 - **El cliente elige al proveedor. Superola no reparte la solicitud a todo el mundo.** Una solicitud va a un proveedor elegido a propósito. Si el cliente quiere contactar a otro, eso es otra decisión suya, hecha a mano.
 - **Buscar, ver perfiles y armar la solicitud no requiere cuenta.** La cuenta y la confirmación del contacto aparecen al enviar, que es cuando el cliente ya invirtió esfuerzo y tiene más sentido pedírsela. Si abandona en ese paso, **su trabajo queda guardado y no se pierde** — pero el proveedor todavía no vio nada.
 - **La fecha que pone el cliente es lo que necesita, no una promesa del sistema.** Superola nunca dice que un proveedor tenga la fecha libre. Quien contesta eso es el proveedor, dentro de la solicitud.
@@ -38,16 +39,17 @@
 ```text
 "I need a mariachi for my daughter's quinceañera"
   → I choose the service and the place
-  → I see providers who can actually serve there
+  → I see providers who declare covering that area
   → I pick ONE deliberately
   → I answer only what that service needs to know
   → I confirm the contact I gave is mine, and it is sent
-  → The provider answers with a price, with a question, or with a no
+  → The provider answers with a price, with a question, or with a no — or does not reply
   → We talk
   → I decide
   → THE FIRST LAUNCH ENDS HERE
 ```
 
+- **Not replying is as valid an outcome as the other three.** If the provider does not answer, the request is marked that way — no penalty, no rating, no countdown — and the customer can write to a different provider whenever they want.
 - **The customer picks the provider. Superola does not blast the request to everyone.** One request goes to one deliberately chosen provider. Contacting another is another decision the customer makes by hand.
 - **Searching, viewing profiles, and composing the request need no account.** The account and the contact confirmation appear at send, when the customer has already invested effort and the ask has the best odds. If they abandon at that step, **their work is stored and not lost** — but the provider has seen nothing yet.
 - **The date the customer enters is what they need, not a promise from the system.** Superola never states that a provider has that date free. The provider answers that inside the request.
@@ -75,7 +77,7 @@ Me registro
 - **El proveedor decide si responde y qué responde.** Un precio, una pregunta para entender mejor, o un no. **No responder también es una salida legítima** y nunca se presenta como una falta ni como un juicio: Superola no promete tiempos de respuesta, ni al cliente ni al proveedor.
 - **Un no puede llevar un motivo, opcional y escrito por el proveedor.** No es un castigo ni una nota. Sirve para que Superola entienda por qué el marketplace no cerró.
 - **El proveedor puede pausar la entrada de solicitudes cuando quiera**, y reanudarla igual de fácil. **Pausado no significa "esa fecha está ocupada"** y nunca se muestra así: significa que ahora mismo no quiere recibir pedidos.
-- **Sólo llegan solicitudes que él puede atender:** de su categoría y de una zona que él mismo declaró servir. Cuando hay precio, siempre lleva su moneda explícita (USD como base).
+- **Solo llegan solicitudes de su categoría y de una zona que él mismo declaró cubrir.** Superola no promete que pueda atenderlas: eso lo confirma el proveedor al responder. Cuando hay precio, siempre lleva su moneda explícita (USD como base).
 - **No es un CRM.** No hay embudos, ni etiquetas, ni reportes, ni calendario. Si una pantalla no sirve para tomar una decisión del marketplace, no entra.
 
 ### English
@@ -95,7 +97,7 @@ I register
 - **The provider decides whether to answer and what to say.** A price, a question to understand better, or a no. **Not answering is also a legitimate outcome** and is never presented as a fault or a judgement: Superola promises no response times, to the customer or to the provider.
 - **A no can carry a reason, optional and written by the provider.** It is not a penalty and not a score. It exists so Superola understands why the marketplace did not close.
 - **The provider can pause incoming requests whenever they want**, and resume just as easily. **Paused does not mean "that date is taken"** and is never shown that way: it means they do not want requests right now.
-- **Only requests they can serve arrive:** in their category, and in an area they themselves declared they serve. Where there is a price, it always carries its currency explicitly (USD as the base).
+- **Only requests in their category, and in an area they themselves declared they cover, arrive.** Superola does not promise they can serve them: the provider confirms that when they respond. Where there is a price, it always carries its currency explicitly (USD as the base).
 - **It is not a CRM.** No pipelines, no tags, no report builder, no calendar. If a screen cannot name the marketplace decision it supports, it does not ship.
 
 ---

@@ -150,7 +150,7 @@ Four conditions, all required, would make it worth running: the guided composer 
 Per-surface classification vocabulary:
 
 - `DOC` — mostly document and navigation. Server rendering is sufficient. No island is required **by the class**; an island may still be attached, and must then be named.
-- `LOCAL` — local interactive state that does not need to survive navigation.
+- `LOCAL` — bounded local interactive state that does not normally require a rich client rendering model. Navigation-persistent local state is permitted where explicitly bounded by a named island and a domain-owned persistence contract (`UX-07`'s anonymous pre-`Account` window; see `docs/04-ux/surface-inventory.md` §1.1 and `docs/04-ux/rendering-evidence.md` §1.2).
 - `RICH` — client state that must survive navigation, held by the client. Would justify Option B for that surface.
 
 **Finding: no V1 surface is `RICH`.** The one candidate, the multi-step composer, has state that survives navigation — but it is held by `RequestDraft`, a domain aggregate `ADR-003` already owns, plus browser-local storage before an `Account` exists. Three named islands: `I-1` governed type-ahead picker, `I-2` composer step controller and local draft persistence, `I-3` media upload manager. Each must degrade to a working server-rendered path, and each goes through the same application layer and the same single machine-access enforcement point. **No JSON API is built speculatively.**
