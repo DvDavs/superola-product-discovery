@@ -125,4 +125,4 @@ Imported records must remain traceable to source and separable until approved. N
 6. Capability-level TCO, operator workload, compliance/migration effort, exit cost, and reconsideration thresholds are accepted before budget/schedule/scope approval.
 7. Owner reconciliation and explicit authorization precede P02/P04; P03 later evaluates technology only against validated decision problems.
 
-P06 remains responsible for an approved roadmap, delivery ranges, dependencies, and committed MVP after relevant product, domain, UX, migration, compliance, cost, and team evidence exists.
+P06 may complete a **conditional decision package** under explicit authorization before all owner, migration, compliance, and team evidence exists, provided every confidence limit and dependency remains visible. An **approved roadmap, dated delivery ranges, committed MVP, budget, migration, or implementation authorization** still requires the relevant product, domain, UX, migration, compliance, cost, and team evidence plus the named owner/decision approvals.

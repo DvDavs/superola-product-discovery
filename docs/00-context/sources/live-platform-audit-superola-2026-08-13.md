@@ -289,7 +289,7 @@ One locale defect sits on the provider path: `/claim-listing/` is a Spanish-lang
 
 ## 8. Booking / quote / messaging claims
 
-### 8.1 There is no booking, and no quote — `OBSERVED`
+### 8.1 Public booking-labelled surface does not demonstrate a booking or quote lifecycle — `OBSERVED`
 
 The music type shows a tab labelled **"Solicitud de Reserva"** (booking request); the venue type shows **"Reservar"** (book). The theme's own tab type is `bookings`.
 
