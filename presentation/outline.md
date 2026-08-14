@@ -1,6 +1,15 @@
-# Presentation Pack — Future Outline
+# Presentation Pack — Production Outline
 
-> Status: NOT STARTED. P00 produces no employer-facing recommendation deck.
+> Status: P07 IN PROGRESS — CONTENT SOURCE COMPLETE; rendered deck and interactive explorer not started.
+
+P07 now provides the canonical editorial package in:
+
+- `superola-owner-review-v1.md` — 16-slide core source;
+- `superola-owner-review-speaker-notes-v1.md` — Spanish delivery notes;
+- `superola-owner-review-appendix-v1.md` — depth material;
+- `owner-decision-sheet-v1.md` — bilingual meeting capture sheet.
+
+This outline now governs the remaining visual-production work. The content-source milestone did not generate a PPTX or the Decision & Cost Explorer.
 
 This internal planning document remains English only. Only the owner-facing preview/slides and presentation diagrams are bilingual Spanish + English; internal source, research, production, and speaker/planning support files remain English only unless explicitly intended for owner viewing.
 
